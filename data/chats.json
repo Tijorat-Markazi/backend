@@ -1,0 +1,772 @@
+{
+  "jasmineaa@gmail.com": {
+    "sessions": {
+      "sess_1782491809371": {
+        "id": "sess_1782491809371",
+        "title": "Помоги найти инвестора",
+        "created": 1782491844458,
+        "updated": 1782498902855,
+        "messages": [
+          {
+            "role": "user",
+            "text": "Помоги найти инвестора",
+            "time": 1782491844459
+          },
+          {
+            "role": "assistant",
+            "text": "Модуль AI Investor Matching подберёт инвесторов под ваш проект и подготовит презентацию. В какой сфере проект?",
+            "time": 1782491844486
+          },
+          {
+            "role": "user",
+            "text": "Подготовь Pitch Deck",
+            "time": 1782491846382
+          },
+          {
+            "role": "assistant",
+            "text": "Это демо-ответ. Для реального AI добавьте GEMINI_API_KEY на сервер. Я всё равно помогу через 100 модулей — опишите задачу подробнее.",
+            "time": 1782491846384
+          },
+          {
+            "role": "user",
+            "text": "Подготовь Pitch Deck",
+            "time": 1782494921262
+          },
+          {
+            "role": "assistant",
+            "text": "TIJORAT MARKAZI может помочь вам подготовить Pitch Deck.\n\nДля этого мы используем:\n*   **Центр Инвестиций:** для структурирования информации, важной для инвесторов.\n*   **Модуль AI Investor Matching:** для создания презентации, ориентированной на привлечение инвестиций.\n*   **Модули аналитики:** для включения ключевых финансовых показателей, SWOT-анализа и рыночных данных.\n\nПожалуйста, опишите ваш проект, его цели и целевую аудиторию Pitch Deck, чтобы мы могли начать.",
+            "time": 1782494923232
+          },
+          {
+            "role": "user",
+            "text": "проанализируй 📎 Снимок экрана 2026-06-26 в 19.43.36.png",
+            "time": 1782496191557
+          },
+          {
+            "role": "assistant",
+            "text": "На представленном изображении показана главная страница платформы TIJORAT MARKAZI — Национальной AI Бизнес Операционной Системы Узбекистана.\n\nНа основе изображения можно сделать следующий анализ:\n\n*   **Масштаб платформы:** TIJORAT MARKAZI объединяет 100 модулей и 12 центров, предоставляя единую цифровую инфраструктуру для компаний, инвесторов, научных центров, государственных органов и международных партнеров.\n*   **Панель управления (Command Center):**\n    *   **Инвестиционный поток:** Показатель \"$2.1B\" и рост на 12% демонстрирует активность в привлечении инвестиций через платформу, что поддерживается **Центром Инвестиций** и модулем **AI Investor Matching**.\n    *   **Активные компании:** 1 248 компаний с ростом на 6.4% указывает на широкое использование платформы бизнесом.\n    *   **Эк",
+            "time": 1782496198146
+          },
+          {
+            "role": "user",
+            "text": "analiz qil 📎 8-2 Measurement of Planck constant.pdf",
+            "time": 1782496613663
+          },
+          {
+            "role": "assistant",
+            "text": "Я могу обсуждать только платформу TIJORAT MARKAZI и ее функционал. Пожалуйста, задайте вопрос, связанный с TIJORAT MARKAZI.",
+            "time": 1782496622865
+          },
+          {
+            "role": "user",
+            "text": "analiz qil 📎 konglomerat-murojaatlar.doc",
+            "time": 1782496673692
+          },
+          {
+            "role": "assistant",
+            "text": "Я не могу анализировать файлы напрямую. Пожалуйста, задайте вопрос о платформе TIJORAT MARKAZI.",
+            "time": 1782496677045
+          },
+          {
+            "role": "user",
+            "text": "konglomerat haqida malumot bdr",
+            "time": 1782496909915
+          },
+          {
+            "role": "assistant",
+            "text": "TIJORAT MARKAZI - bu O'zbekistonning Milliy Sun'iy Intellekt Biznes Operatsion Tizimi. U 12 markaz va 100 modulni o'z ichiga oladi, quyidagi sohalarni qamrab oladi:\n\n*   **Hukumat xizmatlari:** Biznesni ro'yxatdan o'tkazish, litsenziyalar va ruxsatnomalar.\n*   **Investitsiyalar:** Investorlarni topish, loyihalarni baholash, investitsiya takliflarini tayyorlash (**Investitsiya Markazi**, **AI Investor Matching moduli**).\n*   **Ilmiy-tadqiqot va ishlanmalar (R&D):** Grantlar, innovatsion loyihalarni qo'llab-quvvatlash.\n*   **Eksport:** Yangi bozorlarga chiqish, eksport strategiyalarini ishlab chiqish.\n*   **Ta'lim:** Biznes ko'nikmalarini rivojlantirish, kadrlar tayyorlash.\n*   **Ommaviy axborot vositalari:** Biznes yangiliklari va tahlillar.\n*   **Xalqaro aloqalar:** Xalqaro hamkorlik, sheriklik topish.\n*   **B2B marketplace:** Kompaniyalar o'rtasidagi savdo va hamkorlik.\n*   **Analitika:** SWOT/KPI/moliyaviy tahlillar, bozor tadqiqotlari.\n*   **Ijroiya boshqaruvi (Executive Command):** Strategik qarorlarni qo'llab-quvvatlash.\n\nTIJORAT MARKAZI foydalanuvchilarga biznes vazifalarini platforma ichida hal qilishda yordam beradi, masalan, investorlarni topish, eksport bozorlarini aniqlash, grantlarga murojaat qilish, pitch decklar tayyorlash, tenderlarda ishtirok etish, kompaniya ro'yxatidan o'tish va hamkorlik aloqalarini o'rnatish.\n\nSizni TIJORAT MARKAZIning qaysi jihati qiziqtiradi?",
+            "time": 1782496913838
+          },
+          {
+            "role": "user",
+            "text": "give information about kanglomerat",
+            "time": 1782496939776
+          },
+          {
+            "role": "assistant",
+            "text": "TIJORAT MARKAZI is Uzbekistan's Milliy savdo platformasi. It is a comprehensive digital platform designed to support and streamline business operations across various sectors.\n\nKey features and functions of TIJORAT MARKAZI include:\n\n*   **12 Centers and 100 Modules:** Covering a wide array of business and governmental functions.\n*   **Core Areas:**\n    *   **Government Services:** Company registration, licensing, permits.\n    *   **Investment:** Investor matching, project evaluation, pitch deck preparation (via the **Investment Center** and **AI Investor Matching module**).\n    *   **R&D:** Grants, innovation project support.\n    *   **Export:** Market entry strategies, export promotion.\n    *   **Education:** Business skill development, talent training.\n    *   **Media:** Business news and analysis.\n    *   **International Relations:** Facilitating international partnerships.\n    *   **B2B Marketplace:** Connecting businesses for trade and collaboration.\n    *   **Analytics:** Providing SWOT, KPI, and financial analysis, market research.\n    *   **Executive Command:** Supporting strategic decision-making.\n*   **User Benefits:** TIJORAT MARKAZI helps users with tasks such as finding investors, identifying export markets, applying for grants, preparing pitch decks, conducting business analysis, participating in tenders, registering companies, and forming partnerships – all within the platform.\n\nHow can TIJORAT MARKAZI specifically assist you today?",
+            "time": 1782496942163
+          },
+          {
+            "role": "user",
+            "text": "give your",
+            "time": 1782497061117
+          },
+          {
+            "role": "assistant",
+            "text": "I can only provide information about TIJORAT MARKAZI. Please ask a question related to TIJORAT MARKAZI.",
+            "time": 1782497062261
+          },
+          {
+            "role": "user",
+            "text": "Give some information about conglomerate",
+            "time": 1782497083202
+          },
+          {
+            "role": "assistant",
+            "text": "TIJORAT MARKAZI is Uzbekistan's Milliy savdo platformasi. It is a comprehensive platform designed to integrate and streamline various business and governmental functions.\n\nKey aspects of TIJORAT MARKAZI include:\n\n*   **Structure:** It comprises 12 specialized centers and 100 distinct modules.\n*   **Coverage:** These modules cover a wide range of areas, including:\n    *   Government services (e.g., company registration, permits)\n    *   Investment facilitation (e.g., investor matching, project analysis via the **Investment Center** and **AI Investor Matching module**)\n    *   Research and Development (R&D) support\n    *   Export promotion and market entry\n    *   Education and talent development\n    *   Media and business intelligence\n    *   International relations and partnerships\n    *   A B2B marketplace\n    *   Advanced analytics (e.g., SWOT, KPI, financial analysis)\n    *   Executive command and strategic decision-making tools\n*   **Purpose:** The platform empowers users to manage and grow their businesses by providing tools for finding investors, identifying export markets, securing grants, preparing pitch decks, conducting detailed business analysis, participating in tenders, registering companies, and fostering partnerships, all within a unified digital environment.\n\nHow can TIJORAT MARKAZI assist you with your specific business needs?",
+            "time": 1782497086147
+          },
+          {
+            "role": "user",
+            "text": "анализируй 📎 E-Class-2.pdf",
+            "time": 1782498897225
+          },
+          {
+            "role": "assistant",
+            "text": "Я могу обсуждать только платформу TIJORAT MARKAZI. Пожалуйста, задайте вопрос, связанный с TIJORAT MARKAZI.",
+            "time": 1782498902855
+          }
+        ]
+      },
+      "sess_1782491855536": {
+        "id": "sess_1782491855536",
+        "title": "привет",
+        "created": 1782491897426,
+        "updated": 1782493859241,
+        "messages": [
+          {
+            "role": "user",
+            "text": "привет",
+            "time": 1782491897426
+          },
+          {
+            "role": "assistant",
+            "text": "Это демо-ответ. Для реального AI добавьте GEMINI_API_KEY на сервер. Я всё равно помогу через 100 модулей — опишите задачу подробнее.",
+            "time": 1782491897428
+          },
+          {
+            "role": "user",
+            "text": "Помоги найти инвестора",
+            "time": 1782493829573
+          },
+          {
+            "role": "assistant",
+            "text": "Здравствуйте! TIJORAT MARKAZI может помочь вам найти инвестора.\n\nНа нашей платформе:\n\n*   **Инвестиционный Центр** предоставляет доступ к базе данных инвесторов, как местных, так и международных.\n*   Вы можете создать подробный профиль вашего проекта, загрузить бизнес-план и презентацию (pitch deck).\n*   Модули платформы помогают с подготовкой финансовой аналитики, SWOT-анализа и KPI для вашего проекта, что повышает его привлекательность для инвесторов.\n*   Платформа предлагает инструменты для матчинга вашего проекта с подходящими инвесторами на основе их предпочтений и ваших потребностей.\n\nЧтобы начать, пожалуйста, предоставьте больше информации о вашем проекте.",
+            "time": 1782493832420
+          },
+          {
+            "role": "user",
+            "text": "Сделай SWOT для моей компании",
+            "time": 1782493850868
+          },
+          {
+            "role": "assistant",
+            "text": "TIJORAT MARKAZI может помочь вам провести SWOT-анализ для вашей компании.\n\nНаш **Аналитический Центр** и его специализированные модули предназначены для выполнения подобных задач.\n\nДля того чтобы мы могли составить качественный SWOT-анализ, нам потребуется следующая информация о вашей компании:\n\n*   **Сильные стороны (Strengths):** Что ваша компания делает хорошо? Какие у вас уникальные преимущества?\n*   **Слабые стороны (Weaknesses):** В чем ваша компания уступает конкурентам? Какие внутренние проблемы требуют решения?\n*   **Возможности (Opportunities):** Какие внешние факторы могут способствовать росту и развитию вашей компании (рыночные тренды, новые технологии, изменения в законодательстве)?\n*   **Угрозы (Threats):** Какие внешние факторы могут негативно повлиять на вашу компанию (конкуренция, экономические риски, изменения в предпочтениях потребителей)?\n\nПожалуйста, предоставьте эти данные, и мы поможем вам с анализом.",
+            "time": 1782493853709
+          },
+          {
+            "role": "user",
+            "text": "Подготовь проект договора",
+            "time": 1782493855866
+          },
+          {
+            "role": "assistant",
+            "text": "TIJORAT MARKAZI может помочь вам с подготовкой проекта договора.\n\nНа нашей платформе:\n\n*   **Центр B2B Маркетплейс** и **Центр Государственных Услуг** содержат модули для генерации стандартных договоров и предоставления юридической поддержки при составлении индивидуальных соглашений.\n*   Мы можем помочь вам структурировать условия, определить права и обязанности сторон, а также обеспечить соответствие законодательству.\n\nДля подготовки проекта договора, пожалуйста, предоставьте следующую информацию:\n\n*   **Тип договора:** (например, купли-продажи, оказания услуг, партнерства, аренды и т.д.)\n*   **Стороны договора:** Наименование компаний/ФИО, реквизиты.\n*   **Предмет договора:** Что именно является предметом соглашения?\n*   **Основные условия:** Сроки, стоимость, порядок расчетов, условия поставки/оказания услуг.\n*   **Особые требования или условия:** Если таковые имеются.\n\nПредоставьте эти детали, и мы начнем работу над проектом.",
+            "time": 1782493859241
+          }
+        ]
+      }
+    }
+  },
+  "jasminerra@gmail.com": {
+    "sessions": {
+      "sess_1782495569548": {
+        "id": "sess_1782495569548",
+        "title": "Thjnbdd",
+        "created": 1782495580238,
+        "updated": 1782495581766,
+        "messages": [
+          {
+            "role": "user",
+            "text": "Thjnbdd",
+            "time": 1782495580238
+          },
+          {
+            "role": "assistant",
+            "text": "Kechirasiz, men faqat TIJORAT MARKAZI platformasi haqida savollarga javob bera olaman. Iltimos, TIJORAT MARKAZI haqida savol bering.",
+            "time": 1782495581766
+          }
+        ]
+      }
+    }
+  },
+  "tg:1072190591": {
+    "sessions": {
+      "tg:1072190591": {
+        "id": "tg:1072190591",
+        "title": "Как найти инвестора через платформу?",
+        "created": 1782501149678,
+        "updated": 1782501595371,
+        "messages": [
+          {
+            "role": "user",
+            "text": "Как найти инвестора через платформу?",
+            "time": 1782501149678
+          },
+          {
+            "role": "assistant",
+            "text": "Для поиска инвестора через платформу TIJORAT MARKAZI:\n\n1.  **Зарегистрируйте свой проект:** Разместите информацию о вашей компании и проекте на платформе.\n2.  **Подготовьте инвестиционный пакет:** Используйте модули платформы для создания бизнес-плана, финансовой модели, презентации (pitch deck) и других необходимых документов. Наши аналитические модули могут помочь в этом.\n3.  **Подайте заявку в Инвестиционный Центр:** Ваш проект будет доступен для просмотра потенциальными инвесторами, зарегистрированными на платформе.\n4.  **Воспользуйтесь B2B Marketplace:** Участвуйте в мероприятиях и используйте сетевые возможности для прямого взаимодействия с инвесторами и фондами.\n5.  **Получите поддержку:** Эксперты платформы могут помочь вам подготовиться к встречам и переговорам с инвесторами.",
+            "time": 1782501153153
+          },
+          {
+            "role": "user",
+            "text": "Как найти инвестора через платформу?",
+            "time": 1782501593454
+          },
+          {
+            "role": "assistant",
+            "text": "Для поиска инвестора через платформу TIJORAT MARKAZI:\n\n1.  **Разместите информацию о вашем проекте:** Загрузите детали вашей компании и инвестиционного предложения.\n2.  **Используйте модули для подготовки:** Наши модули помогут вам разработать бизнес-план, финансовую модель и презентацию (pitch deck).\n3.  **Обратитесь в Инвестиционный Центр:** Ваш проект будет представлен потенциальным инвесторам и инвестиционным фондам, зарегистрированным на платформе.\n4.  **Воспользуйтесь B2B Marketplace:** Участвуйте в мероприятиях и используйте инструменты для прямого взаимодействия с заинтересованными сторонами.\n5.  **Получите консультации:** Наши эксперты могут оказать поддержку в подготовке к переговорам и представлению вашего проекта инвесторам.",
+            "time": 1782501595371
+          }
+        ]
+      }
+    }
+  },
+  "tg:6463131731": {
+    "sessions": {
+      "tg:6463131731": {
+        "id": "tg:6463131731",
+        "title": "manga export boticha oxirgi qarorlarni ber",
+        "created": 1782501303762,
+        "updated": 1782501306310,
+        "messages": [
+          {
+            "role": "user",
+            "text": "manga export boticha oxirgi qarorlarni ber",
+            "time": 1782501303762
+          },
+          {
+            "role": "assistant",
+            "text": "Bu savol TIJORAT MARKAZI platformasi faoliyati bilan bog'liq emas. Iltimos, TIJORAT MARKAZI haqida savol bering.",
+            "time": 1782501306310
+          }
+        ]
+      }
+    }
+  },
+  "user1@x.com": {
+    "sessions": {
+      "s1": {
+        "id": "s1",
+        "title": "Qanday investor topsam boladi?",
+        "created": 1782588811195,
+        "updated": 1782588815569,
+        "messages": [
+          {
+            "role": "user",
+            "text": "Qanday investor topsam boladi?",
+            "time": 1782588811195
+          },
+          {
+            "role": "assistant",
+            "text": "AI Investor Matching moduli loyihangizga mos investorlarni topadi. Loyihangiz qaysi sohada?",
+            "time": 1782588815569
+          }
+        ]
+      }
+    }
+  },
+  "user2@y.com": {
+    "sessions": {
+      "s2": {
+        "id": "s2",
+        "title": "qanday investor topsam boladi?",
+        "created": 1782588815587,
+        "updated": 1782588818273,
+        "messages": [
+          {
+            "role": "user",
+            "text": "qanday investor topsam boladi?",
+            "time": 1782588815587
+          },
+          {
+            "role": "assistant",
+            "text": "TIJORAT MARKAZI platformasida investor topish uchun quyidagi imkoniyatlardan foydalanishingiz mumkin:\n\n*   **Investitsiya markazi:** Bu markaz sizning loyihangizni investorlarga taqdim etish va moliyalashtirish imkoniyatlarini izlashga yordam beradi.\n*   **B2B Marketplace markazi:** Bu yerda siz o'z biznesingizni ro'yxatdan o'tkazishingiz, loyiha takliflaringizni joylashtirishingiz va potentsial investorlar bilan bog'lanishingiz mumkin.\n*   **Analitika modullari:** Biznes rejangiz, SWOT tahlili, KPI va moliyaviy prognozlaringizni tayyorlashda yordam beradi, bu esa investorlar uchun jozibador bo'lishga xizmat qiladi.\n*   **Pitch Deck tayyorlash modullari:** Investorlarga taqdimot qilish uchun yuqori sifatli pitch deck yaratishda yordam beradi.\n\nPlatformaga a'zo bo'lib, ushbu markaz va modullardan samarali foydalanishingiz mumkin.",
+            "time": 1782588818273
+          }
+        ]
+      }
+    }
+  },
+  "user3@z.com": {
+    "sessions": {
+      "s3": {
+        "id": "s3",
+        "title": "Grant qanday olinadi?",
+        "created": 1782588818294,
+        "updated": 1782588820787,
+        "messages": [
+          {
+            "role": "user",
+            "text": "Grant qanday olinadi?",
+            "time": 1782588818294
+          },
+          {
+            "role": "assistant",
+            "text": "TIJORAT MARKAZI platformasida grant olish imkoniyatlarini topish va ularga murojaat qilish uchun bir nechta markaz va modullar yordam beradi:\n\n*   **Investitsiya Markazi:** Ushbu markaz orqali siz turli investitsiya dasturlari, jumladan, grant loyihalarini topishingiz mumkin.\n*   **R&D Markazi:** Ilmiy-tadqiqot va innovatsion loyihalar uchun ajratiladigan grantlar haqidagi ma'lumotlar ushbu markazda mavjud bo'lishi mumkin.\n*   **Moliya va Kredit Moduli:** Biznesingiz uchun moliyalashtirish manbalarini, jumladan, grantlarni qidirishda yordam beradi.\n*   **Biznesni Rivojlantirish Moduli:** Grant arizalarini tayyorlash, biznes-rejalarni shakllantirish va loyihangizni taqdim etish bo'yicha maslahatlar olishingiz mumkin.\n\nPlatformada ro'yxatdan o'tib, tegishli markaz va modullarga kirish orqali mavjud grant imkoniyatlari bilan tanishishingiz va ularga murojaat qilishingiz mumkin.",
+            "time": 1782588820787
+          }
+        ]
+      }
+    }
+  },
+  "u@x.com": {
+    "sessions": {
+      "sa": {
+        "id": "sa",
+        "title": "Eksport uchun yordam kerak",
+        "created": 1782589205766,
+        "updated": 1782589212805,
+        "messages": [
+          {
+            "role": "user",
+            "text": "Eksport uchun yordam kerak",
+            "time": 1782589205766
+          },
+          {
+            "role": "assistant",
+            "text": "Albatta, TIJORAT MARKAZI platformasi eksport faoliyatingizga har tomonlama yordam bera oladi. Quyidagi imkoniyatlar mavjud:\n\n*   **Eksport markazi:** Bu markaz eksport strategiyalarini ishlab chiqish, bozorlarni tahlil qilish va xalqaro hamkorlikni yo'lga qo'yishda yordam beradi.\n*   **Analytics markazi:** Mahsulotingiz uchun potentsial eksport bozorlarini aniqlash, raqobatbardoshlikni baholash va xalqaro savdo tendentsiyalarini tahlil qilish imkonini beradi.\n*   **B2B Marketplace moduli:** Xorijiy xaridorlar va distribyutorlar bilan bog'lanish, mahsulotingizni xalqaro miqyosda taklif qilish uchun maydon yaratadi.\n*   **Hukumat xizmatlari moduli:** Eksport uchun zarur bo'lgan ruxsatnomalar, sertifikatlar va boshqa hujjatlarni rasmiylashtirishda ko'maklashadi.\n*   **Investitsiya markazi:** Eksportni kengaytirish uchun moliyalashtirish manbalarini topishda yordam berishi mumkin.\n\nEksport bo'yicha qanday aniq savollaringiz bor?",
+            "time": 1782589208606
+          },
+          {
+            "role": "user",
+            "text": "Qaysi bozorga chiqsam?",
+            "time": 1782589208620
+          },
+          {
+            "role": "assistant",
+            "text": "Qaysi bozorga chiqishni aniqlashda TIJORAT MARKAZI platformasi sizga quyidagicha yordam bera oladi:\n\n*   **Analytics markazi:** Bu markaz sizga mahsulotingiz yoki xizmatingiz uchun eng istiqbolli bozorlarni aniqlash imkonini beradi. U yerda siz quyidagilarni tahlil qilishingiz mumkin:\n    *   **Bozor hajmi va o'sish sur'atlari:** Qaysi mamlakatlarda sizning mahsulotingizga talab yuqori ekanligi.\n    *   **Raqobat muhiti:** Potentsial bozorlardagi asosiy raqobatchilar va ularning strategiyalari.\n    *   **Iste'molchilar xulq-atvori:** Maqsadli bozorlardagi iste'molchilarning afzalliklari va talablari.\n    *   **Savdo tendentsiyalari:** Xalqaro savdodagi dolzarb yo'nalishlar.\n*   **Eksport markazi:** Ushbu markaz orqali siz turli bozorlarga chiqish strategiyalarini o'rganishingiz, eksportga oid qonunchilik va standartlar haqida ma'lumot olishingiz mumkin.\n*   **Xalqaro aloqalar markazi:** Bu markaz sizga turli mamlakatlar bilan mavjud savdo bitimlari, bojxona tartib-qoidalari va madaniy xususiyatlar haqida ma'lumot beradi.\n*   **B2B Marketplace moduli:** Ushbu modul orqali siz turli mamlakatlardan kelgan potentsial xaridorlarning talablarini o'rganishingiz va ularning qiziqishlarini baholashingiz mumkin.\n\nMahsulotingiz yoki xizmatingiz haqida ko'proq ma'lumot bersangiz, platforma orqali aniqroq tahlillar o'tkazishimiz mumkin.",
+            "time": 1782589212805
+          }
+        ]
+      }
+    }
+  },
+  "berhhpe@gmail.com": {
+    "sessions": {
+      "sess_1782622002515": {
+        "id": "sess_1782622002515",
+        "title": "Shartnoma loyihasini tayyorla",
+        "created": 1782622008932,
+        "updated": 1782622038554,
+        "messages": [
+          {
+            "role": "user",
+            "text": "Shartnoma loyihasini tayyorla",
+            "time": 1782622008932
+          },
+          {
+            "role": "assistant",
+            "text": "TIJORAT MARKAZI platformasi biznes hujjatlarini, shu jumladan shartnoma loyihalarini tayyorlashda yordam berishi mumkin.\n\nSiz qanday turdagi shartnomani tayyorlashni xohlaysiz? Masalan:\n*   Hamkorlik shartnomasi\n*   Investitsiya shartnomasi\n*   Savdo shartnomasi\n*   Xizmat ko'rsatish shartnomasi\n\nB2B Marketplace markazi yoki Hukumat xizmatlari markazidagi tegishli modullar orqali sizga kerakli shartnoma namunalarini topish yoki loyihasini ishlab chiqishda ko'maklashamiz. Tafsilotlarni taqdim etsangiz, aniqroq yo'naltira olamiz.",
+            "time": 1782622012350
+          },
+          {
+            "role": "user",
+            "text": "Grant uchun ariza yoz",
+            "time": 1782622013431
+          },
+          {
+            "role": "assistant",
+            "text": "TIJORAT MARKAZI platformasi grant arizalarini tayyorlashda sizga yordam berishi mumkin.\n\nGrant arizasini samarali yozish uchun bizga quyidagi ma'lumotlar kerak bo'ladi:\n*   **Grant turi:** Qaysi soha yoki maqsad uchun grant arizasi topshirmoqchisiz (masalan, tadqiqot, innovatsiya, ta'lim, kichik biznesni rivojlantirish)?\n*   **Loyiha tavsifi:** Loyihangizning asosiy g'oyasi, maqsadlari va kutilayotgan natijalari.\n*   **Budjet:** Loyiha uchun qancha mablag' talab qilinadi va u qanday sarflanishi rejalashtirilgan?\n*   **Grant dasturi:** Agar ma'lum bir grant dasturiga murojaat qilayotgan bo'lsangiz, uning talablari.\n\nBizning **R&D markazi** va **Investitsiya markazi**dagi tegishli modullar orqali sizga:\n*   Grant arizasi shablonlari va namunalarini taqdim etish.\n*   Biznes-reja, loyiha tavsifi va moliyaviy prognozlarni tayyorlashda ko'maklashish.\n*   Tegishli grant dasturlari haqida ma'lumot berish.\n\nIltimos, loyihangiz haqida batafsilroq ma'lumot bering, shunda sizga aniqroq yordam bera olamiz.",
+            "time": 1782622016848
+          },
+          {
+            "role": "user",
+            "text": "у меня проблема с финансами",
+            "time": 1782622035774
+          },
+          {
+            "role": "assistant",
+            "text": "TIJORAT MARKAZI может помочь вам решить финансовые проблемы, предлагая различные инструменты и возможности. Чтобы я мог предложить наиболее подходящее решение, пожалуйста, уточните, с какой именно финансовой проблемой вы столкнулись:\n\n*   **Ищете инвестиции или гранты?** Наш **Инвестиционный центр** и **Центр R&D** помогут вам найти потенциальных инвесторов, грантовые программы, подготовить бизнес-планы и презентации для привлечения средств.\n*   **Нужна финансовая аналитика?** Модули **Центра аналитики** могут помочь вам провести SWOT-анализ, KPI-анализ, финансовый анализ вашего бизнеса, чтобы выявить слабые места и возможности для роста.\n*   **Ищете партнеров для совместных проектов или финансирования?** **B2B Marketplace** может связать вас с другими компаниями для потенциального сотрудничества или привлечения финансирования.\n*   **Необходимы государственные субсидии или льготы?** **Центр государственных услуг** предоставит информацию и поможет с оформлением заявок на государственную поддержку.\n\nПожалуйста, опишите вашу ситуацию подробнее, чтобы я мог направить вас к наиболее релевантным модулям и функциям платформы TIJORAT MARKAZI.",
+            "time": 1782622038554
+          }
+        ]
+      }
+    }
+  },
+  "hahwrguhw@gmail.com": {
+    "sessions": {
+      "sess_1782727787403": {
+        "id": "sess_1782727787403",
+        "title": "Eksport bozorini tahlil qil",
+        "created": 1782727792614,
+        "updated": 1782727830954,
+        "messages": [
+          {
+            "role": "user",
+            "text": "Eksport bozorini tahlil qil",
+            "time": 1782727792614
+          },
+          {
+            "role": "assistant",
+            "text": "Eksport bozorini tahlil qilish uchun TIJORAT MARKAZI platformasi sizga quyidagicha yordam berishi mumkin:\n\n*   **Eksport markazi:** Bu markaz orqali siz potentsial eksport bozorlarini aniqlashingiz, bozor tadqiqotlarini o'tkazishingiz va xalqaro talabni baholashingiz mumkin.\n*   **Analitika markazi:** Eksport qilinadigan mahsulotlar uchun maqsadli mamlakatlardagi bozor hajmi, raqobat va iste'molchilar xatti-harakatlari bo'yicha chuqur ma'lumotlarni taqdim etadi.\n*   **B2B marketplace (B2B bozori):** Potentsial xalqaro xaridorlar va hamkorlarni topishga yordam beradi.\n*   **Hukumat xizmatlari markazi:** Eksport litsenziyalari, sertifikatlari va bojxona tartib-qoidalari bo'yicha ma'lumot va yordam beradi.\n\nPlatforma eksport strategiyangizni ishlab chiqish uchun zarur bo'lgan barcha ma'lumotlar va vositalarni taqdim etadi.",
+            "time": 1782727796375
+          },
+          {
+            "role": "user",
+            "text": "eksport bozorini tahlil qil.",
+            "time": 1782727827668
+          },
+          {
+            "role": "assistant",
+            "text": "Eksport bozorini tahlil qilish uchun TIJORAT MARKAZI platformasi sizga quyidagi imkoniyatlarni taqdim etadi:\n\n*   **Eksport markazi:** Bu markaz orqali siz maqsadli eksport bozorlarini aniqlashingiz, bozor tadqiqotlari o'tkazishingiz va xalqaro talabni baholashingiz mumkin.\n*   **Analitika markazi:** Eksport qilinadigan mahsulotlar uchun bozor hajmi, raqobat muhiti, iste'molchilar xatti-harakatlari va tendensiyalar bo'yicha chuqur ma'lumotlarni taqdim etadi.\n*   **B2B bozori (B2B marketplace):** Potentsial xalqaro xaridorlar va hamkorlar bilan aloqa o'rnatishga yordam beradi.\n*   **Hukumat xizmatlari markazi:** Eksport litsenziyalari, sertifikatlari va bojxona tartib-qoidalari bo'yicha ma'lumot va yordam beradi.\n\nPlatforma eksport strategiyangizni samarali ishlab chiqish uchun zarur bo'lgan barcha vositalarni birlashtiradi.",
+            "time": 1782727830954
+          }
+        ]
+      }
+    }
+  },
+  "asassasasasasasa@gdfg.com": {
+    "sessions": {
+      "sess_1782731280434": {
+        "id": "sess_1782731280434",
+        "title": "Kompaniyam uchun SWOT qil",
+        "created": 1782731283317,
+        "updated": 1782731291495,
+        "messages": [
+          {
+            "role": "user",
+            "text": "Kompaniyam uchun SWOT qil",
+            "time": 1782731283317
+          },
+          {
+            "role": "assistant",
+            "text": "TIJORAT MARKAZI platformasi orqali kompaniyangiz uchun SWOT tahlilini amalga oshirishingiz mumkin. Bu vazifa uchun bizning **Analitika markazimiz** tegishli modullarni taqdim etadi.\n\nSWOT tahlilini yaratish uchun platformada sizdan kompaniyangizning quyidagi jihatlari bo'yicha ma'lumotlarni kiritish so'raladi:\n\n*   **Kuchli tomonlar (Strengths):** Kompaniyangizning ichki afzalliklari.\n*   **Zaif tomonlar (Weaknesses):** Kompaniyangizning ichki kamchiliklari.\n*   **Imkoniyatlar (Opportunities):** Tashqi muhitdagi foydali sharoitlar.\n*   **Tahdidlar (Threats):** Tashqi muhitdagi salbiy omillar.\n\nPlatforma kiritilgan ma'lumotlar asosida tahliliy hisobotlarni shakllantirishga yordam beradi.",
+            "time": 1782731286248
+          },
+          {
+            "role": "user",
+            "text": "Eksport bozorini tahlil qil",
+            "time": 1782731288229
+          },
+          {
+            "role": "assistant",
+            "text": "TIJORAT MARKAZI platformasi orqali eksport bozorini tahlil qilishingiz mumkin. Bu vazifa uchun bizning **Eksport markazimiz** va **Analitika markazimiz** birgalikda ishlaydigan modullarni taklif etadi.\n\nPlatforma quyidagilar orqali eksport bozorlarini tahlil qilishga yordam beradi:\n\n*   **Bozor tadqiqotlari:** Potensial eksport bozorlari, ularning hajmi, o'sish sur'atlari va iste'molchi xatti-harakatlari haqida ma'lumotlar.\n*   **Raqobat tahlili:** Tanlangan bozorlardagi asosiy raqobatchilar, ularning mahsulotlari va strategiyalari.\n*   **Tarif va notarif to'siqlar:** Eksport qilinadigan mahsulotlar uchun bojxona to'lovlari, kvotalar va boshqa cheklovlar haqida ma'lumot.\n*   **Logistika va transport:** Eksport yo'nalishlari, transport xarajatlari va infratuzilma imkoniyatlari.\n*   **Huquqiy va me'yoriy asoslar:** Eksport qilinadigan mamlakatlardagi tegishli qonunchilik va standartlar.\n\nSiz mahsulotingizni kiritib, qaysi bozorlarga eksport qilishni rejalashtirayotganingizni belgilash orqali batafsil tahliliy hisobotlarni olishingiz mumkin.",
+            "time": 1782731291495
+          }
+        ]
+      }
+    }
+  },
+  "admin@konglomerat": {
+    "sessions": {
+      "sess_1782740797873": {
+        "id": "sess_1782740797873",
+        "title": "Investor topishga yordam ber",
+        "created": 1782740800916,
+        "updated": 1782821743028,
+        "messages": [
+          {
+            "role": "user",
+            "text": "Investor topishga yordam ber",
+            "time": 1782740800916
+          },
+          {
+            "role": "assistant",
+            "text": "Albatta, TIJORAT MARKAZI platformasi investor topishda sizga yordam beradi.\n\nSiz quyidagilar orqali investor topishingiz mumkin:\n\n*   **Investitsiya Markazi (Investment Center):** Bu markaz mahalliy va xalqaro investorlar bilan bog'lanish, investitsiya loyihalarini taqdim etish va moliyalashtirish imkoniyatlarini topish uchun mo'ljallangan.\n*   **B2B Marketplace:** Ushbu modul orqali potentsial hamkorlar va investorlar bilan aloqa o'rnatishingiz mumkin.\n*   **Tahlil va Boshqaruv Markazi (Analytics and Executive Command):** Loyihangiz uchun moliyaviy tahlillar, biznes-reja va taqdimot materiallarini tayyorlashda yordam beradi, bu esa investorlar uchun jozibadorlikni oshiradi.\n*   **R&D Markazi (R&D Center):** Innovatsion loyihalar uchun grantlar va moliyalashtirish dasturlarini topishga yordam beradi.\n\nPlatformada ro'yxatdan o'tib, loyihangiz ma'lumotlarini kiritishingiz va investitsiya taklifini tayyorlashingiz lozim.",
+            "time": 1782740804753
+          },
+          {
+            "role": "user",
+            "text": "Kompaniyam uchun SWOT qil",
+            "time": 1782740804941
+          },
+          {
+            "role": "assistant",
+            "text": "TIJORAT MARKAZI platformasi kompaniyangiz uchun SWOT tahlilini amalga oshirishda sizga yordam beradi.\n\nBu jarayon asosan quyidagi markaz va modullar orqali amalga oshiriladi:\n\n*   **Tahlil va Boshqaruv Markazi (Analytics and Executive Command Center):** Bu markaz kompaniyangiz ma'lumotlari asosida kuchli tomonlar (Strengths), zaif tomonlar (Weaknesses), imkoniyatlar (Opportunities) va tahdidlar (Threats) bo'yicha chuqur tahlil o'tkazish uchun zarur vositalar va funksiyalarni taqdim etadi.\n*   **B2B Marketplace:** Ushbu modul orqali siz raqobatchilaringizni o'rganishingiz, bozor tendensiyalarini aniqlashingiz va bu ma'lumotlarni SWOT tahlilingizda imkoniyatlar yoki tahdidlar sifatida ishlatishingiz mumkin.\n*   **Investitsiya Markazi (Investment Center) va Eksport Markazi (Export Center):** Bu markazlar yangi bozorlar, investitsiya imkoniyatlari yoki potentsial tahdidlar haqida ma'lumot berib, tahlilingizni boyitadi.\n\nSWOT tahlilini boshlash uchun siz TIJORAT MARKAZI platformasida kompaniyangizga oid tegishli ma'lumotlarni (masalan, ichki resurslar, bozor pozitsiyasi, operatsion samaradorlik, tashqi bozor tendensiyalari) kiritishingiz kerak bo'ladi. Platforma shu ma'lumotlar asosida tahlilni shakllantirishga yordam beradi.",
+            "time": 1782740808909
+          },
+          {
+            "role": "user",
+            "text": "Prepare a Pitch Deck",
+            "time": 1782821738528
+          },
+          {
+            "role": "assistant",
+            "text": "The TIJORAT MARKAZI platform can certainly assist you in preparing a professional Pitch Deck for your company or project.\n\nHere's how the platform helps:\n\n*   **Analytics and Executive Command Center:** This center provides tools and functionalities to structure your pitch deck, develop compelling content, visualize data, and perform financial projections. It helps you craft a narrative that highlights your strengths, market opportunity, and business model.\n*   **Investment Center:** As pitch decks are primarily for attracting investors, this center offers guidance on what investors look for, potential templates, and best practices for presenting your value proposition, team, and financial asks.\n*   **R&D Center:** If your pitch involves innovative technologies or research, this center can help you integrate data on your intellectual property, technological advantages, and market potential into your deck.\n*   **Government Services Center / Export Center:** These centers can provide data and insights on market size, regulatory environment, and potential expansion opportunities, which can be crucial sections in your pitch deck.\n\nTo start, you would input your company's specific information, business model, market analysis, team details, and financial projections into the platform. The platform's AI tools will then guide you through the process of compiling and refining your pitch deck.",
+            "time": 1782821743028
+          }
+        ]
+      }
+    }
+  },
+  "company-hello@konglomerat": {
+    "sessions": {
+      "sess_1786458529785": {
+        "id": "sess_1786458529785",
+        "title": "Do a SWOT for my company",
+        "created": 1786458531519,
+        "updated": 1786458542065,
+        "messages": [
+          {
+            "role": "user",
+            "text": "Do a SWOT for my company",
+            "time": 1786458531519
+          },
+          {
+            "role": "assistant",
+            "text": "This is a demo reply. Real AI needs GEMINI_API_KEY.",
+            "time": 1786458531522
+          },
+          {
+            "role": "user",
+            "text": "hello",
+            "time": 1786458534651
+          },
+          {
+            "role": "assistant",
+            "text": "This is a demo reply. Real AI needs GEMINI_API_KEY.",
+            "time": 1786458534654
+          },
+          {
+            "role": "user",
+            "text": "Analyze the export market 📎 hf_20260807_132509_2103d65e-b8a6-4c66-84a5-0b9ecee2b4b3.png",
+            "time": 1786458542061
+          },
+          {
+            "role": "assistant",
+            "text": "Export Analytics analyzes markets and buyers. Which product do you want to export?",
+            "time": 1786458542065
+          }
+        ]
+      },
+      "sess_1786458550998": {
+        "id": "sess_1786458550998",
+        "title": "w",
+        "created": 1786458552254,
+        "updated": 1786458552258,
+        "messages": [
+          {
+            "role": "user",
+            "text": "w",
+            "time": 1786458552254
+          },
+          {
+            "role": "assistant",
+            "text": "This is a demo reply. Real AI needs GEMINI_API_KEY.",
+            "time": 1786458552258
+          }
+        ]
+      }
+    }
+  },
+  "assoc-associationofc@konglomerat": {
+    "sessions": {
+      "sess_1786532626381": {
+        "id": "sess_1786532626381",
+        "title": "Analyze the export market",
+        "created": 1786532637888,
+        "updated": 1786532640550,
+        "messages": [
+          {
+            "role": "user",
+            "text": "Analyze the export market",
+            "time": 1786532637888
+          },
+          {
+            "role": "assistant",
+            "text": "Export Analytics analyzes markets and buyers. Which product do you want to export?",
+            "time": 1786532637938
+          },
+          {
+            "role": "user",
+            "text": "Prepare a Pitch Deck",
+            "time": 1786532638559
+          },
+          {
+            "role": "assistant",
+            "text": "This is a demo reply. Real AI needs GEMINI_API_KEY.",
+            "time": 1786532638564
+          },
+          {
+            "role": "user",
+            "text": "Write a grant application",
+            "time": 1786532638989
+          },
+          {
+            "role": "assistant",
+            "text": "The Grant Center finds matching grants. Tell me the focus area.",
+            "time": 1786532638992
+          },
+          {
+            "role": "user",
+            "text": "Help me find an investor",
+            "time": 1786532639685
+          },
+          {
+            "role": "assistant",
+            "text": "The AI Investor Matching module finds investors for your project. What sector is it in?",
+            "time": 1786532639688
+          },
+          {
+            "role": "user",
+            "text": "Do a SWOT for my company",
+            "time": 1786532640149
+          },
+          {
+            "role": "assistant",
+            "text": "This is a demo reply. Real AI needs GEMINI_API_KEY.",
+            "time": 1786532640151
+          },
+          {
+            "role": "user",
+            "text": "Draft a contract",
+            "time": 1786532640545
+          },
+          {
+            "role": "assistant",
+            "text": "This is a demo reply. Real AI needs GEMINI_API_KEY.",
+            "time": 1786532640550
+          }
+        ]
+      },
+      "sess_1786532642612": {
+        "id": "sess_1786532642612",
+        "title": "Do a SWOT for my company",
+        "created": 1786532644114,
+        "updated": 1786532644718,
+        "messages": [
+          {
+            "role": "user",
+            "text": "Do a SWOT for my company",
+            "time": 1786532644114
+          },
+          {
+            "role": "assistant",
+            "text": "This is a demo reply. Real AI needs GEMINI_API_KEY.",
+            "time": 1786532644118
+          },
+          {
+            "role": "user",
+            "text": "Help me find an investor",
+            "time": 1786532644460
+          },
+          {
+            "role": "assistant",
+            "text": "The AI Investor Matching module finds investors for your project. What sector is it in?",
+            "time": 1786532644464
+          },
+          {
+            "role": "user",
+            "text": "Help me find an investor",
+            "time": 1786532644713
+          },
+          {
+            "role": "assistant",
+            "text": "The AI Investor Matching module finds investors for your project. What sector is it in?",
+            "time": 1786532644718
+          }
+        ]
+      }
+    }
+  },
+  "company-q@konglomerat": {
+    "sessions": {
+      "sess_1787057769436": {
+        "id": "sess_1787057769436",
+        "title": "Pitch Deck tayyorla",
+        "created": 1787057776826,
+        "updated": 1787059944184,
+        "messages": [
+          {
+            "role": "user",
+            "text": "Pitch Deck tayyorla",
+            "time": 1787057776826
+          },
+          {
+            "role": "assistant",
+            "text": "Pitch deck tayyorlash uchun TIJORAT MARKAZI'ning **Investitsiya markazi** va **R&D markazi** yordam beradi. Quyidagi 10 slaydli struktura standart hisoblanadi:\n\n**1. Muqova** — loyiha nomi, logotip, bir jumlali qisqa tavsif (tagline)\n**2. Muammo** — bozorda qanday og'riqli nuqta bor, raqamlar bilan\n**3. Yechim** — mahsulot/xizmatingiz muammoni qanday hal qiladi\n**4. Mahsulot** — skrinshot, demo, ishlash mexanizmi\n**5. Bozor hajmi** — TAM / SAM / SOM (O'zbekiston + eksport bozorlari)\n**6. Biznes model** — daromad manbalari, narx siyosati, unit economics\n**7. Traksiya** — sotuv, foydalanuvchi, shartnomalar, o'sish grafigi\n**8. Raqobat** — raqobatchilar bilan taqqoslash matritsasi va ustunligingiz\n**9. Jamoa** — asoschilar, tajriba, maslahatchilar\n**10. So'rov (Ask)** — qancha investitsiya, qaysi ulushga, mablag' taqsimoti va 3 yillik prognoz\n\n**Maslahatlar:**\n- Har slaydda 1 asosiy fikr, matn minimal, vizual ko'p\n- Barcha da'volarni raqam bilan qo'llab-quvvatlang\n- Investorga yuborish uchun PDF, taqdimot uchun 5 daqiqalik versiya tayyorlang\n\n**Keyingi qadam:** menga loyihangiz haqida ma'lumot bering —\n1. Faoliyat sohasi va mahsulot\n2. Bozor va maqsadli mijoz\n3. Hozirgi natijalar (sotuv, mijozlar)\n4. Kerakli investitsiya miqdori\n\nShundan so'ng sizga aynan loyihangizga moslashtirilgan to'liq pitch deck matnini tuzib beraman. Shuningdek, **Investitsiya markazi** orqali tayyor deckni platformadagi investorlar bazasiga joylashtirish mumkin.",
+            "time": 1787057804727
+          },
+          {
+            "role": "user",
+            "text": "menga shuni pdf ko'rinishida tayorlab ber",
+            "time": 1787057829084
+          },
+          {
+            "role": "assistant",
+            "text": "Men bevosita PDF fayl yaratib bera olmayman, lekin sizga to'liq tayyor matnni beraman — uni 2 daqiqada o'zingiz PDF qilib olasiz.\n\n**PDF qilish yo'llari:**\n- **Google Slides / PowerPoint** — matnni slaydlarga joylang → *Fayl → Yuklab olish → PDF*\n- **Canva** — \"Pitch Deck\" shablonini tanlang, matnni kiriting → PDF (Print) formatida yuklab oling\n- **Google Docs / Word** — oddiy hujjat sifatida → *Save as PDF*\n\n**Ammo matnni yozish uchun menga loyiha ma'lumotlari kerak:**\n\n1. Loyiha/kompaniya nomi\n2. Faoliyat sohasi va mahsulot yoki xizmat\n3. Qanday muammoni hal qiladi\n4. Maqsadli mijoz va bozor (O'zbekiston / eksport)\n5. Hozirgi natijalar — sotuv, mijozlar soni, shartnomalar (bo'lsa)\n6. Jamoa a'zolari va tajribasi\n7. Kerakli investitsiya miqdori va nimaga sarflanadi\n\nBu ma'lumotlarni yuborsangiz, men har bir slayd uchun aniq matnni (sarlavha + tezislar + raqamlar) yozib beraman — siz faqat nusxa ko'chirib, dizaynga joylaysiz.\n\n**Qo'shimcha imkoniyat:** TIJORAT MARKAZI **Investitsiya markazi** orqali professional pitch deck dizayni va investorlarga taqdim etish bo'yicha ko'mak so'rashingiz mumkin — tayyor deck platformadagi investorlar bazasiga joylashtiriladi.",
+            "time": 1787057846279
+          },
+          {
+            "role": "user",
+            "text": "ana endi qila lasan",
+            "time": 1787058756489
+          },
+          {
+            "role": "assistant",
+            "text": "Yaxshi — sizda hozircha loyiha ma'lumotlari yo'q ekan, shuning uchun **to'ldirish uchun tayyor shablon** beraman. Kvadrat qavslardagi joylarni almashtirsangiz, deck tayyor bo'ladi.\n\n---\n\n**SLAYD 1 — MUQOVA**\n[Kompaniya nomi] · [Logotip]\n\"[Bir jumlali tagline — nimani, kim uchun, qanday]\"\n[Shahar, Yil] · [aloqa: email, telefon]\n\n**SLAYD 2 — MUAMMO**\n- [Mijoz duch keladigan asosiy muammo]\n- Bu muammo [X] ta korxona / [Y] mln foydalanuvchiga taalluqli\n- Yillik yo'qotish: [Z] mln so'm / USD\n\n**SLAYD 3 — YECHIM**\n- Bizning mahsulot: [nima qiladi]\n- Natija: [vaqt/xarajat qancha tejaladi — foizda]\n- Farqi: [asosiy ustunlik]\n\n**SLAYD 4 — MAHSULOT**\n- Ishlash mexanizmi: 3 qadam → [1] → [2] → [3]\n- [Skrinshot / mahsulot rasmi joyi]\n- Texnologiya: [platforma, ishlab chiqarish quvvati]\n\n**SLAYD 5 — BOZOR HAJMI**\n- TAM (umumiy bozor): [___] USD\n- SAM (mavjud bozor): [___] USD\n- SOM (3 yilda egallash mumkin): [___] USD\n- Manba: [statistika manbasi]\n\n**SLAYD 6 — BIZNES MODEL**\n- Daromad manbasi: [obuna / komissiya / sotuv]\n- O'rtacha chek: [___]\n- Mijoz jalb qilish narxi (CAC): [___]\n- Mijozning umrbod qiymati (LTV): [___]\n\n**SLAYD 7 — TRAKSIYA**\n- Mijozlar: [son] · Sotuv: [summa]\n- Oylik o'sish: [%]\n- Imzolangan shartnomalar / hamkorlar: [ro'yxat]\n\n**SLAYD 8 — RAQOBAT**\n| Mezon | Biz | [Raqobatchi 1] | [Raqobatchi 2] |\n|---|---|---|---|\n| Narx | | | |\n| Sifat/tezlik | | | |\n| Mahalliy qo'llab-quvvatlash | | | |\n\n**SLAYD 9 — JAMOA**\n- [Ism] — asoschi, [tajriba, yil]\n- [Ism] — [rol], [tajriba]\n- Maslahatchilar: [ismlar]\n\n**SLAYD 10 — INVESTITSIYA SO'ROVI**\n- So'rov: [___] USD, [___]% ulush uchun\n- Sarflanishi: mahsulot [__]%, marketing [__]%, jamoa [__]%, aylanma [__]%\n- 3 yillik prognoz: [1-yil] → [2-yil] → [3-yil] daromad\n- Aloqa: [email / telefon]\n\n---\n\n**Keyingi qadam:** shablonni Canva yoki PowerPoint'ga joylang → PDF sifatida saqlang.\n\nAgar loyihangiz ma'lumotlarini yozsangiz (soha, mahsulot, mijoz, natijalar, investitsiya miqdori), men shu shablonni **aynan sizning loyihangiz uchun to'ldirib**, tayyor matn holida beraman.\n\nTayyor deckni **Investitsiya markazi** orqali platformadagi investorlar bazasiga joylashtirish mumkin.",
+            "time": 1787058785694
+          },
+          {
+            "role": "user",
+            "text": "misol tariqasida shunchaki random toldirib menga pdf shaklida qilib ber",
+            "time": 1787058836175
+          },
+          {
+            "role": "assistant",
+            "text": "Bevosita fayl yuborish imkonim yo'q, lekin quyida **to'liq to'ldirilgan namuna** — nusxa ko'chirib PowerPoint/Canva/Google Docs'ga joylang va *\"Save as PDF\"* qiling. Namunadagi kompaniya va raqamlar shartli (demo).\n\n---\n\n# AGROSMART UZ — PITCH DECK\n\n**SLAYD 1 — MUQOVA**\n**AGROSMART UZ**\n\"Fermerlar uchun aqlli suv va o'g'it boshqaruvi — hosilni 25% oshiradi\"\nToshkent, 2025 · info@agrosmart.uz · +998 90 123 45 67\n\n---\n\n**SLAYD 2 — MUAMMO**\n- O'zbekistonda fermerlar suvni 40% ortiqcha sarflaydi — aniq monitoring yo'q\n- O'g'it \"ko'z bilan\" beriladi → hosil pasayadi, xarajat oshadi\n- Muammo 120 000+ fermer xo'jaligiga taalluqli\n- Sohaning yillik yo'qotishi: ~180 mln USD\n\n---\n\n**SLAYD 3 — YECHIM**\n- Tuproq sensorlari + mobil ilova: namlik, harorat, o'g'it darajasini real vaqtda ko'rsatadi\n- Natija: suv sarfi −35%, o'g'it xarajati −20%, hosil +25%\n- Farqi: mahalliy tuproq ma'lumotlar bazasi va o'zbek tilidagi interfeys\n\n---\n\n**SLAYD 4 — MAHSULOT**\nIshlash mexanizmi 3 qadam:\n1. Dalaga sensor o'rnatiladi (1 ta sensor — 5 gektar)\n2. Ma'lumot bulutga uzatiladi, AI tahlil qiladi\n3. Fermer ilovada \"bugun 40 daqiqa suv ber\" tavsiyasini oladi\n\n[Ilova skrinshoti joyi]\nTexnologiya: LoRaWAN sensorlar, Android/iOS ilova, AI tavsiya moduli\n\n---\n\n**SLAYD 5 — BOZOR HAJMI**\n- TAM (Markaziy Osiyo agrotech): 850 mln USD\n- SAM (O'zbekiston sug'oriladigan yerlar): 210 mln USD\n- SOM (3 yilda egallash maqsadi): 12 mln USD\n- Manba: Qishloq xo'jaligi vazirligi hisoboti, 2024\n\n---\n\n**SLAYD 6 — BIZNES MODEL**\n- Daromad: uskuna sotuvi + oylik obuna (SaaS)\n- Uskuna: 1 sensor = 180 USD\n- Obuna: 15 USD/oy har bir xo'jalik uchun\n- O'rtacha chek: 640 USD/yil\n- CAC: 85 USD · LTV: 1 920 USD · LTV/CAC = 22x\n\n---\n\n**SLAYD 7 — TRAKSIYA**\n- Mijozlar: 74 fermer xo'jaligi\n- Qamrov: 2 300 gektar\n- 2024 sotuv: 98 000 USD\n- Oylik o'sish: +18%\n- Hamkorlar: 2 ta viloyat agroklasteri, 1 ta bank lizing programmasi\n\n---\n\n**SLAYD 8 — RAQOBAT**\n\n| Mezon | AgroSmart UZ | Xorijiy A brendi | Qo'lda boshqaruv |\n|---|---|---|---|\n| Narx (1 ga) | 36 USD | 140 USD | 0 |\n| O'rnatish muddati | 1 kun | 3 hafta | — |\n| O'zbek tili / qo'llab-quvvatlash | Bor | Yo'q | — |\n| Mahalliy tuproq bazasi | Bor | Yo'q | — |\n| Aniqlik | 92% | 95% | ~50% |\n\n---\n\n**SLAYD 9 — JAMOA**\n- **Aziz Karimov** — asoschi, CEO. Agronom, 11 yil dala tajribasi\n- **Dilnoza Rahimova** — CTO. IoT injener, 7 yil, xalqaro loyihalar\n- **Sardor Yo'ldoshev** — Sotuv rahbari. Agro-lizing sohasida 6 yil\n- Maslahatchi: prof. B. Toshpo'latov — tuproqshunoslik instituti\n\n---\n\n**SLAYD 10 — INVESTITSIYA SO'ROVI**\n- **So'rov: 500 000 USD — 15% ulush uchun**\n- Sarflanishi: ishlab chiqarish 40% · marketing/sotuv 30% · jamoa 20% · aylanma 10%\n- 3 yillik prognoz:\n – 2025: 420 000 USD daromad, 600 xo'jalik\n – 2026: 1,4 mln USD, 2 100 xo'jalik\n – 2027: 3,6 mln USD, 5 000 xo'jalik + Qozog'iston bozori\n- Break-even: 2026-yil II chorak\n- Aloqa: Aziz Karimov · aziz@agrosmart.uz · +998 90 123 45 67\n\n---\n\n**PDF qilish (30 soniya):**\n1. Google Docs'ga nusxa ko'chirib joylang\n2. *Fayl → Yuklab olish → PDF hujjat (.pdf)*\n\nDizaynli variant kerak bo'lsa: Canva → \"Pitch Deck\" shablon → matnni joylang → *Share → Download → PDF Standard*.\n\nEndi shu strukturani **o'z loyihangiz** ma'lumotlari bilan to'ldirib bersam bo'ladi — soha, mahsulot, mijozlar soni va investitsiya miqdorini yozib yuboring. Tayyor deckni **Investitsiya markazi** orqali investorlar bazasiga joylashtirasiz.",
+            "time": 1787058878388
+          },
+          {
+            "role": "user",
+            "text": "ana endi qil",
+            "time": 1787059493966
+          },
+          {
+            "role": "assistant",
+            "text": "Pitch deck namunasi tayyor — yuklab olish: [AgroSmart_UZ_Pitch_Deck.pdf](/uploads/dochv2vhg5wgl.pdf)\n\nLoyihangiz ma'lumotlarini bersangiz, shuni real raqamlaringiz bilan qayta tayyorlab beraman va **Investitsiya markazi** orqali investorlar bazasiga joylashtirish yo'lini ko'rsataman.",
+            "time": 1787059638701,
+            "files": [
+              {
+                "ok": true,
+                "url": "/uploads/dochv2vhg5wgl.pdf",
+                "name": "AgroSmart_UZ_Pitch_Deck.pdf",
+                "size": 60561,
+                "note": "I'll start by reading the PDF skill file.10 betlik \"AgroSmart UZ\" investitsiya pitch-deki (o'zbek tilida, yashil dizayn, raqobat va prognoz jadvallari bilan) PDF sifatida tayyorlandi va eksport qilindi."
+              }
+            ]
+          },
+          {
+            "role": "user",
+            "text": "manga tayyor faylni ber",
+            "time": 1787059808421
+          },
+          {
+            "role": "assistant",
+            "text": "Tayyor fayl: [AgroSmart_UZ_Pitch_Deck.pdf](/uploads/doclfjiqbchqg.pdf)\n\nLoyihangizning real ma'lumotlarini yuborsangiz, shu deckni sizning raqamlaringiz bilan qayta tayyorlab beraman — keyin **Investitsiya markazi** orqali investorlar bazasiga joylashtiramiz.",
+            "time": 1787059944184,
+            "files": [
+              {
+                "ok": true,
+                "url": "/uploads/doclfjiqbchqg.pdf",
+                "name": "AgroSmart_UZ_Pitch_Deck.pdf",
+                "size": 60694,
+                "note": "I'll start by reading the PDF skill file.10 sahifali AgroSmart UZ pitch deck PDF (muqova, muammo, yechim, mahsulot, bozor, biznes model, traksiya, raqobat jadvali, jamoa va investitsiya so'rovi) tayyorlandi va eksport qilindi."
+              }
+            ]
+          }
+        ]
+      },
+      "sess_1787132166044": {
+        "id": "sess_1787132166044",
+        "title": "Investor topishga yordam ber",
+        "created": 1787132167325,
+        "updated": 1787132183942,
+        "messages": [
+          {
+            "role": "user",
+            "text": "Investor topishga yordam ber",
+            "time": 1787132167325
+          },
+          {
+            "role": "assistant",
+            "text": "Investor topish — TIJORAT MARKAZI **Investitsiya markazi** orqali bosqichma-bosqich amalga oshiriladi:\n\n**1. Profilingizni tayyorlaymiz**\n- Kompaniya, soha, bozor hajmi\n- Talab qilinayotgan investitsiya summasi va nimaga sarflanadi\n- Hozirgi aylanma / foyda ko'rsatkichlari\n\n**2. Investitsiya paketi**\n- Pitch deck (10–12 slayd)\n- Moliyaviy model va ROI hisob-kitobi\n- SWOT va risklar tahlili\n\n**3. Investor bilan uchrashtirish**\n- Platformadagi mahalliy va xorijiy investorlar bazasi bilan moslashtirish\n- B2B markazi orqali strategik hamkorlar\n- Analitika markazi orqali sohangiz bo'yicha investitsiya jozibadorligi bahosi\n\n**Menga quyidagilarni yozib bering:**\n1. Sohangiz va loyiha nomi\n2. Kerakli investitsiya summasi\n3. Loyiha bosqichi (g'oya / ishlab turgan biznes / kengaytirish)\n4. Yillik aylanmangiz (bo'lsa)\n\nShu ma'lumotlar asosida sizga tayyor **pitch deck (PPTX)** yoki **investitsiya taklifi (PDF)** faylini yaratib beraman. Boshlaymizmi?",
+            "time": 1787132183942
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,366 @@
+{
+  "agriculture": {
+    "items": [
+      {
+        "id": "n8qcl4un4uy",
+        "time": 1787074999560,
+        "title": {
+          "uz": "Rossiyaning Oʻzbekistonga agrar mahsulotlar eksporti 2025 yilda 19 foizga oshib, 1,2 milliard dollarga yetdi",
+          "ru": "Экспорт агропродукции из России в Узбекистан вырос в 2025 году на 19% — до $1,2 млрд",
+          "en": "Russia increases agricultural exports to Uzbekistan by 19% in 2025 to $1.2 billion"
+        },
+        "body": {
+          "uz": "«Agroeksport» markazi maʼlumotlariga koʻra, 2025 yilda Rossiya Oʻzbekistonga 1,2 milliard dollarlik qishloq xoʻjaligi mahsulotlari yetkazib bergan — bu oldingi yilga nisbatan 19 foiz koʻp boʻlib, eng katta ulushni shakar va xom shakar (255 million dollardan ziyod) hamda shokolad mahsulotlari (107 mi",
+          "ru": "По данным центра «Агроэкспорт», в 2025 году Россия поставила в Узбекистан агропродукцию на $1,2 млрд — на 19% больше, чем годом ранее, причём крупнейшую долю заняли сахар и сахар-сырец (свыше $255 млн) и шоколадные изделия ($107 млн).",
+          "en": "According to the Agroexport federal centre, Russia supplied $1.2 billion worth of agricultural products to Uzbekistan in 2025 — up 19% year-on-year — with sugar and raw sugar (over $255 million) and chocolate confectionery ($107 million) making up the largest shares."
+        },
+        "url": "https://interfax.com/newsroom/top-stories/116702/",
+        "source": "interfax.com",
+        "image": ""
+      },
+      {
+        "id": "noo5o3fn4uy",
+        "time": 1787103799560,
+        "title": {
+          "uz": "Oʻzbekiston agrar mahsulotlarni tonnalab eksport qiladi, ammo brendlarni deyarli yoʻq",
+          "ru": "Узбекистан экспортирует агропродукцию тоннами, но почти не экспортирует бренды",
+          "en": "Uzbekistan exports tons of agricultural products, but almost no brands"
+        },
+        "body": {
+          "uz": "2025 yilda Oʻzbekiston 2,2 million tonnadan ziyod meva-sabzavot eksport qilib, qariyb 2,1 milliard dollar tushum olgan boʻlsa-da, mahsulotlar koʻpincha xom holda chiqarilib, chet el doʻkonlarida boshqa davlatlar brendi ostida sotiladi.",
+          "ru": "В 2025 году Узбекистан экспортировал более 2,2 млн тонн плодоовощной продукции почти на $2,1 млрд, однако товары вывозятся в основном как сырьё и в зарубежных магазинах продаются под брендами других стран.",
+          "en": "In 2025 Uzbekistan exported over 2.2 million tons of fruit and vegetables for nearly $2.1 billion, yet the produce leaves the country mostly as raw commodities and appears on foreign shelves under other countries' brands."
+        },
+        "url": "https://kun.uz/en/news/2026/02/26/uzbekistan-exports-tons-of-agricultural-products-but-almost-no-brands-why",
+        "source": "kun.uz",
+        "image": "/uploads/news/newsuxegr4n4d5.jpg"
+      },
+      {
+        "id": "n6yjsyln4uy",
+        "time": 1787132599560,
+        "title": {
+          "uz": "Oʻzbekistonda qishloq xoʻjaligi mahsulotlari hajmi 2025 yilda qariyb 539 trillion soʻmga yetdi",
+          "ru": "Объём продукции сельского хозяйства Узбекистана в 2025 году достиг почти 539 трлн сумов",
+          "en": "Uzbekistan's agricultural sector output reaches nearly 539 trillion soums in 2025"
+        },
+        "body": {
+          "uz": "Davlat statistika qoʻmitasi maʼlumotlariga koʻra, 2025 yilda qishloq xoʻjaligi, oʻrmon va baliqchilik sohalarida 538 919,7 milliard soʻmlik mahsulot va xizmatlar ishlab chiqarilgan, qishloq xoʻjaligi ishlab chiqarishi esa 4,4 foizga oshgan.",
+          "ru": "По данным Госкомстата, в 2025 году в сельском, лесном и рыбном хозяйстве Узбекистана произведено товаров и услуг на 538 919,7 млрд сумов, а объём сельхозпроизводства вырос на 4,4%.",
+          "en": "According to the State Committee on Statistics, Uzbekistan's agriculture, forestry and fisheries sectors produced goods and services worth 538,919.7 billion soums in 2025, with agricultural output alone rising 4.4% year-on-year."
+        },
+        "url": "https://www.uzdaily.uz/en/uzbekistans-agricultural-sector-output-reaches-nearly-539-trillion-soums-in-2025/",
+        "source": "uzdaily.uz",
+        "image": "/uploads/news/newsthh4jvn4uw.webp"
+      }
+    ],
+    "lastBatch": 1787132599560,
+    "nextTry": 0
+  },
+  "agrobiznes association": {
+    "items": [
+      {
+        "id": "nmspytxrb0",
+        "time": 1786531673639,
+        "title": {
+          "uz": "Agrobiznes Association — yangiliklar",
+          "ru": "Новости: Agrobiznes Association",
+          "en": "Agrobiznes Association — news"
+        },
+        "body": {
+          "uz": "Sohangiz bo'yicha yangiliklar tez orada.",
+          "ru": "Новости по вашей сфере скоро.",
+          "en": "Sector news coming soon."
+        }
+      },
+      {
+        "id": "nmqzfl4zz0",
+        "time": 1782750447503,
+        "title": {
+          "uz": "Qishloq xo'jaligida raqamli texnologiyalar joriy etilmoqda",
+          "ru": "Внедрение цифровых технологий в сельском хозяйстве",
+          "en": "Digital Technologies Adopted in Agriculture"
+        },
+        "body": {
+          "uz": "O'zbekiston agrobiznesida hosildorlikni oshirish uchun dronlar va sun'iy intellekt qo'llanilmoqda.",
+          "ru": "Дроны и ИИ используются в агробизнесе Узбекистана для повышения урожайности.",
+          "en": "Drones and AI are being utilized in Uzbekistan's agribusiness to boost yields."
+        }
+      },
+      {
+        "id": "nmqzfl4zz1",
+        "time": 1782750447503,
+        "title": {
+          "uz": "Eksportga yo'naltirilgan meva-sabzavot mahsulotlari ortmoqda",
+          "ru": "Растет экспорт плодоовощной продукции",
+          "en": "Export-Oriented Fruit and Vegetable Production Rises"
+        },
+        "body": {
+          "uz": "Yangi logistika markazlari sharofati bilan O'zbekiston meva-sabzavot eksporti sezilarli darajada oshdi.",
+          "ru": "Благодаря новым логистическим центрам экспорт фруктов и овощей из Узбекистана значительно увеличился.",
+          "en": "Uzbekistan's fruit and vegetable exports have significantly increased due to new logistics hubs."
+        }
+      },
+      {
+        "id": "nmqzfl4zz2",
+        "time": 1782750447503,
+        "title": {
+          "uz": "Organik qishloq xo'jaligi sertifikatlari talabi o'sdi",
+          "ru": "Растет спрос на сертификаты органического земледелия",
+          "en": "Demand for Organic Farming Certifications Grows"
+        },
+        "body": {
+          "uz": "Xalqaro bozorlarga chiqish uchun mahalliy fermerlar organik sertifikatlarni faol ravishda olmoqdalar.",
+          "ru": "Местные фермеры активно получают органические сертификаты для выхода на международные рынки.",
+          "en": "Local farmers are actively pursuing organic certifications to access international markets."
+        }
+      },
+      {
+        "id": "nmqzfl4zz3",
+        "time": 1782750447503,
+        "title": {
+          "uz": "Suvni tejovchi texnologiyalarga sarmoya kiritish kuchaymoqda",
+          "ru": "Увеличение инвестиций в водосберегающие технологии",
+          "en": "Investment in Water-Saving Technologies Intensifies"
+        },
+        "body": {
+          "uz": "Suv tanqisligi sharoitida tomchilatib sug'orish va boshqa samarali usullar keng joriy etilmoqda.",
+          "ru": "В условиях дефицита воды широко внедряются капельное орошение и другие эффективные методы.",
+          "en": "Drip irrigation and other efficient methods are being widely adopted amid water scarcity."
+        }
+      },
+      {
+        "id": "nmqzfl4zz4",
+        "time": 1782750447503,
+        "title": {
+          "uz": "Qishloq xo'jaligi texnikasi parki yangilanmoqda",
+          "ru": "Обновление парка сельскохозяйственной техники",
+          "en": "Agricultural Machinery Fleet Being Renewed"
+        },
+        "body": {
+          "uz": "Zamonaviy traktorlar va kombaynlar ishlab chiqarish samaradorligini oshirish uchun sotib olinmoqda.",
+          "ru": "Приобретаются современные тракторы и комбайны для повышения эффективности производства.",
+          "en": "Modern tractors and combines are being procured to enhance production efficiency."
+        }
+      },
+      {
+        "id": "nmqzfl4zz5",
+        "time": 1782750447503,
+        "title": {
+          "uz": "Agroturizm salohiyati kengaymoqda",
+          "ru": "Расширение потенциала агротуризма",
+          "en": "Agrotourism Potential Expanding"
+        },
+        "body": {
+          "uz": "Qishloq joylarda turizm infratuzilmasini rivojlantirish uchun davlat tomonidan qo'llab-quvvatlanmoqda.",
+          "ru": "Оказывается государственная поддержка развитию туристической инфраструктуры в сельской местности.",
+          "en": "Government support is being provided for the development of tourism infrastructure in rural areas."
+        }
+      },
+      {
+        "id": "nmqzfl4zz6",
+        "time": 1782750447503,
+        "title": {
+          "uz": "Qishloq xo'jaligida innovatsion klasterlar yaratilmoqda",
+          "ru": "Создание инновационных кластеров в сельском хозяйстве",
+          "en": "Innovative Clusters Created in Agriculture"
+        },
+        "body": {
+          "uz": "Tadqiqot institutlari, fermerlar va qayta ishlash korxonalari hamkorlikda yangi mahsulotlar yaratmoqda.",
+          "ru": "Научно-исследовательские институты, фермеры и перерабатывающие предприятия сотрудничают в создании новых продуктов.",
+          "en": "Research institutes, farmers, and processing enterprises are collaborating to create new products."
+        }
+      },
+      {
+        "id": "nmqzfl4zz7",
+        "time": 1782750447503,
+        "title": {
+          "uz": "Oziq-ovqat xavfsizligi strategiyasi ustuvor vazifa",
+          "ru": "Стратегия продовольственной безопасности – приоритет",
+          "en": "Food Security Strategy a Priority"
+        },
+        "body": {
+          "uz": "Ichki bozor uchun asosiy oziq-ovqat mahsulotlari ishlab chiqarishni oshirishga qaratilgan sa'y-harakatlar kuchaymoqda.",
+          "ru": "Усиливаются усилия по увеличению производства основных продуктов питания для внутреннего рынка.",
+          "en": "Efforts are intensifying to increase the production of staple food products for the domestic market."
+        }
+      }
+    ],
+    "lastBatch": 1786531673639
+  },
+  "women and girls association": {
+    "items": [
+      {
+        "id": "nmr08msur0",
+        "time": 1782799233939,
+        "title": {
+          "uz": "Women and Girls Association — yangiliklar",
+          "ru": "Новости: Women and Girls Association",
+          "en": "Women and Girls Association — news"
+        },
+        "body": {
+          "uz": "Sohangiz bo'yicha yangiliklar tez orada.",
+          "ru": "Новости по вашей сфере скоро.",
+          "en": "Sector news coming soon."
+        }
+      }
+    ],
+    "lastBatch": 1782799233939
+  },
+  "association of craftsmen \"hunarmand\"": {
+    "items": [
+      {
+        "id": "nmsoqjecr0",
+        "time": 1786457278827,
+        "title": {
+          "uz": "Association of Craftsmen \"Hunarmand\" — yangiliklar",
+          "ru": "Новости: Association of Craftsmen \"Hunarmand\"",
+          "en": "Association of Craftsmen \"Hunarmand\" — news"
+        },
+        "body": {
+          "uz": "Sohangiz bo'yicha yangiliklar tez orada.",
+          "ru": "Новости по вашей сфере скоро.",
+          "en": "Sector news coming soon."
+        }
+      }
+    ],
+    "lastBatch": 1786602831996
+  },
+  "business": {
+    "items": [
+      {
+        "id": "nmsor93960",
+        "time": 1786458477498,
+        "title": {
+          "uz": "Business — yangiliklar",
+          "ru": "Новости: Business",
+          "en": "Business — news"
+        },
+        "body": {
+          "uz": "Sohangiz bo'yicha yangiliklar tez orada.",
+          "ru": "Новости по вашей сфере скоро.",
+          "en": "Sector news coming soon."
+        }
+      }
+    ],
+    "lastBatch": 1786458477498
+  },
+  "“hunarmand” uyushmasi": {
+    "items": [
+      {
+        "id": "nokd2hioguk",
+        "time": 1787074999560,
+        "title": {
+          "uz": "O‘zbekiston “Hunarmand” uyushmasi 2025-yilning birinchi choragi natijalarini ma’lum qildi",
+          "ru": "Ассоциация ремесленников «Хунарманд» отчиталась об итогах работы за первый квартал 2025 года",
+          "en": "The Uzbekistan Craftsmen Association reported on the results of its work for the first quarter"
+        },
+        "body": {
+          "uz": "Axborot va ommaviy kommunikatsiyalar agentligidagi matbuot anjumanida ma’lum qilinishicha, uch oy ichida “ustoz-shogird” an’anasi doirasida 15 mingdan ortiq ish o‘rni yaratilgan, hozirda mamlakatda 27,5 ming hunarmand faoliyat yuritadi (yarmiga yaqini ayollar), 25 hunarmand oltita xalqaro festivalda",
+          "ru": "На пресс-конференции в Агентстве информации и массовых коммуникаций сообщили, что за три месяца в рамках традиции «устоз-шогирд» создано более 15 тысяч рабочих мест, в стране работают 27,5 тысячи ремесленников (почти половина — женщины), 25 мастеров приняли участие в шести международных фестивалях, ",
+          "en": "At a press conference at the Information and Mass Communications Agency, the association said that over three months more than 15,000 jobs were created under the \"ustoz-shogird\" tradition, 27,500 artisans now work in the country (nearly half of them women), 25 craftsmen took part in six internationa"
+        },
+        "url": "https://mag.humodoc.com/en/2025/04/03/news/news/the-uzbekistan-craftsmen-association-reported-on-the-results-of-its-work-for-the-first-quarter",
+        "source": "mag.humodoc.com",
+        "image": "/uploads/news/newsxgfwkpoel6.webp"
+      },
+      {
+        "id": "nzibkiboguk",
+        "time": 1787103799560,
+        "title": {
+          "uz": "O‘zbekiston Respublikasi “Hunarmand” uyushmasining matbuot anjumani: hunarmandchilik tarmoqlari 43 tadan 32 taga qisqartirildi",
+          "ru": "Пресс-конференция ассоциации «Хунарманд»: число видов ремесленной деятельности сокращено с 43 до 32",
+          "en": "A Press Conference by the Association \"Hunarmand\" of the Republic of Uzbekistan"
+        },
+        "body": {
+          "uz": "Anjumanda 2025-yil 19-martdagi kichik va o‘rta biznes rolini oshirish to‘g‘risidagi Prezident farmoni bilan hunarmandchilik tarmoqlari soni 43 tadan 32 taga kamaytirilgani, birinchi chorakda usta-shogird an’analari asosida 15 176 ta yangi ish o‘rni (1 741 usta va 13 436 shogird) yaratilgani hamda 25",
+          "ru": "На пресс-конференции отмечено, что согласно президентскому указу от 19 марта 2025 года о повышении роли малого и среднего бизнеса число видов ремесленной деятельности сокращено с 43 до 32, в первом квартале за счёт традиций «мастер — ученик» создано 15 176 новых рабочих мест (1 741 мастер и 13 436 у",
+          "en": "The press conference noted that under the presidential decree of 19 March 2025 on enhancing the role of small and medium-sized business the number of handicraft sectors was cut from 43 to 32, that 15,176 new jobs (1,741 masters and 13,436 apprentices) were created in the first quarter through master"
+        },
+        "url": "https://handicraftman.uz/en/a-press-conference-by-the-association-hunarmand-of-the-republic-of-uzbekistan/",
+        "source": "handicraftman.uz",
+        "image": ""
+      },
+      {
+        "id": "n2vnus4oguk",
+        "time": 1787132599560,
+        "title": {
+          "uz": "“Hunarmand” uyushmasi tashabbusi bilan chop etilgan “Hunarmand” jurnalining taqdimoti bo‘lib o‘tdi",
+          "ru": "Состоялась презентация журнала «Хунарманд», изданного по инициативе ассоциации «Хунарманд»",
+          "en": "The presentation of the \"Hunarmand\" magazine published by the initiative of the \"Hunarmand\" Association was held"
+        },
+        "body": {
+          "uz": "Taqdimotda jurnalni viloyat va tuman darajasidagi hunarmandlarga tarqatish, raqamli platformalarda targ‘ib qilish va keng auditoriyaga yetkazish masalalari muhokama qilindi — bosma va raqamli shaklda chiqadigan nashr hunarmandchilik sohasidagi yangiliklar, tarixiy tahlillar va innovatsiyalarni jamla",
+          "ru": "На презентации обсуждались распространение журнала среди ремесленников на областном и районном уровнях, его продвижение на цифровых платформах и выход на широкую аудиторию: издание в печатном и цифровом виде объединяет новости, исторические анализы и инновации отрасли, способствуя развитию креативно",
+          "en": "The presentation discussed reaching a wider audience, distributing the magazine to artisans at regional and district levels and promoting it on digital platforms, with the publication — available both in print and digitally — combining innovations, historical analyses and topical handicraft issues t"
+        },
+        "url": "https://handicraftman.uz/en/the-presentation-of-the-hunarmand-magazine-published-by-the-initiative-of-the-hunarmand-association-was-held/",
+        "source": "handicraftman.uz",
+        "image": ""
+      }
+    ],
+    "lastBatch": 1787132599560,
+    "nextTry": 0
+  },
+  "__global__": {
+    "items": [
+      {
+        "id": "nxwfa32ncp0",
+        "time": 1787074999557,
+        "title": {
+          "uz": "O'zbekiston iqtisodiyoti xizmatlar va investitsiyalar hisobiga 2026-yilning birinchi yarmida 8,5 foizga o'sdi",
+          "ru": "Экономика Узбекистана выросла на 8,5% в первой половине 2026 года за счёт услуг и инвестиций",
+          "en": "Uzbek economy grows 8.5% in first half of 2026 as services and investment expand"
+        },
+        "body": {
+          "uz": "Xabarga ko'ra, O'zbekiston iqtisodiyoti 2026-yilning birinchi yarmida 8,5 foizga o'sgan bo'lib, o'sishning asosiy omillari xizmatlar sohasi va investitsiyalar hajmining kengayishi bo'lgan.",
+          "ru": "Согласно материалу, экономика Узбекистана в первой половине 2026 года выросла на 8,5%, а основными драйверами роста стали сфера услуг и расширение инвестиций.",
+          "en": "The report says Uzbekistan's economy expanded by 8.5% in the first half of 2026, with the services sector and growing investment cited as the main drivers."
+        },
+        "url": "https://tashkenttimes.uz/economy",
+        "source": "tashkenttimes.uz",
+        "image": ""
+      },
+      {
+        "id": "nbxput6ncp0",
+        "time": 1787103799557,
+        "title": {
+          "uz": "O'zbekistonning to'qimachilik va tikuvchilik mahsulotlari eksporti 2026-yilning birinchi yarmida 25 foizga oshdi",
+          "ru": "Экспорт текстиля и одежды Узбекистана вырос на 25% в первой половине 2026 года",
+          "en": "Uzbek textile and apparel exports jump 25% in H1 2026"
+        },
+        "body": {
+          "uz": "Nashrda O'zbekistonning to'qimachilik va tikuvchilik mahsulotlari eksporti 2026-yilning birinchi yarmida 25 foizga o'sgani qayd etilgan, bu esa tarmoqning eksportga yo'naltirilgan salohiyati ortib borayotganini ko'rsatadi.",
+          "ru": "В публикации отмечается, что экспорт текстильной и швейной продукции Узбекистана в первой половине 2026 года увеличился на 25%, что свидетельствует о росте экспортного потенциала отрасли.",
+          "en": "The article reports that Uzbekistan's textile and apparel exports rose 25% in the first half of 2026, signalling the sector's growing export capacity."
+        },
+        "url": "https://www.textilesresources.com/news/uzbek-textile-apparel-exports-2026/",
+        "source": "textilesresources.com",
+        "image": "/uploads/news/newsz3kwoxnc8k.jpg"
+      },
+      {
+        "id": "np9h1f4ncp0",
+        "time": 1787132599557,
+        "title": {
+          "uz": "O'zbekistonda Tadbirkorlar kuni – 2026 oldidan ishbilarmonlar taqdirlandi",
+          "ru": "В Узбекистане накануне Дня предпринимателей 2026 наградили бизнесменов",
+          "en": "Uzbekistan honors entrepreneurs ahead of Business Day 2026"
+        },
+        "body": {
+          "uz": "Maqolada O'zbekistonda Tadbirkorlar kuni – 2026 bayrami oldidan tadbirkorlarning mamlakat iqtisodiyotiga qo'shgan hissasi uchun taqdirlanganligi haqida ma'lumot berilgan.",
+          "ru": "В статье сообщается, что в Узбекистане накануне Дня предпринимателей 2026 предпринимателей отметили наградами за вклад в экономику страны.",
+          "en": "The article reports that Uzbekistan recognised and awarded entrepreneurs for their contribution to the national economy ahead of Business Day 2026."
+        },
+        "url": "https://www.uzdaily.uz/en/uzbekistan-honors-entrepreneurs-ahead-of-business-day-2026/",
+        "source": "uzdaily.uz",
+        "image": "/uploads/news/newsr2q9zwncoy.webp"
+      }
+    ],
+    "lastBatch": 1787132599557,
+    "nextTry": 0
+  },
+  "agrobiznes uyushmasi": {
+    "items": [],
+    "lastBatch": 0,
+    "nextTry": 1786708181763
+  }
+}

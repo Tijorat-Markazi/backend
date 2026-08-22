@@ -1,0 +1,35 @@
+{
+  "global": [],
+  "byAssoc": {
+    "ajn1zoyo8o8": [
+      {
+        "id": "mmqziyw5vpfn3",
+        "title": "edwj",
+        "datetime": "2026-06-30T23:02",
+        "link": "http://localhost:4321/association.html",
+        "desc": "",
+        "updated": 1782756128083
+      }
+    ],
+    "arudvfuo8o8": [
+      {
+        "id": "mmsx5daij02bs",
+        "title": "ert",
+        "datetime": "2026-08-17T17:25",
+        "link": "https://meet.google.com/pdd-whse-hzd",
+        "desc": "rgrgrg",
+        "updated": 1786966758711,
+        "provider": "meet-bot"
+      },
+      {
+        "id": "mmsx5w9nk4a8u",
+        "title": "Abrik11",
+        "datetime": "2026-08-17T16:42",
+        "link": "https://meet.google.com/wjc-svsh-sby",
+        "desc": "rgrgrg",
+        "updated": 1786966802912,
+        "provider": "meet-bot"
+      }
+    ]
+  }
+}

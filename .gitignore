@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Secrets — API keys, bot tokens, TLS material
+*.key
+*.pem
+.env
+.env.*
+data/google-token.json
+data/meet-bot.json
+data/.gsetup-profile/
+data/.meet-profile/
+
+# generated account list — never commit
+credentials.txt
+credentials.xlsx
+backups/
+
+# tooling
+.claude/
+
+# OS / editor
+.DS_Store
+Thumbs.db

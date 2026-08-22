@@ -1,0 +1,11 @@
+[req]
+distinguished_name=dn
+x509_extensions=v3
+prompt=no
+[dn]
+CN=TIJORAT MARKAZI
+[v3]
+subjectAltName=DNS:localhost,IP:127.0.0.1,IP:192.168.56.1,IP:192.168.0.139
+basicConstraints=CA:FALSE
+keyUsage=digitalSignature,keyEncipherment
+extendedKeyUsage=serverAuth

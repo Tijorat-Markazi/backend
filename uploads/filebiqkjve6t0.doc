@@ -1,0 +1,38 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><title>Soliq</title></head>
+<body style="font-family:Calibri,Arial,sans-serif;color:#0a2540;font-size:13px;line-height:1.55">
+  <table style="width:100%;border-bottom:1.5px solid #0a2540;padding-bottom:6px"><tr>
+    <td style="width:64px;vertical-align:top">
+      <div style="width:50px;height:50px;border:1.5px solid #0a2540;border-radius:8px;text-align:center;line-height:50px;font-weight:bold;font-size:22px;color:#0a2540">K</div>
+    </td>
+    <td style="vertical-align:top">
+      <div style="font-size:16px;font-weight:bold;letter-spacing:1px">TIJORAT MARKAZI</div>
+      <div style="font-size:11px;color:#445">Milliy sun'iy intellekt biznes operatsion tizimi</div>
+      <div style="font-size:10.5px;color:#697586">STIR: 300000000 · Toshkent sh., Amir Temur ko'ch. · +998 71 200 00 00 · info@tijoratmarkazi.uz</div>
+    </td>
+  </tr></table>
+
+  <table style="width:100%;font-size:12px;margin:8px 0 14px"><tr>
+    <td>Chiq. № MUR/X4AU4T &nbsp; sana: «18» avgust 2026 y.</td>
+    <td style="text-align:right">Kirish № ____ sana «__» ________ 20__ y.</td>
+  </tr></table>
+
+  <p style="text-align:right;margin:0 0 14px;font-weight:bold">Soliq qo'mitasi<br>rahbariyatiga</p>
+  <h2 style="font-size:15px;margin:0 0 12px;text-align:center">Soliq</h2>
+  <p style="margin:0 0 10px;text-align:justify">Soliq qimmatlik qilyabti shunga bir yechim qilinsin</p>
+
+  <table style="width:100%;margin-top:26px;font-size:12.5px"><tr>
+    <td>“Hunarmand” uyushmasi<br><span style="color:#697586">a'zo korxona: GreenAgro</span></td>
+    <td style="text-align:right">_______________<br><span style="color:#697586">imzo va muhr</span></td>
+  </tr></table>
+
+  <div style="margin-top:28px;border-top:1px solid #ccd;padding-top:8px">
+    <div style="font-size:11px;color:#697586;margin-bottom:6px">Murojaat harakati (xizmat ma'lumoti)</div>
+    <table border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;width:100%;font-size:11px">
+      <tr style="background:#0a2540;color:#fff"><th>Sana</th><th>Bosqich</th><th>Kim</th><th>Izoh</th></tr>
+      <tr><td style="white-space:nowrap">8/18/2026, 3:15:04 PM</td>
+         <td>Yangi — uyushma ko'rib chiqmoqda</td>
+         <td>GreenAgro</td><td></td></tr>
+    </table>
+  </div>
+</body></html>

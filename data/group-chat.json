@@ -1,0 +1,896 @@
+{
+  "assoc:ajn1zoyo8o8": [
+    {
+      "from": "assoc",
+      "fromId": "ajn1zoyo8o8",
+      "fromName": "Komoliddin Ikromov",
+      "text": "Assalomu alaykum, oylik hisobotlarni yuboring.",
+      "time": 1786458668801,
+      "id": "mmsord6v50",
+      "readBy": [
+        {
+          "id": "cd7gvoso8ra",
+          "name": "GreenAgro LLC",
+          "time": 1786707598504
+        }
+      ]
+    },
+    {
+      "from": "company",
+      "fromId": "cd7gvoso8ra",
+      "fromName": "GreenAgro LLC",
+      "text": "Xo'p bo'ladi, ertaga yuboraman.",
+      "time": 1786458668887,
+      "id": "mmsord6xj1",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786531923925
+        }
+      ]
+    },
+    {
+      "from": "company",
+      "fromId": "cd7gvoso8ra",
+      "fromName": "GreenAgro LLC",
+      "text": "rasm bilan",
+      "time": 1786531026735,
+      "att": {
+        "url": "/uploads/imagexznk40g2lp.png",
+        "name": "tovar.png",
+        "mime": "image/png",
+        "kind": "image",
+        "size": 70,
+        "dur": 0
+      },
+      "id": "mmspyg2lr2",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786531923925
+        }
+      ]
+    },
+    {
+      "from": "company",
+      "fromId": "cd7gvoso8ra",
+      "fromName": "GreenAgro LLC",
+      "text": "",
+      "time": 1786531026742,
+      "att": {
+        "url": "/uploads/voicer9ojreg2lx.webm",
+        "name": "voice",
+        "mime": "audio/webm",
+        "kind": "voice",
+        "size": 14,
+        "dur": 7.4
+      },
+      "id": "mmspyg2ly3",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786531923925
+        }
+      ]
+    },
+    {
+      "from": "company",
+      "fromId": "cd7gvoso8ra",
+      "fromName": "GreenAgro LLC",
+      "text": "shartnoma",
+      "time": 1786531026745,
+      "att": {
+        "url": "/uploads/file1qnb0qg2m0.pdf",
+        "name": "../../etc/passwd.pdf",
+        "mime": "application/pdf",
+        "kind": "file",
+        "size": 5,
+        "dur": 0
+      },
+      "id": "mmspyg2m14",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786531923925
+        }
+      ]
+    },
+    {
+      "from": "assoc",
+      "fromId": "ajn1zoyo8o8",
+      "fromName": "Komoliddin Ikromov",
+      "text": "😊😊😊",
+      "time": 1786531473610,
+      "id": "mmspypney5",
+      "readBy": [
+        {
+          "id": "cd7gvoso8ra",
+          "name": "GreenAgro LLC",
+          "time": 1786707598504
+        }
+      ]
+    },
+    {
+      "from": "assoc",
+      "fromId": "ajn1zoyo8o8",
+      "fromName": "Komoliddin Ikromov",
+      "text": "",
+      "time": 1786531482222,
+      "att": {
+        "url": "/uploads/file8dv84epu25.txt",
+        "name": "Анализ_проекта_3_трек.txt",
+        "mime": "text/plain",
+        "kind": "file",
+        "size": 4858,
+        "dur": 0
+      },
+      "id": "mmspypu266",
+      "readBy": [
+        {
+          "id": "cd7gvoso8ra",
+          "name": "GreenAgro LLC",
+          "time": 1786707598504
+        }
+      ]
+    },
+    {
+      "id": "mmspyzavmi0c1",
+      "from": "company",
+      "fromId": "cd7gvoso8ra",
+      "fromName": "GreenAgro LLC",
+      "text": "",
+      "time": 1786531923922,
+      "edited": 1786531923924,
+      "_last": "ajn1zoyo8o8|👍",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786531923925
+        }
+      ],
+      "deleted": 1786531923926,
+      "deletedBy": "self"
+    },
+    {
+      "id": "mmspz287ijsg6",
+      "from": "company",
+      "fromId": "cd7gvoso8ra",
+      "fromName": "GreenAgro LLC",
+      "text": "",
+      "time": 1786532060430,
+      "_last": "ajn1zoyo8o8|🔥",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786532061088
+        }
+      ],
+      "edited": 1786532061953,
+      "deleted": 1786532063134,
+      "deletedBy": "self"
+    },
+    {
+      "id": "mmspz63pnrb5n",
+      "from": "company",
+      "fromId": "cd7gvoso8ra",
+      "fromName": "GreenAgro LLC",
+      "text": "",
+      "time": 1786532241227,
+      "_last": "ajn1zoyo8o8|🔥",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786532241887
+        }
+      ],
+      "edited": 1786532242748,
+      "deleted": 1786532243922,
+      "deletedBy": "self"
+    },
+    {
+      "id": "mmspzmle3bxb9",
+      "from": "company",
+      "fromId": "cd7gvoso8ra",
+      "fromName": "GreenAgro LLC",
+      "text": "",
+      "time": 1786533010635,
+      "deleted": 1786533010636,
+      "deletedBy": "self",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786533016920
+        }
+      ]
+    },
+    {
+      "id": "mmspzmpq57o33",
+      "from": "company",
+      "fromId": "cd7gvoso8ra",
+      "fromName": "GreenAgro LLC",
+      "text": "",
+      "time": 1786533016253,
+      "_last": "ajn1zoyo8o8|🔥",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786533016920
+        }
+      ],
+      "edited": 1786533017795,
+      "deleted": 1786533018969,
+      "deletedBy": "self"
+    },
+    {
+      "id": "mmspzvye380zy",
+      "from": "company",
+      "fromId": "cd7gvoso8ra",
+      "fromName": "GreenAgro LLC",
+      "text": "",
+      "time": 1786533447387,
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786533447524
+        }
+      ],
+      "_last": "ajn1zoyo8o8|🔥",
+      "edited": 1786533448907,
+      "deleted": 1786533450074,
+      "deletedBy": "self"
+    },
+    {
+      "id": "mmspzwagjtsqk",
+      "from": "company",
+      "fromId": "cd7gvoso8ra",
+      "fromName": "GreenAgro LLC",
+      "text": "",
+      "time": 1786533463027,
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786533463081
+        }
+      ],
+      "_last": "ajn1zoyo8o8|🔥",
+      "edited": 1786533464555,
+      "deleted": 1786533465720,
+      "deletedBy": "self"
+    },
+    {
+      "id": "mmspzwozos554",
+      "from": "company",
+      "fromId": "cd7gvoso8ra",
+      "fromName": "GreenAgro LLC",
+      "text": "read-check",
+      "time": 1786533481860,
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786533481861
+        }
+      ]
+    },
+    {
+      "id": "mmspzx6g8tfqm",
+      "from": "company",
+      "fromId": "cd7gvoso8ra",
+      "fromName": "GreenAgro LLC",
+      "text": "",
+      "time": 1786533504488,
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786533504511
+        }
+      ],
+      "_last": "ajn1zoyo8o8|🔥",
+      "edited": 1786533505999,
+      "deleted": 1786533507188,
+      "deletedBy": "self"
+    },
+    {
+      "id": "mmspzx9e9tisx",
+      "from": "company",
+      "fromId": "cd7gvoso8ra",
+      "fromName": "GreenAgro LLC",
+      "text": "",
+      "time": 1786533508305,
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786533508338
+        }
+      ],
+      "_last": "ajn1zoyo8o8|🔥",
+      "edited": 1786533509825,
+      "deleted": 1786533510998,
+      "deletedBy": "self"
+    },
+    {
+      "id": "mmspzxcbmyhrp",
+      "from": "company",
+      "fromId": "cd7gvoso8ra",
+      "fromName": "GreenAgro LLC",
+      "text": "",
+      "time": 1786533512098,
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786533512125
+        }
+      ],
+      "_last": "ajn1zoyo8o8|🔥",
+      "edited": 1786533513624,
+      "deleted": 1786533514797,
+      "deletedBy": "self"
+    },
+    {
+      "id": "mmspzy3f248ym",
+      "from": "company",
+      "fromId": "cd7gvoso8ra",
+      "fromName": "GreenAgro LLC",
+      "text": "probe",
+      "time": 1786533547214,
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786533547233
+        }
+      ]
+    },
+    {
+      "id": "mmspzzh89139q",
+      "from": "company",
+      "fromId": "cd7gvoso8ra",
+      "fromName": "GreenAgro LLC",
+      "text": "probe2",
+      "time": 1786533611769,
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786533611790
+        }
+      ]
+    },
+    {
+      "id": "mmsq00t6bm283",
+      "from": "company",
+      "fromId": "cd7gvoso8ra",
+      "fromName": "GreenAgro LLC",
+      "text": "",
+      "time": 1786533673907,
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786533673998
+        }
+      ],
+      "_last": "ajn1zoyo8o8|🔥",
+      "edited": 1786533675553,
+      "deleted": 1786533676727,
+      "deletedBy": "self"
+    },
+    {
+      "id": "mmsq1beeiudzg",
+      "from": "company",
+      "fromId": "cd7gvoso8ra",
+      "fromName": "GreenAgro LLC",
+      "text": "",
+      "time": 1786535847594,
+      "_last": "ajn1zoyo8o8|🔥",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786535848254
+        }
+      ],
+      "edited": 1786535849221,
+      "deleted": 1786535850385,
+      "deletedBy": "self"
+    },
+    {
+      "id": "mmsq1mjr7rufj",
+      "from": "company",
+      "fromId": "cd7gvoso8ra",
+      "fromName": "GreenAgro LLC",
+      "text": "",
+      "time": 1786536367747,
+      "_last": "ajn1zoyo8o8|🔥",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786536368407
+        }
+      ],
+      "edited": 1786536369377,
+      "deleted": 1786536370553,
+      "deletedBy": "self"
+    },
+    {
+      "id": "mmsq3dwqkr4z3",
+      "from": "company",
+      "fromId": "cd7gvoso8ra",
+      "fromName": "GreenAgro LLC",
+      "text": "",
+      "time": 1786539323900,
+      "_last": "ajn1zoyo8o8|🔥",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786539324565
+        }
+      ],
+      "edited": 1786539325531,
+      "deleted": 1786539326704,
+      "deletedBy": "self"
+    }
+  ],
+  "assoc:arudvfuo8o8": [
+    {
+      "from": "company",
+      "fromId": "chnw2ph8g2r",
+      "fromName": "hello",
+      "text": "hello",
+      "time": 1786460236457,
+      "id": "mmsosash50",
+      "readBy": [
+        {
+          "id": "arudvfuo8o8",
+          "name": "U. Abdullayev",
+          "time": 1786532371437
+        },
+        {
+          "id": "c7p8zdh917i",
+          "name": "GreenAgro",
+          "time": 1787048486067
+        }
+      ]
+    },
+    {
+      "id": "mmspz8zbua4rr",
+      "from": "company",
+      "fromId": "chnw2ph8g2r",
+      "fromName": "hello",
+      "text": "hi",
+      "time": 1786532375514,
+      "readBy": [
+        {
+          "id": "arudvfuo8o8",
+          "name": "U. Abdullayev",
+          "time": 1786532375518
+        },
+        {
+          "id": "c7p8zdh917i",
+          "name": "GreenAgro",
+          "time": 1787048486067
+        }
+      ]
+    },
+    {
+      "id": "mmspz92qamgl6",
+      "from": "assoc",
+      "fromId": "arudvfuo8o8",
+      "fromName": "U. Abdullayev",
+      "text": "",
+      "time": 1786532379922,
+      "readBy": [
+        {
+          "id": "chnw2ph8g2r",
+          "name": "hello",
+          "time": 1786532380068
+        },
+        {
+          "id": "c7p8zdh917i",
+          "name": "GreenAgro",
+          "time": 1787048486067
+        }
+      ],
+      "deleted": 1786532390151,
+      "deletedBy": "self"
+    },
+    {
+      "id": "mmspz9u6ccgjg",
+      "from": "assoc",
+      "fromId": "arudvfuo8o8",
+      "fromName": "U. Abdullayev",
+      "text": "",
+      "time": 1786532415492,
+      "att": {
+        "url": "/uploads/imageqxn4t09u69.png",
+        "name": "hf_20260807_132123_9b614632-cc66-4ced-9ba4-9b8343d51529.png",
+        "mime": "image/png",
+        "kind": "image",
+        "size": 2097056,
+        "dur": 0
+      },
+      "readBy": [
+        {
+          "id": "chnw2ph8g2r",
+          "name": "hello",
+          "time": 1786532415608
+        },
+        {
+          "id": "c7p8zdh917i",
+          "name": "GreenAgro",
+          "time": 1787048486067
+        }
+      ]
+    },
+    {
+      "id": "mmspzntawz7ss",
+      "from": "assoc",
+      "fromId": "arudvfuo8o8",
+      "fromName": "U. Abdullayev",
+      "text": "",
+      "time": 1786533067544,
+      "att": {
+        "url": "/uploads/imagecrz66wntat.png",
+        "name": "Screenshot (46).png",
+        "mime": "image/png",
+        "kind": "image",
+        "size": 3610765,
+        "dur": 0
+      },
+      "readBy": [
+        {
+          "id": "chnw2ph8g2r",
+          "name": "hello",
+          "time": 1786533067613
+        },
+        {
+          "id": "c7p8zdh917i",
+          "name": "GreenAgro",
+          "time": 1787048486067
+        }
+      ]
+    },
+    {
+      "id": "mmsq2x8srbxaj",
+      "from": "assoc",
+      "fromId": "arudvfuo8o8",
+      "fromName": "U. Abdullayev",
+      "text": "https://192.168.0.139:4443",
+      "time": 1786538546379,
+      "readBy": [
+        {
+          "id": "c7p8zdh917i",
+          "name": "GreenAgro",
+          "time": 1787048486067
+        }
+      ]
+    }
+  ],
+  "dm:ajn1zoyo8o8|cd7gvoso8ra": [
+    {
+      "from": "company",
+      "fromId": "cd7gvoso8ra",
+      "fromName": "GreenAgro LLC",
+      "text": "Rais, shaxsiy savolim bor.",
+      "time": 1786460425403,
+      "id": "mmsoseu9n0",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786532419400
+        }
+      ]
+    }
+  ],
+  "dm:arudvfuo8o8|rais": [
+    {
+      "from": "assoc",
+      "fromId": "arudvfuo8o8",
+      "fromName": "U. Abdullayev",
+      "text": "salom",
+      "time": 1786460615946,
+      "id": "mmsosixai0"
+    },
+    {
+      "from": "assoc",
+      "fromId": "arudvfuo8o8",
+      "fromName": "U. Abdullayev",
+      "text": "😀😀😀😀😀",
+      "time": 1786531283254,
+      "id": "mmspylkja1"
+    },
+    {
+      "from": "assoc",
+      "fromId": "arudvfuo8o8",
+      "fromName": "U. Abdullayev",
+      "text": "",
+      "time": 1786531416234,
+      "att": {
+        "url": "/uploads/filer5f810of55.doc",
+        "name": "association-of-craftsmen-hunarmand--all.doc",
+        "mime": "application/msword",
+        "kind": "file",
+        "size": 203,
+        "dur": 0
+      },
+      "id": "mmspyof562"
+    },
+    {
+      "from": "assoc",
+      "fromId": "arudvfuo8o8",
+      "fromName": "U. Abdullayev",
+      "text": "",
+      "time": 1786531438743,
+      "id": "mmspyowif3",
+      "deleted": 1786539703151,
+      "deletedBy": "self"
+    }
+  ],
+  "chairmen": [
+    {
+      "from": "assoc",
+      "fromId": "arudvfuo8o8",
+      "fromName": "U. Abdullayev",
+      "text": "hello",
+      "time": 1786531512721,
+      "id": "mmspyqhld0",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786532414967
+        }
+      ]
+    },
+    {
+      "from": "assoc",
+      "fromId": "ajn1zoyo8o8",
+      "fromName": "Komoliddin Ikromov",
+      "text": "привееееет😊😊😊",
+      "time": 1786531514164,
+      "id": "mmspyqipg1",
+      "readBy": [
+        {
+          "id": "arudvfuo8o8",
+          "name": "U. Abdullayev",
+          "time": 1786532261326
+        }
+      ]
+    },
+    {
+      "from": "assoc",
+      "fromId": "arudvfuo8o8",
+      "fromName": "U. Abdullayev",
+      "text": "",
+      "time": 1786531522886,
+      "id": "mmspyqpfq2",
+      "_last": "arudvfuo8o8|❤️",
+      "deleted": 1786532278817,
+      "deletedBy": "self",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786532414967
+        }
+      ]
+    },
+    {
+      "from": "assoc",
+      "fromId": "arudvfuo8o8",
+      "fromName": "U. Abdullayev",
+      "text": "ierngpierjh",
+      "time": 1786531524440,
+      "id": "mmspyqqmw3",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786532414967
+        }
+      ]
+    },
+    {
+      "from": "assoc",
+      "fromId": "arudvfuo8o8",
+      "fromName": "U. Abdullayev",
+      "text": "[oirthporth",
+      "time": 1786531525177,
+      "id": "mmspyqr7d4",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786532414967
+        }
+      ]
+    },
+    {
+      "from": "assoc",
+      "fromId": "arudvfuo8o8",
+      "fromName": "U. Abdullayev",
+      "text": "[oireth'oierhj",
+      "time": 1786531525913,
+      "id": "mmspyqrrt5",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786532414967
+        }
+      ]
+    },
+    {
+      "from": "assoc",
+      "fromId": "arudvfuo8o8",
+      "fromName": "U. Abdullayev",
+      "text": "'otrhneornh",
+      "time": 1786531526698,
+      "id": "mmspyqsdm6",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786532414967
+        }
+      ]
+    },
+    {
+      "from": "assoc",
+      "fromId": "arudvfuo8o8",
+      "fromName": "U. Abdullayev",
+      "text": "ojrenhonh",
+      "time": 1786531527483,
+      "id": "mmspyqszf7",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786532414967
+        }
+      ]
+    },
+    {
+      "from": "assoc",
+      "fromId": "arudvfuo8o8",
+      "fromName": "U. Abdullayev",
+      "text": "jert'oneh",
+      "time": 1786531528351,
+      "id": "mmspyqtnj8",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786532414967
+        }
+      ]
+    },
+    {
+      "from": "assoc",
+      "fromId": "arudvfuo8o8",
+      "fromName": "U. Abdullayev",
+      "text": "'oenrth;ojnth",
+      "time": 1786531529173,
+      "id": "mmspyquad9",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786532414967
+        }
+      ]
+    },
+    {
+      "from": "assoc",
+      "fromId": "arudvfuo8o8",
+      "fromName": "U. Abdullayev",
+      "text": "'oerth;kenrth",
+      "time": 1786531530002,
+      "id": "mmspyquxea",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786532414967
+        }
+      ]
+    },
+    {
+      "from": "assoc",
+      "fromId": "arudvfuo8o8",
+      "fromName": "U. Abdullayev",
+      "text": "'oenrth'kenrth",
+      "time": 1786531530855,
+      "id": "mmspyqvl3b",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786532414967
+        }
+      ]
+    },
+    {
+      "from": "assoc",
+      "fromId": "arudvfuo8o8",
+      "fromName": "U. Abdullayev",
+      "text": "'oejnth';oenrh",
+      "time": 1786531531687,
+      "id": "mmspyqw87c",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786532414967
+        }
+      ]
+    },
+    {
+      "from": "assoc",
+      "fromId": "arudvfuo8o8",
+      "fromName": "U. Abdullayev",
+      "text": "",
+      "time": 1786531631370,
+      "att": {
+        "url": "/uploads/voiceutryugt154.webm",
+        "name": "voice",
+        "mime": "audio/webm",
+        "kind": "voice",
+        "size": 97548,
+        "dur": 6.312
+      },
+      "id": "mmspyt156d",
+      "readBy": [
+        {
+          "id": "ajn1zoyo8o8",
+          "name": "Komoliddin Ikromov",
+          "time": 1786532414967
+        }
+      ],
+      "reactions": {
+        "🙏": [
+          {
+            "id": "arudvfuo8o8",
+            "name": "U. Abdullayev"
+          }
+        ]
+      },
+      "_last": "arudvfuo8o8|🙏"
+    }
+  ],
+  "dm:admin|c7p8zdh917i": [
+    {
+      "id": "mmsype6t3908q",
+      "from": "company",
+      "fromId": "c7p8zdh917i",
+      "fromName": "GreenAgro",
+      "text": "",
+      "time": 1787060017911,
+      "att": {
+        "url": "/uploads/filebiqkjve6t0.doc",
+        "name": "soliq-x4au4t.doc",
+        "mime": "application/msword",
+        "kind": "file",
+        "size": 2432,
+        "dur": 0
+      }
+    }
+  ]
+}
