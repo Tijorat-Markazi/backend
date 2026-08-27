@@ -22,6 +22,7 @@ const KEY   = AI.KEY;
    database without changing. If Postgres is unreachable they fall back to the
    JSON files, and the platform keeps running. */
 const DB = require("./db");
+const PW = require("./srv/passwords");  // hashing at rest + the migration off plaintext
 const loadJSON = (f,def) => DB.get(f, def);
 const saveJSON = (f,o)   => DB.set(f, o);
 const esc = s => String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
@@ -1373,7 +1374,7 @@ const ASSOC_SEED = [
 ];
 function uid(p){ return (p||"") + Math.random().toString(36).slice(2,8) + Date.now().toString(36).slice(-4); }
 function slugLogin(s){ return String(s||"").toLowerCase().replace(/[^a-z0-9]+/g,"").slice(0,14) || "uyushma"; }
-function genPass(){ return Math.random().toString(36).slice(2,8); }
+function genPass(){ return PW.generate(); }
 function getOrgs(){
   let o = loadJSON(ORGS_FILE, null);
   if(!o){
@@ -1387,9 +1388,13 @@ function getOrgs(){
   const used=new Set(o.associations.filter(a=>a.login).map(a=>a.login));
   o.associations.forEach((a,i)=>{
     if(!a.login){ let base=slugLogin(a.name)||("uy"+(i+1)), lg=base, n=2; while(used.has(lg)){ lg=base+n; n++; } used.add(lg); a.login=lg; changed=true; }
-    if(!a.password){ a.password=genPass(); changed=true; }
+    if(!a.password && !a.pwHash){ PW.set(a, genPass()); changed=true; }
   });
-  if(!o.rais || !o.rais.login){ o.rais = { login:"rais", password:"rais2024" }; changed=true; }
+  if(!o.rais || !o.rais.login){ o.rais = PW.set({ login:"rais" }, "rais2024"); changed=true; }
+  /* Legacy plaintext credentials are rewritten as scrypt hashes here, before
+     any caller sees the document. See srv/passwords.js for why this is eager. */
+  const moved = PW.migrate(o);
+  if(moved){ changed = true; console.log(`  [passwords] ${moved} plaintext credential(s) hashed`); }
   if(changed) saveJSON(ORGS_FILE, o);
   return o;
 }
@@ -1408,7 +1413,12 @@ function orgNames(a){
   return { uz:i.uz||n, ru:i.ru||n, en:i.en||n };
 }
 function findCompany(o, login, password){
-  return o.companies.find(c => c.login===String(login||"").trim() && c.password===String(password||""));
+  const lg = String(login||"").trim();
+  if(!lg) return undefined;
+  /* `suspended` is set when consent is withdrawn (srv/rights.js). Consent is
+     the ground this cabinet processes on, so once it is gone the account must
+     stop working — otherwise withdrawal changes nothing but a flag. */
+  return o.companies.find(c => c.login===lg && !c.suspended && PW.verify(c, password));
 }
 
 /* ---------- module items: invest projects / news / R&D / foreign-economics ---------- */

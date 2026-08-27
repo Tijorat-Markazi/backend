@@ -22,3 +22,12 @@ backups/
 # OS / editor
 .DS_Store
 Thumbs.db
+
+# Runtime state — Postgres is the source of truth, these are a local mirror.
+# data/orgs.json held 54 plaintext account passwords and was publicly
+# readable on this repo. Never commit them again.
+data/*.json
+data/*.doc
+data/cert-hosts.txt
+data/cert.cnf
+data/reports/

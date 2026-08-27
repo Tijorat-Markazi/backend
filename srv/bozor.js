@@ -347,13 +347,30 @@ function quotesFor(rfqId){
   };
 }
 
-/* ---------- deal room (TZ §10.1) ---------- */
+/* ---------- deal room (TZ §10.1) ----------
+   Both entry points below check that the caller is actually one of the two
+   sides. They did not, until buyers gained accounts: every identity here used
+   to come from an unverified e-mail, so an ownership test would have been
+   theatre — anyone could have claimed to be the buyer. Now that a buyer is a
+   real account, "who may move this deal" is a question with an answer, and
+   leaving it unasked would let any signed-in party walk another party's
+   negotiation to `closed`. */
+const partyToDeal = (deal, actor) =>
+  !!actor && (String(deal.buyerId) === String(actor.id) || String(deal.sellerId) === String(actor.id));
+
 function dealOpen(body, actor){
   const st    = load();
   const quote = st.quotes.find(q => q.id === H.S(body.quoteId, 40));
   if(!quote) return { error: "quote_not_found" };
   const rfq = st.rfqs.find(r => r.id === quote.rfqId);
   if(!rfq) return { error: "rfq_not_found" };
+
+  /* Only the two sides of this quote may open its room: the buyer who raised
+     the RFQ, or the seller who priced it. */
+  if(!actor || (String(rfq.buyerId) !== String(actor.id)
+             && String(quote.sellerId) !== String(actor.id)))
+    return { error: "forbidden" };
+
   const existing = st.deals.find(d => d.quoteId === quote.id);
   if(existing) return { ok: true, deal: existing };
 
@@ -396,6 +413,7 @@ function dealUpdate(body, actor){
   const id   = H.S(body.id, 40);
   const deal = st.deals.find(d => d.id === id);
   if(!deal) return { error: "not_found" };
+  if(!partyToDeal(deal, actor)) return { error: "forbidden" };
 
   const stage = DEAL_STAGES.includes(H.S(body.stage, 20)) ? H.S(body.stage, 20) : deal.stage;
   const note  = H.S(body.note, 1500);
@@ -427,16 +445,24 @@ function dealsFor(companyId){
    does not want to broadcast an RFQ to the whole market. This is the private
    one-to-one channel: it lands in that company's Seller Center, and the thread
    stays visible to the buyer through the same contact address. */
-function inquiryAdd(body, target){
+function inquiryAdd(body, target, buyer){
   const st = load();
-  const contact = H.S(body.contact, 200);
-  const email   = H.S(body.email, 120).toLowerCase();
+  /* A signed-in buyer IS the contact — their account already carries a
+     verified-by-approval company name and e-mail, so they are never asked to
+     retype it, and what they typed is never trusted over what was approved. */
+  const contact = buyer ? H.S(buyer.email || buyer.name, 200) : H.S(body.contact, 200);
+  const email   = buyer ? H.S(buyer.email, 120).toLowerCase() : H.S(body.email, 120).toLowerCase();
   if(!contact && !email) return { error: "contact_required" };
 
-  /* The buyer has no account, so the thread cannot be protected by a login.
+  /* A visitor has no account, so their thread cannot be protected by a login.
      It is protected by a capability instead: a key minted on the first
      enquiry from this address and handed back to that browser. Knowing the
-     e-mail alone is not enough to read the thread. */
+     e-mail alone is not enough to read the thread.
+
+     A buyer account makes that unnecessary — buyerAccountId is the owner, and
+     inquiriesOfBuyer() reads by it. The key is still minted so a thread that
+     starts signed-in stays readable if the same person later writes in from
+     the public showroom with the same address. */
   const existing = st.inquiries.find(i => i.buyerEmail && i.buyerEmail === email && i.viewKey);
   const viewKey = (H.S(body.viewKey, 60) && existing && existing.viewKey === H.S(body.viewKey, 60))
     ? existing.viewKey
@@ -445,15 +471,20 @@ function inquiryAdd(body, target){
   const row = {
     id:          H.uid("iq"),
     viewKey,
+    buyerAccountId: buyer ? H.S(buyer.id, 40) : "",
     companyId:   H.S(target.companyId, 40),
     companyName: H.S(target.companyName, 160),
     productId:   H.S(target.productId, 40),
     productName: H.S(target.productName, 200),
     source:      H.ONE(body.source, ["showroom", "bozor", "direct"], "showroom"),
-    buyerName:   H.S(body.name, 160) || "Xaridor",
+    buyerName:   buyer ? (H.S(buyer.contactName, 160) || H.S(buyer.name, 160))
+                       : (H.S(body.name, 160) || "Xaridor"),
     buyerEmail:  email,
     contact,
-    company:     H.S(body.company, 160),      // the buyer's own organisation, if any
+    /* The buyer's own organisation. From an account it is the approved name;
+       from a visitor it is whatever they typed, which is why a seller can
+       tell the two apart at a glance in the Seller Center. */
+    company:     buyer ? H.S(buyer.name, 160) : H.S(body.company, 160),
     country:     H.S(body.country, 120),
     qty:         H.N(body.qty),
     unit:        H.S(body.unit, 30),
@@ -525,6 +556,43 @@ const inquiriesOf = (email, key) => {
     .sort((a, b) => b.updated - a.updated).map(buyerInquiry);
 };
 
+/** A signed-in buyer needs no capability key: the account id IS the owner. */
+const inquiriesOfBuyer = buyerId => {
+  const id = H.S(buyerId, 40);
+  if(!id) return [];
+  return load().inquiries.filter(i => i.buyerAccountId === id)
+    .sort((a, b) => b.updated - a.updated).map(buyerInquiry);
+};
+
+/**
+ * The buyer's half of the thread. A channel where only one side may write is
+ * a contact form, not a conversation — and a seller who answers a question
+ * with a question would otherwise have nowhere to be answered.
+ */
+function inquiryAsk(buyer, body){
+  const st = load();
+  const id = H.S(body.id, 40);
+  const iq = st.inquiries.find(x => x.id === id);
+  if(!iq) return { error: "not_found" };
+  if(!buyer || iq.buyerAccountId !== buyer.id) return { error: "forbidden" };
+
+  const text = H.S(body.text, 3000);
+  if(!text) return { error: "empty" };
+
+  const next = Object.assign({}, iq, {
+    /* Back to "new" so it resurfaces in the seller's unanswered count — the
+       whole point of writing again is that the buyer is still waiting. */
+    status: "new",
+    replies: (iq.replies || [])
+      .concat([{ by: H.S(buyer.name, 160), text, t: Date.now(), side: "buyer" }]).slice(-40),
+    updated: Date.now(),
+  });
+  st.inquiries = st.inquiries.map(x => (x.id === id ? next : x));
+  H.logEvent(st, "inquiry_followed_up", { inquiryId: id, companyId: iq.companyId });
+  save(st);
+  return { ok: true, inquiry: buyerInquiry(next) };
+}
+
 /* ---------- trust (TZ §12) ---------- */
 function trustOf(company, st){
   const store  = st || load();
@@ -572,7 +640,7 @@ function exportReadiness(company, st){
 
 module.exports = {
   CHANNELS, CURRENCIES, DEAL_STAGES, RFQ_STATUS, P_STATUS, TRUST, INQUIRY_STATUS,
-  inquiryAdd, inquiryReply, inquiriesFor, inquiriesOf,
+  inquiryAdd, inquiryReply, inquiryAsk, inquiriesFor, inquiriesOf, inquiriesOfBuyer,
   load, save, view, priceAt,
   productSave, productRemove, productsOf, searchProducts,
   rfqAdd, rfqList, rfqMatches, matchRfq,

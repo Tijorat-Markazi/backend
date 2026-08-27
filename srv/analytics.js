@@ -23,6 +23,7 @@ const B = require("./bozor");
 const M = require("./moliya");
 const W = require("./mehnat");
 const I = require("./intel");
+const PW = require("./passwords");
 
 const COHORT_MIN = I.COHORT_MIN;          // one definition of "too few", shared
 const MODULES = ["bozor", "moliya", "mehnat"];
@@ -34,7 +35,7 @@ const BUCKETS = { day: 864e5, week: 7 * 864e5, month: 30 * 864e5 };
 function authenticate(orgs, login, password){
   const lg = H.S(login, 80).trim(), pw = String(password == null ? "" : password);
   if(!lg) return null;
-  const a = (orgs.analysts || []).find(x => x.login === lg && x.password === pw);
+  const a = (orgs.analysts || []).find(x => x.login === lg && !x.suspended && PW.verify(x, pw));
   if(!a) return null;
   /* The scope list is authoritative. Treating an empty one as "unset, so allow
      everything" inverted the admin's intent: unchecking every market handed the

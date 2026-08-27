@@ -11,6 +11,9 @@ const { execSync } = require("child_process");
 const C = require("./core");
 const G = require("./meet-bot");
 const MARKETS = require("./srv/api");     // Bozor · Moliya bozori · Human Capital Markazi
+const BID = require("./srv/business-id");  // Business ID — public identity card
+const QR = require("qrcode");
+const PW = require("./srv/passwords");     // credentials are hashed at rest — nothing here reads one
 
 /* The admin password used to be the literal string "admin" compiled into a
    dozen comparisons. In production it comes from ADMIN_PASSWORD (or admin.key);
@@ -63,9 +66,9 @@ function isPrivileged(o, auth){
   const lg = String(auth.login||"").trim(), pw = String(auth.password||"");
   if(!lg) return false;
   if(C.findCompany(o, lg, pw)) return true;                              // company (uyushma a'zosi)
-  if(o.rais && o.rais.login===lg && o.rais.password===pw) return true;   // rais
-  if((o.associations||[]).some(a=>a.login===lg && a.password===pw)) return true; // super-admin (association)
-  if((o.analysts||[]).some(a=>a.login===lg && a.password===pw)) return true;     // analyst (tahlilchi)
+  if(raisAuth(o, lg, pw)) return true;                                   // rais
+  if((o.associations||[]).some(a=>a.login===lg && PW.verify(a, pw))) return true; // super-admin (association)
+  if((o.analysts||[]).some(a=>a.login===lg && PW.verify(a, pw))) return true;     // analyst (tahlilchi)
   return false;
 }
 const LIMIT_MSG = [
@@ -74,15 +77,26 @@ const LIMIT_MSG = [
   "Free limit of 3 questions reached."
 ];
 function limitMsg(lang){ const i={uz:0,ru:1,en:2}[lang]; return LIMIT_MSG[i==null?1:i]; }
-function authAssoc(o, login, password){ return o.associations.find(x=>x.login===String(login||"").trim() && x.password===String(password||"")) || null; }
+/* The rais tier. Seventeen routes used to inline the same three-part comparison
+   against a plaintext field; they all ask this instead, so the day the hash
+   scheme changes there is one place to change it. */
+function raisAuth(o, login, password){
+  const lg = String(login||"").trim();
+  return !!(o && o.rais && lg && o.rais.login===lg && PW.verify(o.rais, password));
+}
+function authAssoc(o, login, password){
+  const lg = String(login||"").trim();
+  if(!lg) return null;
+  return o.associations.find(x=>x.login===lg && !x.suspended && PW.verify(x, password)) || null;
+}
 
 /* Who is calling? Used by the group chat and by attachment upload, so
    both agree on identity and neither has to trust a claim in the body. */
 function resolveActor(o, b){
   if(isAdmin(b.pass)) return { type:"admin", id:"admin", name:"Administrator" };
   const lg = String(b.login||"").trim(), pw = String(b.password||"");
-  if(o.rais && o.rais.login===lg && o.rais.password===pw) return { type:"rais", id:"rais", name:"Rais" };
-  const a = o.associations.find(x=>x.login===lg && x.password===pw);
+  if(raisAuth(o, lg, pw)) return { type:"rais", id:"rais", name:"Rais" };
+  const a = o.associations.find(x=>x.login===lg && PW.verify(x, pw));
   if(a) return { type:"assoc", id:a.id, name:a.chairman || a.name };
   const c = C.findCompany(o, lg, pw);
   if(c) return { type:"company", id:c.id, name:c.name, assocId:c.assocId };
@@ -364,7 +378,7 @@ async function handleApi(req, res, pathname, query){
         a.name = i18n.uz || a.name;          // Uzbek stays the canonical key
         if(b.chairman!=null)a.chairman=S(b.chairman,120);
         if(b.login!=null){ const lg=S(b.login,60).trim(); if(lg && !o.associations.some(x=>x!==a&&x.login===lg)) a.login=lg; }
-        if(b.password)a.password=S(b.password,120);
+        if(b.password) PW.set(a, S(b.password,120));
       }
     } else if(op==="assoc.del"){
       o.associations=o.associations.filter(x=>x.id!==b.id);
@@ -373,29 +387,33 @@ async function handleApi(req, res, pathname, query){
       const login=S(b.login,60).trim();
       if(!login||!b.password) return json(res,400,{ error:"login & password required" });
       if(o.companies.some(c=>c.login===login)) return json(res,409,{ error:"login exists" });
-      o.companies.push({ id:C.uid("c"), name:S(b.name,200), assocId:S(b.assocId,40),
-        sector:S(b.sector,120), login, password:S(b.password,120), showroom:[], created:Date.now() });
+      o.companies.push(PW.set({ id:C.uid("c"), name:S(b.name,200), assocId:S(b.assocId,40),
+        sector:S(b.sector,120), login, showroom:[], created:Date.now() }, S(b.password,120)));
     } else if(op==="company.update"){
       const c=o.companies.find(x=>x.id===b.id);
       if(c){ if(b.name!=null)c.name=S(b.name,200); if(b.assocId!=null)c.assocId=S(b.assocId,40);
-        if(b.sector!=null)c.sector=S(b.sector,120); if(b.password)c.password=S(b.password,120); }
+        if(b.sector!=null)c.sector=S(b.sector,120); if(b.password) PW.set(c, S(b.password,120)); }
     } else if(op==="company.del"){
       o.companies=o.companies.filter(x=>x.id!==b.id);
     } else if(op==="rais.set"){
-      const lg=S(b.login,60).trim(); if(lg) o.rais.login=lg; if(b.password) o.rais.password=S(b.password,120);
+      const lg=S(b.login,60).trim(); if(lg) o.rais.login=lg; if(b.password) PW.set(o.rais, S(b.password,120));
       if(b.tgChat!=null) o.rais.tgChat=S(b.tgChat,40).trim();
     } else if(op!=="list"){
       return json(res,400,{ error:"unknown op" });
     }
     if(op&&op!=="list") C.saveOrgs(o);
-    return json(res,200,{ ok:true, associations:o.associations, companies:o.companies, rais:o.rais });
+    /* These are the raw store records. Sent whole they carried the credential
+       field with them, so the admin panel was a second way to read every
+       password on the platform. They leave stripped. */
+    return json(res,200,{ ok:true, associations:o.associations.map(PW.strip),
+      companies:o.companies.map(PW.strip), rais:PW.strip(o.rais) });
   }
 
   /* ---- rais schedules a meeting (Zoom) → all associations & companies see it ---- */
   if(pathname==="/api/rais/conference" && req.method==="POST"){
     const b = await readBody(req);
     const o = C.getOrgs();
-    if(!(isAdmin(b.pass) || (o.rais && o.rais.login===String(b.login||"").trim() && o.rais.password===String(b.password||""))))
+    if(!(isAdmin(b.pass) || raisAuth(o, b.login, b.password)))
       return json(res,403,{ error:"forbidden" });
     if(b.removeId){ await dropMeet(b.removeId, "global"); C.confRemove("global", b.removeId); return json(res,200,{ ok:true, meetings: C.confList("global") }); }
     if(b.relinkId) return json(res,200, await relinkMeeting("global", b.relinkId));
@@ -408,7 +426,7 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/rais/questions" && req.method==="POST"){
     const b = await readBody(req);
     const o = C.getOrgs();
-    if(!(isAdmin(b.pass) || (o.rais && o.rais.login===String(b.login||"").trim() && o.rais.password===String(b.password||""))))
+    if(!(isAdmin(b.pass) || raisAuth(o, b.login, b.password)))
       return json(res,403,{ error:"forbidden" });
     const months = C.questionMonths();
     const ym = b.ym || months[0] || "";
@@ -426,7 +444,7 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/rais/reports" && req.method==="POST"){
     const b = await readBody(req);
     const o = C.getOrgs();
-    if(!(isAdmin(b.pass) || (o.rais && o.rais.login===String(b.login||"").trim() && o.rais.password===String(b.password||""))))
+    if(!(isAdmin(b.pass) || raisAuth(o, b.login, b.password)))
       return json(res,403,{ error:"forbidden" });
     const dir = path.join(C.DATA,"reports");
     let archived = [];
@@ -438,7 +456,7 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/rais/letter" && req.method==="POST"){
     const b = await readBody(req);
     const o = C.getOrgs();
-    if(!(isAdmin(b.pass) || (o.rais && o.rais.login===String(b.login||"").trim() && o.rais.password===String(b.password||""))))
+    if(!(isAdmin(b.pass) || raisAuth(o, b.login, b.password)))
       return json(res,403,{ error:"forbidden" });
     const type = b.type==="company" ? "company" : "email";
     const key  = String(b.key||"").slice(0,160);
@@ -458,7 +476,7 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/rais/assoc-letter" && req.method==="POST"){
     const b = await readBody(req);
     const o = C.getOrgs();
-    if(!(isAdmin(b.pass) || (o.rais && o.rais.login===String(b.login||"").trim() && o.rais.password===String(b.password||""))))
+    if(!(isAdmin(b.pass) || raisAuth(o, b.login, b.password)))
       return json(res,403,{ error:"forbidden" });
     const a = o.associations.find(x=>x.id===String(b.assocId||""));
     if(!a) return json(res,404,{ error:"association not found" });
@@ -495,11 +513,11 @@ async function handleApi(req, res, pathname, query){
 
     if(login){
       const creds = JSON.stringify({ login, password });
-      if(o.rais && o.rais.login===login && o.rais.password===password)
+      if(raisAuth(o, login, password))
         return json(res,200,{ ok:true, role:"rais", target:"admin.html",
           keys:{ kg_admin:"1", kg_rais:creds } });
 
-      if(o.associations.some(x=>x.login===login && x.password===password))
+      if(o.associations.some(x=>x.login===login && !x.suspended && PW.verify(x, password)))
         return json(res,200,{ ok:true, role:"association", target:"association.html",
           keys:{ kg_as:creds } });
 
@@ -510,6 +528,13 @@ async function handleApi(req, res, pathname, query){
       if(MARKETS.analystAuth && MARKETS.analystAuth(o, login, password))
         return json(res,200,{ ok:true, role:"analyst", target:"tahlil.html",
           keys:{ kg_an:creds } });
+
+      /* The buying side. Last in the chain because it is the newest tier and
+         the one whose logins are checked against every other tier at
+         approval time — nothing above it can be shadowed by a buyer. */
+      if(MARKETS.buyerAuth && MARKETS.buyerAuth(o, login, password))
+        return json(res,200,{ ok:true, role:"buyer", target:"xaridor.html",
+          keys:{ kg_by:creds } });
     }
     return json(res,401,{ error:"invalid_credentials" });
   }
@@ -517,7 +542,7 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/rais/login" && req.method==="POST"){
     const { login, password } = await readBody(req);
     const o = C.getOrgs();
-    if(!o.rais || o.rais.login!==String(login||"").trim() || o.rais.password!==String(password||""))
+    if(!raisAuth(o, login, password))
       return json(res,401,{ error:"invalid credentials" });
     const associations = o.associations.map(a=>({
       id:a.id, name:a.name, i18n:C.orgNames(a), chairman:a.chairman,
@@ -529,9 +554,9 @@ async function handleApi(req, res, pathname, query){
 
   /* ---- public: associations directory + single association page ---- */
   if(pathname==="/api/assoc/list" && req.method==="GET"){
-    const o = C.getOrgs();
+    const o = ensureBizIds(C.getOrgs());
     return json(res,200, o.associations.map(a=>({
-      id:a.id, name:a.name, i18n:C.orgNames(a), chairman:a.chairman,
+      id:a.id, bizId:a.bizId||"", name:a.name, i18n:C.orgNames(a), chairman:a.chairman,
       companies: o.companies.filter(c=>c.assocId===a.id).length })));
   }
   /* ---- public Showroom: all products across all companies (for the home page) ---- */
@@ -640,7 +665,7 @@ async function handleApi(req, res, pathname, query){
 
   /* ---- one showroom product, with the company behind it ---- */
   if(pathname==="/api/showroom/item" && req.method==="GET"){
-    const o = ensureShowroomIds(C.getOrgs());
+    const o = ensureBizIds(ensureShowroomIds(C.getOrgs()));
     const id = String(query.id||"").slice(0,40);
     let product = null, company = null;
     for(const c of o.companies){
@@ -652,7 +677,7 @@ async function handleApi(req, res, pathname, query){
     return json(res,200,{ ok:true,
       product:{ id:product.id, name:product.name||"", price:product.price||"", desc:product.desc||"",
         img:product.img||"", trade: product.trade==="import" ? "import" : "export" },
-      company:{ id:company.id, name:company.name||"", sector:company.sector||"",
+      company:{ id:company.id, bizId:company.bizId||"", name:company.name||"", sector:company.sector||"",
         assocId:company.assocId||"", assoc:a?a.name:"", assocI18n:a?C.orgNames(a):null,
         chairman:a?a.chairman:"", products:(company.showroom||[]).length,
         since:company.created||0 },
@@ -662,45 +687,174 @@ async function handleApi(req, res, pathname, query){
   }
 
   if(pathname==="/api/assoc/public" && req.method==="GET"){
-    const o = C.getOrgs();
+    const o = ensureBizIds(C.getOrgs());
     const a = o.associations.find(x=>x.id===query.id);
     if(!a) return json(res,404,{ error:"not found" });
-    return json(res,200,{ assoc:{ id:a.id, name:a.name, i18n:C.orgNames(a), chairman:a.chairman },
+    return json(res,200,{ assoc:{ id:a.id, bizId:a.bizId||"", name:a.name, i18n:C.orgNames(a), chairman:a.chairman },
       companies: o.companies.filter(c=>c.assocId===a.id)
-        .map(c=>({ name:c.name, sector:c.sector, products:(c.showroom||[]).length })) });
+        .map(c=>({ bizId:c.bizId||"", name:c.name, sector:c.sector, products:(c.showroom||[]).length })) });
+  }
+
+  /* ============================================================
+     BUSINESS ID — the platform's public identity document.
+
+     Every association and company carries a number, a card and a QR
+     code. The card is deliberately open: it is the one surface a
+     visitor can reach without an account, which is the whole point of
+     handing out a business card. Nothing here is behind a login, so
+     nothing here may read a password — the payloads are built by
+     srv/business-id.js, which only ever copies whitelisted fields.
+     ============================================================ */
+
+  /* Numbers are handed out lazily, the same way showroom ids are. */
+  function ensureBizIds(o){
+    const r = BID.ensure(o);
+    if(r.changed) C.saveOrgs(o);
+    return o;
+  }
+
+  /* The absolute address of a card — what the QR encodes and what a
+     visitor can paste anywhere. Honours a proxy's forwarded headers so
+     the printed code still works behind one. */
+  function cardUrl(id){
+    const proto = String(req.headers["x-forwarded-proto"] || "").split(",")[0].trim()
+      || (req.socket && req.socket.encrypted ? "https" : "http");
+    const host = String(req.headers["x-forwarded-host"] || req.headers.host || "").split(",")[0].trim();
+    return host ? `${proto}://${host}/biznes-id.html?id=${encodeURIComponent(id)}` : `/biznes-id.html?id=${encodeURIComponent(id)}`;
+  }
+
+  if(pathname==="/api/business-id" && req.method==="GET"){
+    const o = ensureBizIds(ensureShowroomIds(C.getOrgs()));
+    const card = BID.card(o, query.id, C.orgNames);
+    if(!card) return json(res,404,{ error:"not_found" });
+    return json(res,200, Object.assign(card, { url: cardUrl(card.bizId) }));
+  }
+
+  /* Rendered server-side so the page stays dependency-free and the code
+     is identical whether it is shown on screen, printed or scanned. */
+  if(pathname==="/api/business-id/qr.svg" && req.method==="GET"){
+    const o = ensureBizIds(C.getOrgs());
+    const found = BID.holderOf(o, query.id);
+    if(!found){ res.writeHead(404,{ "Content-Type":"text/plain" }); return res.end("not found"); }
+    let svg = "";
+    try{
+      svg = await QR.toString(cardUrl(found.id), { type:"svg", margin:0,
+        errorCorrectionLevel:"M", color:{ dark:"#1f4e79", light:"#00000000" } });
+    }catch(e){ res.writeHead(500,{ "Content-Type":"text/plain" }); return res.end("qr failed"); }
+    res.writeHead(200,{ "Content-Type":"image/svg+xml",
+      "Cache-Control":"public, max-age=86400" });
+    return res.end(svg);
+  }
+
+  /* Confirms a number is genuine without revealing anything a card
+     would not already show. A malformed number never reaches a lookup. */
+  if(pathname==="/api/business-id/verify" && req.method==="GET"){
+    const o = ensureBizIds(C.getOrgs());
+    const v = BID.verify(o, query.id);
+    return json(res, v.ok ? 200 : 404, v.ok ? Object.assign(v, { url: cardUrl(v.bizId) }) : v);
+  }
+
+  if(pathname==="/api/business-id/directory" && req.method==="GET"){
+    const o = ensureBizIds(C.getOrgs());
+    return json(res,200,{ ok:true, items: BID.directory(o, C.orgNames) });
+  }
+
+  /* An org edits its own contact block — the only writable part of a
+     card. Identity comes from the credentials, never from the body, so
+     one org can never write another's card. */
+  if(pathname==="/api/business-id/contact" && req.method==="POST"){
+    const b = await readBody(req);
+    const o = ensureBizIds(C.getOrgs());
+    const assoc = authAssoc(o, b.login, b.password);
+    const company = assoc ? null : C.findCompany(o, b.login, b.password);
+    const row = assoc || company;
+    if(!row) return json(res,401,{ error:"invalid credentials" });
+
+    /* The kind decides which fields exist, and it comes from the credentials
+       that matched — never from the request — so a caller cannot widen its
+       own field set by claiming to be the other kind. */
+    const kind = assoc ? "assoc" : "company";
+
+    if(b.op === "get")
+      return json(res,200,{ ok:true, bizId:row.bizId||"", kind, fields: BID.fieldsFor(kind),
+        contact: BID.contactOf(row, kind), url: cardUrl(row.bizId||"") });
+
+    const clean = BID.cleanContact(b, kind);
+    if(clean.error) return json(res,400,{ error:clean.error });
+    BID.applyContact(row, clean.value, kind);
+    C.saveOrgs(o);
+    return json(res,200,{ ok:true, bizId:row.bizId||"", kind, fields: BID.fieldsFor(kind),
+      contact: BID.contactOf(row, kind), url: cardUrl(row.bizId||"") });
+  }
+
+  /* ---- public: one company's own page ----
+     The platform had no public face for a company: a visitor could reach
+     its products through the showroom filter, but a company with nothing
+     listed yet was unreachable entirely. This is that page's data. It is
+     deliberately thinner than the Business ID card — identity and what it
+     sells, with the card one click away for contact details. */
+  if(pathname==="/api/company/public" && req.method==="GET"){
+    const o = ensureBizIds(ensureShowroomIds(C.getOrgs()));
+    const id = String(query.id||"").slice(0,40);
+    /* Reachable by internal id or by Business ID, so a scanned number and
+       an in-site link land on the same page. */
+    const byBiz = BID.holderOf(o, id);
+    const c = (byBiz && byBiz.kind === "company") ? byBiz.row : o.companies.find(x=>x.id===id);
+    if(!c) return json(res,404,{ error:"not_found" });
+    const a = o.associations.find(x=>x.id===c.assocId) || null;
+    return json(res,200,{ ok:true,
+      company:{ id:c.id, bizId:c.bizId||"", name:c.name||"", sector:c.sector||"",
+        since:c.created||0, products:(c.showroom||[]).length },
+      assoc: a ? { id:a.id, bizId:a.bizId||"", name:a.name||"", i18n:C.orgNames(a),
+        chairman:a.chairman||"" } : null,
+      showroom:(c.showroom||[]).filter(p=>p && (p.name||p.img))
+        .map(p=>({ id:p.id||"", name:p.name||"", price:p.price||"", desc:p.desc||"",
+          img:p.img||"", trade: p.trade==="import" ? "import" : "export" })) });
   }
 
   /* ---- association panel: login + manage own companies ---- */
   if(pathname==="/api/assoc/login" && req.method==="POST"){
     const { login, password } = await readBody(req);
     const o = C.getOrgs();
-    const a = o.associations.find(x=>x.login===String(login||"").trim() && x.password===String(password||""));
+    const a = authAssoc(o, login, password);
     if(!a) return json(res,401,{ error:"invalid credentials" });
     const comps = o.companies.filter(c=>c.assocId===a.id)
-      .map(c=>({ id:c.id, name:c.name, sector:c.sector, login:c.login, password:c.password, showroom:c.showroom||[], created:c.created||null }));
+      .map(c=>({ id:c.id, name:c.name, sector:c.sector, login:c.login, showroom:c.showroom||[], created:c.created||null }));
     return json(res,200,{ ok:true, assoc:{ id:a.id, name:a.name, i18n:C.orgNames(a), chairman:a.chairman }, companies:comps });
   }
   if(pathname==="/api/assoc/companies" && req.method==="POST"){
     const b = await readBody(req);
     const o = C.getOrgs();
-    const a = o.associations.find(x=>x.login===String(b.login||"").trim() && x.password===String(b.password||""));
+    const a = authAssoc(o, b.login, b.password);
     if(!a) return json(res,401,{ error:"invalid credentials" });
     const S=(v,n)=>String(v||"").slice(0,n);
     if(b.op==="add"){
       const clogin=S(b.clogin,60).trim();
       if(!clogin||!b.cpassword) return json(res,400,{ error:"login & password required" });
       if(o.companies.some(c=>c.login===clogin)) return json(res,409,{ error:"login exists" });
-      o.companies.push({ id:C.uid("c"), name:S(b.name,200), assocId:a.id, sector:S(b.sector,120),
-        login:clogin, password:S(b.cpassword,120), showroom:[], created:Date.now() });
+      o.companies.push(PW.set({ id:C.uid("c"), name:S(b.name,200), assocId:a.id, sector:S(b.sector,120),
+        login:clogin, showroom:[], created:Date.now() }, S(b.cpassword,120)));
     } else if(b.op==="del"){
       const c=o.companies.find(x=>x.id===b.id);
       if(c && c.assocId===a.id) o.companies=o.companies.filter(x=>x.id!==b.id);
+    } else if(b.op==="pw"){
+      /* Replaces the old "read the member's password off the panel" feature.
+         Nobody can read a hash, so the only way to help a member who has lost
+         their password is to issue a new one. It is returned exactly once, in
+         this response, and never again: the store keeps only the hash. */
+      const c=o.companies.find(x=>x.id===b.id);
+      if(!c || c.assocId!==a.id) return json(res,404,{ error:"not_found" });
+      const fresh = S(b.cpassword,120).trim() || PW.generate();
+      if(fresh.length < 8) return json(res,400,{ error:"password_short" });
+      PW.set(c, fresh);
+      C.saveOrgs(o);
+      return json(res,200,{ ok:true, id:c.id, login:c.login, password:fresh, once:true });
     } else {
       return json(res,400,{ error:"unknown op" });
     }
     C.saveOrgs(o);
     const comps = o.companies.filter(c=>c.assocId===a.id)
-      .map(c=>({ id:c.id, name:c.name, sector:c.sector, login:c.login, password:c.password, showroom:c.showroom||[], created:c.created||null }));
+      .map(c=>({ id:c.id, name:c.name, sector:c.sector, login:c.login, showroom:c.showroom||[], created:c.created||null }));
     return json(res,200,{ ok:true, companies:comps });
   }
   /* ---- Super Admin: questions ONLY from its own companies ---- */
@@ -778,7 +932,7 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/appeals" && req.method==="POST"){
     const b = await readBody(req);
     const o = C.getOrgs();
-    const isRais = o.rais && o.rais.login===String(b.login||"").trim() && o.rais.password===String(b.password||"");
+    const isRais = raisAuth(o, b.login, b.password);
     if(!isAdmin(b.pass) && !isRais) return json(res,403,{ error:"forbidden" });
     if(b.op==="stage") C.appealSetStage(b.id, b.stage, { name:isRais?"Rais":"Administrator", type:isRais?"rais":"admin" }, b.note);
     return json(res,200,{ ok:true, items: C.appealList({ assocId:b.assocId||"" }), stages:C.APPEAL_STAGES });
@@ -803,7 +957,7 @@ async function handleApi(req, res, pathname, query){
     if(!item){ res.writeHead(404,{ "Content-Type":"text/plain" }); return res.end("not found"); }
     const c = C.findCompany(o, query.login, query.password);
     const a = authAssoc(o, query.login, query.password);
-    const isRais = o.rais && o.rais.login===String(query.login||"").trim() && o.rais.password===String(query.password||"");
+    const isRais = raisAuth(o, query.login, query.password);
     const allowed = isAdmin(query.pass) || isRais
       || (c && c.id===item.companyId) || (a && a.id===item.assocId);
     if(!allowed){ res.writeHead(401,{ "Content-Type":"text/plain" }); return res.end("invalid credentials"); }
@@ -918,7 +1072,7 @@ async function handleApi(req, res, pathname, query){
   /* ---- admin/rais: all companies' startup/invest projects ---- */
   if(pathname==="/api/admin/projects" && req.method==="POST"){
     const b = await readBody(req); const o = C.getOrgs();
-    if(!(isAdmin(b.pass) || (o.rais && o.rais.login===String(b.login||"").trim() && o.rais.password===String(b.password||"")))) return json(res,403,{ error:"forbidden" });
+    if(!(isAdmin(b.pass) || raisAuth(o, b.login, b.password))) return json(res,403,{ error:"forbidden" });
     return json(res,200,{ ok:true, projects: C.investProjects() });
   }
   /* ---- group chats: one room per association, plus the chairmen's room ----
@@ -981,7 +1135,7 @@ async function handleApi(req, res, pathname, query){
   /* ---- project chat: admin/rais side ---- */
   if(pathname==="/api/admin/chats" && req.method==="POST"){
     const b = await readBody(req); const o = C.getOrgs();
-    if(!(isAdmin(b.pass) || (o.rais && o.rais.login===String(b.login||"").trim() && o.rais.password===String(b.password||"")))) return json(res,403,{ error:"forbidden" });
+    if(!(isAdmin(b.pass) || raisAuth(o, b.login, b.password))) return json(res,403,{ error:"forbidden" });
     if(b.op==="thread") return json(res,200,{ ok:true, messages: C.chatThread(b.companyId) });
     if(b.op==="send"){
       let att=null;
