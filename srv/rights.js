@@ -77,22 +77,11 @@ function dueAt(from){
    anyone pull anyone's file, which is the breach the right is meant to
    prevent. Identity therefore comes from the same credentials the cabinet
    uses — never from the body. */
-function subjectOf(core, body){
-  const o = core.getOrgs();
-  const lg = H.S(body.login, 80).trim(), pw = String(body.password == null ? "" : body.password);
-  if(!lg) return null;
-
-  const c = core.findCompany(o, lg, pw);
-  if(c) return { tier: "company", id: c.id, name: c.name, email: c.email || "", raw: c, orgs: o };
-
-  const b = (o.buyers || []).find(x => String(x.login || "").toLowerCase() === lg.toLowerCase()
-                                    && PW.verify(x, pw));
-  if(b) return { tier: "buyer", id: b.id, name: b.name, email: b.email || "", raw: b, orgs: o };
-
-  const a = (o.associations || []).find(x => x.login === lg && PW.verify(x, pw));
-  if(a) return { tier: "assoc", id: a.id, name: a.chairman || a.name, email: a.email || "", raw: a, orgs: o };
-
-  return null;
+function subjectOf(core){
+  const Auth=require("./auth"), auth=Auth.current();
+  if(!auth || !["company","buyer","assoc"].includes(auth.role))return null;
+  const rec=Auth.account(auth.role,auth.subjectId);
+  return rec?{tier:auth.role,id:rec.id,name:rec.chairman||rec.name,email:rec.email||"",raw:rec,orgs:core.getOrgs(),owner:Auth.owner()}:null;
 }
 
 /* ---------- access ----------
@@ -111,7 +100,7 @@ function exportFor(subject, core){
   let chats = [];
   try{
     const store = core.getStore() || {};
-    const mine = subject.email ? store[subject.email] : null;
+    const mine = store[subject.owner];
     chats = mine ? Object.values(mine.sessions || {}).map(s => ({
       id: s.id, title: s.title || "", created: s.created, updated: s.updated,
       messages: s.messages || [],

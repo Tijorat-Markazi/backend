@@ -1,0 +1,71 @@
+rules:
+  - id: javascript-dynamic-code
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: Do not execute dynamically supplied JavaScript.
+    pattern-either:
+      - pattern: eval($VALUE)
+      - pattern: new Function(...)
+  - id: javascript-unsafe-html
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: Escape untrusted text or use textContent before inserting it into HTML.
+    mode: taint
+    pattern-sources:
+      - pattern: location.hash
+      - pattern: location.search
+      - pattern: localStorage.getItem(...)
+      - pattern: sessionStorage.getItem(...)
+      - pattern: await $RESPONSE.json()
+      - pattern: await readBody(...)
+    pattern-sanitizers:
+      - pattern: esc(...)
+      - pattern: escapeHtml(...)
+      - pattern: escHtml(...)
+      - pattern: kgEscapeHtml(...)
+      - pattern: sanitizeHTML(...)
+      - pattern: KGAuth.escape(...)
+      - pattern: escAttr(...)
+      - pattern: escA(...)
+      - pattern: fmtDateTime(...)
+      - pattern: Number(...)
+      - pattern: parseInt(...)
+      - pattern: parseFloat(...)
+      # These narrowly named renderers were reviewed for escaped text/attributes
+      # and validated URLs; do not blanket-allow render() or template helpers.
+      - pattern: renderBusinessIdCard(...)
+      - pattern: renderPublicCompany(...)
+    pattern-sinks:
+      - pattern: $ELEMENT.innerHTML = $VALUE
+      - pattern: $ELEMENT.outerHTML = $VALUE
+      - pattern: $ELEMENT.insertAdjacentHTML($POSITION, $VALUE)
+      - pattern: document.write(...)
+  - id: javascript-request-shell-injection
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: Pass request-derived values as separate execFile arguments, never shell commands.
+    mode: taint
+    pattern-sources:
+      - pattern: await readBody(...)
+      - pattern: req.url
+      - pattern: req.headers
+    pattern-sinks:
+      - pattern: exec($COMMAND, ...)
+      - pattern: execSync($COMMAND, ...)
+      - patterns:
+          - pattern-either:
+              - pattern-inside: |
+                  const $CHILD = require("child_process");
+                  ...
+              - pattern-inside: |
+                  const $CHILD = require("node:child_process");
+                  ...
+              - pattern-inside: |
+                  import * as $CHILD from "node:child_process";
+                  ...
+              - pattern-inside: |
+                  import * as $CHILD from "child_process";
+                  ...
+          - pattern-either:
+              - pattern: $CHILD.exec($COMMAND, ...)
+              - pattern: $CHILD.execSync($COMMAND, ...)

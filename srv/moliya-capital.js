@@ -106,7 +106,7 @@ function projectGate(actor, body){
   const st = load();
   const p  = st.projects.find(x => x.id === H.S(body.id, 40));
   if(!p) return { error: "not_found" };
-  if(p.ownerId && p.ownerId !== actor.id) return { error: "forbidden" };
+  if(!p.ownerId || p.ownerId !== actor.id) return { error: "forbidden" };
   const gate = GATES.includes(H.S(body.gate, 4)) ? H.S(body.gate, 4) : p.gate;
   const task = {
     gate, from: p.gate,

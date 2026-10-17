@@ -3,40 +3,21 @@
    Run:  node server.js   (key from gemini.key or GEMINI_API_KEY)
    ============================================================ */
 const http  = require("http");
-const https = require("https");
 const fs    = require("fs");
 const path  = require("path");
-const url   = require("url");
-const { execSync } = require("child_process");
 const C = require("./core");
-const G = require("./meet-bot");
+const G = {status:()=>({available:false,provider:"manual"})};
 const MARKETS = require("./srv/api");     // Bozor · Moliya bozori · Human Capital Markazi
 const BID = require("./srv/business-id");  // Business ID — public identity card
 const QR = require("qrcode");
+const Auth = require("./srv/auth");
+const DB = require("./db");
+const Runtime = require("./srv/runtime");
+Auth.configure(C);
 const PW = require("./srv/passwords");     // credentials are hashed at rest — nothing here reads one
 
-/* The admin password used to be the literal string "admin" compiled into a
-   dozen comparisons. In production it comes from ADMIN_PASSWORD (or admin.key);
-   the old default still works for local dev but the server says so loudly. */
-const ADMIN_PASS = (process.env.ADMIN_PASSWORD || (()=>{
-  try{ return fs.readFileSync(path.join(__dirname,"admin.key"),"utf8").trim(); }catch(e){ return ""; }
-})() || "admin");
-const ADMIN_IS_DEFAULT = ADMIN_PASS === "admin";
-const isAdmin = v => typeof v === "string" && v.length > 0 && v === ADMIN_PASS;
-
-/* A rejected promise anywhere must not take the whole site down. Log it and
-   keep serving; a genuinely broken process still exits so a supervisor can
-   restart it, but only after queued database writes are flushed. */
-process.on("unhandledRejection", e => {
-  console.error("[unhandled rejection]", (e && e.stack) || e);
-});
-process.on("uncaughtException", e => {
-  console.error("[uncaught exception]", (e && e.stack) || e);
-  C.dbFlush().finally(() => process.exit(1));
-});
-
+const isAdmin = () => Auth.hasRole("admin");
 const PORT = process.env.PORT || 4321;
-const HTTPS_PORT = process.env.HTTPS_PORT || 4443;
 const ROOT = __dirname;
 
 /* ---------- helpers ---------- */
@@ -45,32 +26,24 @@ const ROOT = __dirname;
    cap sits above those and aborts anything larger. */
 const MAX_BODY = 12 * 1024 * 1024;
 function readBody(req){
-  return new Promise(res=>{
-    let b="", over=false;
-    req.on("data",c=>{
-      if(over) return;
-      b+=c;
-      if(b.length > MAX_BODY){ over=true; b=""; req.destroy(); res({}); }
+  return new Promise((resolve,reject)=>{
+    let size=0,over=false;const chunks=[];
+    req.on("data",chunk=>{
+      if(over)return;
+      size+=chunk.length;
+      if(size>MAX_BODY){over=true;chunks.length=0;reject(Object.assign(new Error("body_too_large"),{status:413}));return;}
+      chunks.push(chunk);
     });
-    req.on("end",()=>{ if(!over){ try{res(JSON.parse(b||"{}"));}catch(e){res({});} } });
-    req.on("error",()=>{ if(!over) res({}); });
+    req.on("end",()=>{if(over)return;try{const value=JSON.parse(Buffer.concat(chunks).toString("utf8")||"{}");if(!value||typeof value!=="object"||Array.isArray(value))throw new Error();resolve(value);}catch{reject(Object.assign(new Error("invalid_json"),{status:400}));}});
+    req.on("error",()=>reject(Object.assign(new Error("body_read_failed"),{status:400})));
+    req.on("aborted",()=>reject(Object.assign(new Error("body_aborted"),{status:400})));
   });
 }
 function json(res, code, obj){ res.writeHead(code, { "Content-Type":"application/json" }); res.end(JSON.stringify(obj)); }
 
 /* ---- unlimited-AI roles: admin, super-admin (association), company, rais, analyst ----
    Credentials are VALIDATED server-side, so a faked client flag can't bypass the limit. */
-function isPrivileged(o, auth){
-  if(!auth || typeof auth!=="object") return false;
-  if(isAdmin(auth.pass)) return true;                                   // admin panel (password "admin")
-  const lg = String(auth.login||"").trim(), pw = String(auth.password||"");
-  if(!lg) return false;
-  if(C.findCompany(o, lg, pw)) return true;                              // company (uyushma a'zosi)
-  if(raisAuth(o, lg, pw)) return true;                                   // rais
-  if((o.associations||[]).some(a=>a.login===lg && PW.verify(a, pw))) return true; // super-admin (association)
-  if((o.analysts||[]).some(a=>a.login===lg && PW.verify(a, pw))) return true;     // analyst (tahlilchi)
-  return false;
-}
+function isPrivileged(){ return Auth.hasRole("admin","rais","assoc","company","analyst"); }
 const LIMIT_MSG = [
   "Bepul 3 ta savol limiti tugadi.",
   "Лимит 3 бесплатных вопросов исчерпан.",
@@ -80,28 +53,10 @@ function limitMsg(lang){ const i={uz:0,ru:1,en:2}[lang]; return LIMIT_MSG[i==nul
 /* The rais tier. Seventeen routes used to inline the same three-part comparison
    against a plaintext field; they all ask this instead, so the day the hash
    scheme changes there is one place to change it. */
-function raisAuth(o, login, password){
-  const lg = String(login||"").trim();
-  return !!(o && o.rais && lg && o.rais.login===lg && PW.verify(o.rais, password));
-}
-function authAssoc(o, login, password){
-  const lg = String(login||"").trim();
-  if(!lg) return null;
-  return o.associations.find(x=>x.login===lg && !x.suspended && PW.verify(x, password)) || null;
-}
-
-/* Who is calling? Used by the group chat and by attachment upload, so
-   both agree on identity and neither has to trust a claim in the body. */
-function resolveActor(o, b){
-  if(isAdmin(b.pass)) return { type:"admin", id:"admin", name:"Administrator" };
-  const lg = String(b.login||"").trim(), pw = String(b.password||"");
-  if(raisAuth(o, lg, pw)) return { type:"rais", id:"rais", name:"Rais" };
-  const a = o.associations.find(x=>x.login===lg && PW.verify(x, pw));
-  if(a) return { type:"assoc", id:a.id, name:a.chairman || a.name };
-  const c = C.findCompany(o, lg, pw);
-  if(c) return { type:"company", id:c.id, name:c.name, assocId:c.assocId };
-  return null;
-}
+function raisAuth(){ return Auth.hasRole("rais"); }
+function authAssoc(){ return Auth.record("assoc"); }
+function currentCompany(){ return Auth.record("company"); }
+function resolveActor(){ return Auth.chatActor(); }
 
 /* ---------- the admin thread, shown as a chat room ----------
    Bridges the original company↔admin store into the group-chat surface so a
@@ -161,15 +116,9 @@ function adminRooms(o, actor, lang){
    by hand always wins; if the bot cannot produce one the meeting is still
    saved, just without a room, and the panel says why. */
 async function withMeet(b){
-  const manual = String(b.link||"").trim();
-  if(manual) return Object.assign({}, b, { link:manual, provider:"manual", meetError:"" });
-  try{
-    const room = await G.createMeeting();
-    return Object.assign({}, b, { link:room.link, provider:"meet-bot", meetError:"" });
-  }catch(e){
-    console.error("[meet-bot] create failed:", e.message);
-    return Object.assign({}, b, { link:"", provider:"", meetError:String(e.message||e).slice(0,200) });
-  }
+  const link=String(b.link||"").trim();
+  if(link && !/^https:\/\/meet\.google\.com\/[a-z]{3}-[a-z]{4}-[a-z]{3}$/.test(link)) throw Object.assign(new Error("invalid_meeting_link"),{status:400});
+  return {...b,link,provider:link?"manual":"",meetError:""};
 }
 /* A bot-made room is not owned by any calendar entry, so deleting a
    meeting here has nothing to cancel upstream — the room simply goes
@@ -214,32 +163,34 @@ async function handleApi(req, res, pathname, query){
     return MARKETS.handle(req, res, pathname, query, { readBody, json, core:C, isPrivileged, isAdmin });
 
   if(pathname==="/api/sessions"){
-    const store=C.getStore(); const u=store[query.email]; if(!u) return json(res,200,[]);
+    const store=C.getStore(); const u=store[Auth.owner()]; if(!u) return json(res,200,[]);
     const list=Object.values(u.sessions).filter(s=>s.messages.length)
       .map(s=>({ id:s.id, title:s.title||"…", updated:s.updated })).sort((a,b)=>b.updated-a.updated);
     return json(res,200,list);
   }
   if(pathname==="/api/session"){
-    const store=C.getStore(); const s=store[query.email]?.sessions?.[query.id];
+    const store=C.getStore(); const s=store[Auth.owner()]?.sessions?.[query.id];
     return json(res,200,{ messages: s?s.messages:[] });
   }
   if(pathname==="/api/chat" && req.method==="POST"){
-    const { email, id, message, lang, attachment, company, auth } = await readBody(req);
-    if(!email||!id||(!message && !attachment)) return json(res,400,{ error:"bad request" });
+    const { id, message, lang, attachment } = await readBody(req);
+    const email=Auth.owner(), company=Auth.actor()?.name||"", auth=null;
+    if(!email||!id||!/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,79}$/.test(id)||["constructor","prototype"].includes(id)||(!message && !attachment)) return json(res,400,{ error:"bad request" });
     const privileged = isPrivileged(C.getOrgs(), auth);
     if(!privileged && C.aiUsageCount(email) >= C.AI_FREE_LIMIT){
       return json(res,200,{ reply: limitMsg(lang), ai:!!C.KEY, limit:true,
         used: C.aiUsageCount(email), max: C.AI_FREE_LIMIT, remaining: 0, privileged:false });
     }
-    const reply = await C.answer({ email, sessionId:id, message, attachment, lang, company: String(company||"").slice(0,160) });
     const used = privileged ? null : C.aiUsageInc(email);
+    await DB.flush();
+    const reply = await C.answer({ email, sessionId:id, message, attachment, lang, company: String(company||"").slice(0,160) });
     return json(res,200,{ reply, ai:!!C.KEY, limit:false, privileged,
       max: privileged?null:C.AI_FREE_LIMIT, used,
       remaining: privileged?null:Math.max(0, C.AI_FREE_LIMIT-(used||0)) });
   }
   /* ---- AI usage / limit status for the assistant page ---- */
   if(pathname==="/api/ai-usage" && req.method==="POST"){
-    const { email, auth } = await readBody(req);
+    await readBody(req); const email=Auth.owner(), auth=null;
     const privileged = isPrivileged(C.getOrgs(), auth);
     const used = C.aiUsageCount(email);
     return json(res,200,{ privileged, max: privileged?null:C.AI_FREE_LIMIT, used,
@@ -250,18 +201,19 @@ async function handleApi(req, res, pathname, query){
     if(!message && !attachment) return json(res,400,{ error:"bad request" });
     // Demo / guest users (no login) are limited to AI_FREE_LIMIT questions, counted
     // per browser via guestId — same counter store as logged-in email users.
-    const key = String(guestId||"").slice(0,80) || null;
+    const key = Auth.owner();
     if(key && C.aiUsageCount(key) >= C.AI_FREE_LIMIT){
       return json(res,200,{ reply: limitMsg(lang), ai:!!C.KEY, limit:true, privileged:false,
         used: C.aiUsageCount(key), max: C.AI_FREE_LIMIT, remaining: 0 });
     }
-    const msgs = (history||[]).map(m=>({ role:m.role, text:m.text }));
+    const used = key ? C.aiUsageInc(key) : null;
+    await DB.flush();
+    const msgs = (Array.isArray(history)?history.slice(-20):[]).map(m=>({ role:m.role, text:m.text }));
     const turn = C.buildUserTurn(message, attachment);
     msgs.push({ role:"user", text: turn.text, image: turn.media });
     const out = await C.askWithFiles(msgs, lang);
     let reply = out.text;
     if(!reply) reply = C.fallbackReply(message||"", lang);
-    const used = key ? C.aiUsageInc(key) : null;
     return json(res,200,{ reply, files: out.files, ai:!!C.KEY, limit:false, privileged:false,
       max: key?C.AI_FREE_LIMIT:null, used,
       remaining: used!=null ? Math.max(0, C.AI_FREE_LIMIT-used) : null });
@@ -277,15 +229,15 @@ async function handleApi(req, res, pathname, query){
     if(!C.docKinds().includes(kind)) return json(res,400,{ error:"bad_kind", kinds:C.docKinds() });
 
     const privileged = isPrivileged(C.getOrgs(), b.auth || b);
-    const meter = String(b.email || b.guestId || "").slice(0,80);
+    const meter = Auth.owner();
     if(!privileged){
       if(!meter) return json(res,401,{ error:"identify_first" });
       if(C.aiUsageCount(meter) >= C.AI_FREE_LIMIT)
         return json(res,200,{ ok:false, limit:true, reply:limitMsg(b.lang) });
     }
+    if(!privileged&&meter){C.aiUsageInc(meter);await DB.flush();}
     const doc = await C.aiDocument({ kind, prompt, lang:b.lang, title:b.title });
     if(!doc.ok) return json(res,200,{ ok:false, error:doc.error, note:doc.note||"" });
-    if(!privileged && meter) C.aiUsageInc(meter);
     return json(res,200,{ ok:true, url:doc.url, name:doc.name, size:doc.size, kind, note:doc.note||"" });
   }
   if(pathname==="/api/transcribe" && req.method==="POST"){
@@ -297,7 +249,11 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/conference" && req.method==="GET"){
     // ?manage=1[&assoc=ID] → scope-only list (admin/uyushma manage)
     // ?list=1[&assoc=ID]   → company view (assoc meetings + global)
-    if(query.manage!==undefined) return json(res,200,{ meetings: C.confList(query.assoc||"global") });
+    const scope=String(query.assoc||"global");
+    const a=Auth.actor(), own=a&&(a.type==="assoc"?a.id:a.assocId);
+    const oversight=Auth.hasRole("admin","rais");
+    if(query.assoc&&!oversight&&own!==query.assoc)return json(res,403,{error:"forbidden"});
+    if(query.manage!==undefined){if(!oversight&&!(Auth.hasRole("assoc")&&own===scope))return json(res,403,{error:"forbidden"});return json(res,200,{meetings:C.confList(scope)});}
     if(query.list){
       if(query.assoc) return json(res,200,{ meetings: C.confVisible(query.assoc) });
       return json(res,200,{ meetings: C.confList("global") });
@@ -309,6 +265,7 @@ async function handleApi(req, res, pathname, query){
      so a re-generated room reaches everyone without a page refresh) */
   if(pathname==="/api/conference/join" && req.method==="GET"){
     const found = C.confFind(String(query.id||""));
+    if(found&&found.scope!=="global"){const a=Auth.actor(),own=a&&(a.type==="assoc"?a.id:a.assocId);if(!Auth.hasRole("admin","rais")&&own!==found.scope)return json(res,403,{error:"forbidden"});}
     const link = found ? String(found.meeting.link||"") : "";
     if(!/^https?:\/\//i.test(link)){          // never redirect to anything but a real web link
       res.writeHead(302, { Location:"/conference.html?join=unavailable" });
@@ -319,7 +276,7 @@ async function handleApi(req, res, pathname, query){
   }
   if(pathname==="/api/conference" && req.method==="POST"){
     const b = await readBody(req);
-    if(!isAdmin(b.pass)) return json(res,403,{ error:"forbidden" });
+    if(!isAdmin()) return json(res,403,{ error:"forbidden" });
     const scope = String(b.assocId||"").trim();   // empty → global; otherwise a specific uyushma
     if(b.removeId){ await dropMeet(b.removeId, scope||"global"); C.confRemove(scope, b.removeId); return json(res,200,{ ok:true, meetings: C.confList(scope) }); }
     if(b.relinkId) return json(res,200, await relinkMeeting(scope, b.relinkId));
@@ -333,29 +290,12 @@ async function handleApi(req, res, pathname, query){
   }
   /* opens a real Chrome window on the server machine so a human can sign
      in once; the bot reuses that profile forever after */
-  if(pathname==="/api/google/login" && req.method==="POST"){
-    const b = await readBody(req);
-    if(!isAdmin(b.pass)) return json(res,403,{ error:"forbidden" });
-    try{ await G.openLogin(); return json(res,200,{ ok:true, opened:true, google:G.status() }); }
-    catch(e){ return json(res,200,{ ok:false, error:String(e.message||e).slice(0,200), google:G.status() }); }
-  }
-  if(pathname==="/api/google/verify" && req.method==="POST"){
-    const b = await readBody(req);
-    if(!isAdmin(b.pass)) return json(res,403,{ error:"forbidden" });
-    try{ const r = await G.verify(); return json(res,200,{ ok:r.signedIn, google:G.status() }); }
-    catch(e){ return json(res,200,{ ok:false, error:String(e.message||e).slice(0,200), google:G.status() }); }
-  }
-  if(pathname==="/api/google/disconnect" && req.method==="POST"){
-    const b = await readBody(req);
-    if(!isAdmin(b.pass)) return json(res,403,{ error:"forbidden" });
-    await G.signOut();
-    return json(res,200,{ ok:true, google:G.status() });
-  }
+  if(["/api/google/login","/api/google/verify","/api/google/disconnect"].includes(pathname)) return json(res,410,{error:"manual_meeting_links",google:G.status()});
 
   /* ---- super-admin: associations + member companies ---- */
   if(pathname==="/api/orgs" && req.method==="POST"){
     const b = await readBody(req);
-    if(!isAdmin(b.pass)) return json(res,403,{ error:"forbidden" });
+    if(!isAdmin() && !(Auth.hasRole("rais") && b.op==="list")) return json(res,403,{error:"forbidden"});
     const o = C.getOrgs();
     const S = (v,n)=>String(v||"").slice(0,n);
     const op = b.op;
@@ -413,7 +353,7 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/rais/conference" && req.method==="POST"){
     const b = await readBody(req);
     const o = C.getOrgs();
-    if(!(isAdmin(b.pass) || raisAuth(o, b.login, b.password)))
+    if(!(isAdmin() || raisAuth()))
       return json(res,403,{ error:"forbidden" });
     if(b.removeId){ await dropMeet(b.removeId, "global"); C.confRemove("global", b.removeId); return json(res,200,{ ok:true, meetings: C.confList("global") }); }
     if(b.relinkId) return json(res,200, await relinkMeeting("global", b.relinkId));
@@ -426,7 +366,7 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/rais/questions" && req.method==="POST"){
     const b = await readBody(req);
     const o = C.getOrgs();
-    if(!(isAdmin(b.pass) || raisAuth(o, b.login, b.password)))
+    if(!(isAdmin() || raisAuth()))
       return json(res,403,{ error:"forbidden" });
     const months = C.questionMonths();
     const ym = b.ym || months[0] || "";
@@ -444,7 +384,7 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/rais/reports" && req.method==="POST"){
     const b = await readBody(req);
     const o = C.getOrgs();
-    if(!(isAdmin(b.pass) || raisAuth(o, b.login, b.password)))
+    if(!(isAdmin() || raisAuth()))
       return json(res,403,{ error:"forbidden" });
     const dir = path.join(C.DATA,"reports");
     let archived = [];
@@ -456,7 +396,7 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/rais/letter" && req.method==="POST"){
     const b = await readBody(req);
     const o = C.getOrgs();
-    if(!(isAdmin(b.pass) || raisAuth(o, b.login, b.password)))
+    if(!(isAdmin() || raisAuth()))
       return json(res,403,{ error:"forbidden" });
     const type = b.type==="company" ? "company" : "email";
     const key  = String(b.key||"").slice(0,160);
@@ -476,7 +416,7 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/rais/assoc-letter" && req.method==="POST"){
     const b = await readBody(req);
     const o = C.getOrgs();
-    if(!(isAdmin(b.pass) || raisAuth(o, b.login, b.password)))
+    if(!(isAdmin() || raisAuth()))
       return json(res,403,{ error:"forbidden" });
     const a = o.associations.find(x=>x.id===String(b.assocId||""));
     if(!a) return json(res,404,{ error:"association not found" });
@@ -494,55 +434,10 @@ async function handleApi(req, res, pathname, query){
   }
 
   /* ---- rais (top oversight): sees ALL associations + their products ---- */
-  /* ---- one sign-in for every tier ----
-     The browser used to try each tier's endpoint in turn, which meant up to
-     four round trips per sign-in and a 401 logged to the console for every
-     tier that was not the right one. Resolving here instead costs one
-     request, keeps the failures off the client, and leaves a single place to
-     add rate limiting. The reply never says which tier a login belongs to
-     when it fails — only that the pair did not match. */
-  if(pathname==="/api/auth/login" && req.method==="POST"){
-    const body = await readBody(req);
-    const login = String(body.login||"").trim();
-    const password = String(body.password||"");
-    const o = C.getOrgs();
-
-    /* platform admin — the one tier with no login name of its own */
-    if((login==="" || login.toLowerCase()==="admin") && isAdmin(password))
-      return json(res,200,{ ok:true, role:"admin", target:"admin.html", keys:{ kg_admin:"1" } });
-
-    if(login){
-      const creds = JSON.stringify({ login, password });
-      if(raisAuth(o, login, password))
-        return json(res,200,{ ok:true, role:"rais", target:"admin.html",
-          keys:{ kg_admin:"1", kg_rais:creds } });
-
-      if(o.associations.some(x=>x.login===login && !x.suspended && PW.verify(x, password)))
-        return json(res,200,{ ok:true, role:"association", target:"association.html",
-          keys:{ kg_as:creds } });
-
-      if(C.findCompany(o, login, password))
-        return json(res,200,{ ok:true, role:"company", target:"company.html",
-          keys:{ kg_co:creds } });
-
-      if(MARKETS.analystAuth && MARKETS.analystAuth(o, login, password))
-        return json(res,200,{ ok:true, role:"analyst", target:"tahlil.html",
-          keys:{ kg_an:creds } });
-
-      /* The buying side. Last in the chain because it is the newest tier and
-         the one whose logins are checked against every other tier at
-         approval time — nothing above it can be shadowed by a buyer. */
-      if(MARKETS.buyerAuth && MARKETS.buyerAuth(o, login, password))
-        return json(res,200,{ ok:true, role:"buyer", target:"xaridor.html",
-          keys:{ kg_by:creds } });
-    }
-    return json(res,401,{ error:"invalid_credentials" });
-  }
-
   if(pathname==="/api/rais/login" && req.method==="POST"){
     const { login, password } = await readBody(req);
     const o = C.getOrgs();
-    if(!raisAuth(o, login, password))
+    if(!raisAuth())
       return json(res,401,{ error:"invalid credentials" });
     const associations = o.associations.map(a=>({
       id:a.id, name:a.name, i18n:C.orgNames(a), chairman:a.chairman,
@@ -592,7 +487,7 @@ async function handleApi(req, res, pathname, query){
   }
   if(pathname==="/api/gov-services" && req.method==="POST"){
     const b = await readBody(req);
-    if(!isAdmin(b.pass)) return json(res,403,{ error:"forbidden" });
+    if(!isAdmin()) return json(res,403,{ error:"forbidden" });
     const M = C.getModules();
     const S=(v,n)=>String(v||"").slice(0,n);
     if(b.op==="add"){
@@ -765,8 +660,8 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/business-id/contact" && req.method==="POST"){
     const b = await readBody(req);
     const o = ensureBizIds(C.getOrgs());
-    const assoc = authAssoc(o, b.login, b.password);
-    const company = assoc ? null : C.findCompany(o, b.login, b.password);
+    const assoc = authAssoc();
+    const company = assoc ? null : currentCompany();
     const row = assoc || company;
     if(!row) return json(res,401,{ error:"invalid credentials" });
 
@@ -816,7 +711,7 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/assoc/login" && req.method==="POST"){
     const { login, password } = await readBody(req);
     const o = C.getOrgs();
-    const a = authAssoc(o, login, password);
+    const a = authAssoc();
     if(!a) return json(res,401,{ error:"invalid credentials" });
     const comps = o.companies.filter(c=>c.assocId===a.id)
       .map(c=>({ id:c.id, name:c.name, sector:c.sector, login:c.login, showroom:c.showroom||[], created:c.created||null }));
@@ -825,7 +720,7 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/assoc/companies" && req.method==="POST"){
     const b = await readBody(req);
     const o = C.getOrgs();
-    const a = authAssoc(o, b.login, b.password);
+    const a = authAssoc();
     if(!a) return json(res,401,{ error:"invalid credentials" });
     const S=(v,n)=>String(v||"").slice(0,n);
     if(b.op==="add"){
@@ -860,14 +755,14 @@ async function handleApi(req, res, pathname, query){
   /* ---- Super Admin: questions ONLY from its own companies ---- */
   if(pathname==="/api/assoc/questions" && req.method==="POST"){
     const b = await readBody(req);
-    const a = authAssoc(C.getOrgs(), b.login, b.password);
+    const a = authAssoc();
     if(!a) return json(res,401,{ error:"invalid credentials" });
     return json(res,200, C.assocQuestions(a.id, b.ym||""));
   }
   /* ---- Super Admin: official AI letter for one of ITS OWN companies ---- */
   if(pathname==="/api/assoc/letter" && req.method==="POST"){
     const b = await readBody(req);
-    const a = authAssoc(C.getOrgs(), b.login, b.password);
+    const a = authAssoc();
     if(!a) return json(res,401,{ error:"invalid credentials" });
     const key = String(b.key||"");
     if(!C.assocOwnsCompany(a.id, key)) return json(res,403,{ error:"not your company" });
@@ -879,7 +774,7 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/assoc/report" && req.method==="POST"){
     const b = await readBody(req);
     const o = C.getOrgs();
-    const a = authAssoc(o, b.login, b.password);
+    const a = authAssoc();
     if(!a) return json(res,401,{ error:"invalid credentials" });
     const months = C.assocQuestions(a.id, "").months;
     const ym = b.ym || months[0] || "";
@@ -891,7 +786,7 @@ async function handleApi(req, res, pathname, query){
   /* ---- Super Admin: monthly report Word download (own companies) ---- */
   if(pathname==="/api/assoc/report.doc"){
     const o = C.getOrgs();
-    const a = authAssoc(o, query.login, query.password);
+    const a = authAssoc();
     if(!a){ res.writeHead(401,{ "Content-Type":"text/plain" }); return res.end("invalid credentials"); }
     const doc = await C.assocReportOne(a.id, query.ym||"", { force: query.fresh==="1" });
     res.writeHead(200,{ "Content-Type":"application/msword",
@@ -906,7 +801,7 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/company/appeal" && req.method==="POST"){
     const b = await readBody(req);
     const o = C.getOrgs();
-    const c = C.findCompany(o, b.login, b.password);
+    const c = currentCompany();
     if(!c) return json(res,401,{ error:"invalid credentials" });
     if(b.op==="list") return json(res,200,{ ok:true, items: C.appealList({ companyId:c.id }), agencies:C.APPEAL_AGENCIES });
     const subject = String(b.subject||"").trim(), body = String(b.body||"").trim();
@@ -919,7 +814,7 @@ async function handleApi(req, res, pathname, query){
   /* association: its member companies' appeals, and moving them along */
   if(pathname==="/api/assoc/appeals" && req.method==="POST"){
     const b = await readBody(req);
-    const a = authAssoc(C.getOrgs(), b.login, b.password);
+    const a = authAssoc();
     if(!a) return json(res,401,{ error:"invalid credentials" });
     if(b.op==="stage"){
       const target = C.appealFind(b.id);
@@ -932,8 +827,8 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/appeals" && req.method==="POST"){
     const b = await readBody(req);
     const o = C.getOrgs();
-    const isRais = raisAuth(o, b.login, b.password);
-    if(!isAdmin(b.pass) && !isRais) return json(res,403,{ error:"forbidden" });
+    const isRais = raisAuth();
+    if(!isAdmin() && !isRais) return json(res,403,{ error:"forbidden" });
     if(b.op==="stage") C.appealSetStage(b.id, b.stage, { name:isRais?"Rais":"Administrator", type:isRais?"rais":"admin" }, b.note);
     return json(res,200,{ ok:true, items: C.appealList({ assocId:b.assocId||"" }), stages:C.APPEAL_STAGES });
   }
@@ -943,7 +838,7 @@ async function handleApi(req, res, pathname, query){
     const o = C.getOrgs();
     const actor = resolveActor(o, b);
     if(!actor) return json(res,401,{ error:"invalid credentials" });
-    const c = actor.type==="company" ? C.findCompany(o, b.login, b.password) : null;
+    const c = actor.type==="company" ? currentCompany() : null;
     const assoc = c ? o.associations.find(x=>x.id===c.assocId) : null;
     const text = await C.appealDraft({ company:c?c.name:actor.name, assoc:assoc?assoc.name:"",
       agency:b.agency, subject:b.subject, hint:b.hint, lang:b.lang });
@@ -955,10 +850,10 @@ async function handleApi(req, res, pathname, query){
     const o = C.getOrgs();
     const item = C.appealFind(String(query.id||""));
     if(!item){ res.writeHead(404,{ "Content-Type":"text/plain" }); return res.end("not found"); }
-    const c = C.findCompany(o, query.login, query.password);
-    const a = authAssoc(o, query.login, query.password);
-    const isRais = raisAuth(o, query.login, query.password);
-    const allowed = isAdmin(query.pass) || isRais
+    const c = currentCompany();
+    const a = authAssoc();
+    const isRais = raisAuth();
+    const allowed = isAdmin() || isRais
       || (c && c.id===item.companyId) || (a && a.id===item.assocId);
     if(!allowed){ res.writeHead(401,{ "Content-Type":"text/plain" }); return res.end("invalid credentials"); }
     const name = String(item.subject||"murojaat").toLowerCase().replace(/[^a-z0-9]+/g,"-").slice(0,40) || "murojaat";
@@ -970,7 +865,7 @@ async function handleApi(req, res, pathname, query){
   /* ---- Super Admin: news feed — platform-wide + its own sphere ---- */
   if(pathname==="/api/assoc/news" && req.method==="POST"){
     const b = await readBody(req);
-    const a = authAssoc(C.getOrgs(), b.login, b.password);
+    const a = authAssoc();
     if(!a) return json(res,401,{ error:"invalid credentials" });
     const items = await C.newsFeed({ assoc:a.name, assocLabel:C.orgName(a, b.lang), lang:b.lang });
     return json(res,200,{ ok:true, sphere:C.orgName(a, b.lang), items });
@@ -978,7 +873,7 @@ async function handleApi(req, res, pathname, query){
   /* ---- Super Admin: manage its own online meetings (its companies see them) ---- */
   if(pathname==="/api/assoc/conference" && req.method==="POST"){
     const b = await readBody(req);
-    const a = authAssoc(C.getOrgs(), b.login, b.password);
+    const a = authAssoc();
     if(!a) return json(res,401,{ error:"invalid credentials" });
     if(b.op==="list") return json(res,200,{ ok:true, meetings: C.confList(a.id), google: G.status() });
     if(b.removeId){ await dropMeet(b.removeId, a.id); C.confRemove(a.id, b.removeId); return json(res,200,{ ok:true, meetings: C.confList(a.id) }); }
@@ -997,7 +892,7 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/company/login" && req.method==="POST"){
     const { login, password } = await readBody(req);
     const o = C.getOrgs();
-    const c = C.findCompany(o, login, password);
+    const c = currentCompany();
     if(!c) return json(res,401,{ error:"invalid credentials" });
     const a = o.associations.find(x=>x.id===c.assocId);
     return json(res,200,{ ok:true, company:{ id:c.id, name:c.name, sector:c.sector, assocId:c.assocId||"",
@@ -1008,7 +903,7 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/upload" && req.method==="POST"){
     const b = await readBody(req);
     const o = C.getOrgs();
-    const c = C.findCompany(o, b.login, b.password);
+    const c = currentCompany();
     if(!c) return json(res,401,{ error:"invalid credentials" });
     const data = String(b.data||"");
     if(!data || data.length > 9_000_000) return json(res,400,{ error:"bad image" });
@@ -1018,6 +913,7 @@ async function handleApi(req, res, pathname, query){
     const name = C.uid("img")+"."+ext;
     try{ fs.writeFileSync(path.join(dir,name), Buffer.from(data,"base64")); }
     catch(e){ return json(res,500,{ error:"write failed" }); }
+    require("./srv/assets").register("/uploads/"+name,{public:true});
     return json(res,200,{ ok:true, url:"/uploads/"+name });
   }
 
@@ -1027,7 +923,7 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/company/items" && req.method==="POST"){
     const b = await readBody(req);
     const o = C.getOrgs();
-    const c = C.findCompany(o, b.login, b.password);
+    const c = currentCompany();
     if(!c) return json(res,401,{ error:"invalid credentials" });
     const mod = String(b.module||"");
     if(!["invest","rnd","service"].includes(mod)) return json(res,400,{ error:"bad module" });
@@ -1051,7 +947,7 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/company/letters" && req.method==="POST"){
     const { login, password } = await readBody(req);
     const o = C.getOrgs();
-    const c = C.findCompany(o, login, password);
+    const c = currentCompany();
     if(!c) return json(res,401,{ error:"invalid credentials" });
     return json(res,200,{ ok:true, letters: C.lettersFor("company", c.name) });
   }
@@ -1059,7 +955,7 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/company/showroom" && req.method==="POST"){
     const { login, password, items } = await readBody(req);
     const o = C.getOrgs();
-    const c = C.findCompany(o, login, password);
+    const c = currentCompany();
     if(!c) return json(res,401,{ error:"invalid credentials" });
     const S=(v,n)=>String(v||"").slice(0,n);
     c.showroom = Array.isArray(items) ? items.slice(0,200).map(it=>({
@@ -1072,7 +968,7 @@ async function handleApi(req, res, pathname, query){
   /* ---- admin/rais: all companies' startup/invest projects ---- */
   if(pathname==="/api/admin/projects" && req.method==="POST"){
     const b = await readBody(req); const o = C.getOrgs();
-    if(!(isAdmin(b.pass) || raisAuth(o, b.login, b.password))) return json(res,403,{ error:"forbidden" });
+    if(!(isAdmin() || raisAuth())) return json(res,403,{ error:"forbidden" });
     return json(res,200,{ ok:true, projects: C.investProjects() });
   }
   /* ---- group chats: one room per association, plus the chairmen's room ----
@@ -1123,7 +1019,7 @@ async function handleApi(req, res, pathname, query){
   /* ---- project chat: company side ---- */
   if(pathname==="/api/company/chat" && req.method==="POST"){
     const b = await readBody(req); const o = C.getOrgs();
-    const c = C.findCompany(o, b.login, b.password);
+    const c = currentCompany();
     if(!c) return json(res,401,{ error:"invalid credentials" });
     if(b.op==="send"){
       let att=null;
@@ -1135,7 +1031,7 @@ async function handleApi(req, res, pathname, query){
   /* ---- project chat: admin/rais side ---- */
   if(pathname==="/api/admin/chats" && req.method==="POST"){
     const b = await readBody(req); const o = C.getOrgs();
-    if(!(isAdmin(b.pass) || raisAuth(o, b.login, b.password))) return json(res,403,{ error:"forbidden" });
+    if(!(isAdmin() || raisAuth())) return json(res,403,{ error:"forbidden" });
     if(b.op==="thread") return json(res,200,{ ok:true, messages: C.chatThread(b.companyId) });
     if(b.op==="send"){
       let att=null;
@@ -1148,7 +1044,7 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/company/news" && req.method==="POST"){
     const { login, password, lang } = await readBody(req);
     const o = C.getOrgs();
-    const c = C.findCompany(o, login, password);
+    const c = currentCompany();
     if(!c) return json(res,401,{ error:"invalid credentials" });
     const a = o.associations.find(x=>x.id===c.assocId);
     const items = await C.newsFeed({ sector:c.sector, assoc:a?a.name:"",
@@ -1159,7 +1055,7 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/company/data" && req.method==="POST"){
     const { login, password, rows } = await readBody(req);
     const o = C.getOrgs();
-    const c = C.findCompany(o, login, password);
+    const c = currentCompany();
     if(!c) return json(res,401,{ error:"invalid credentials" });
     const S=(v,n)=>String(v||"").slice(0,n);
     c.bizrows = Array.isArray(rows) ? rows.slice(0,200).map(r=>({
@@ -1171,7 +1067,7 @@ async function handleApi(req, res, pathname, query){
   if(pathname==="/api/company/analyze" && req.method==="POST"){
     const { login, password, lang } = await readBody(req);
     const o = C.getOrgs();
-    const c = C.findCompany(o, login, password);
+    const c = currentCompany();
     if(!c) return json(res,401,{ error:"invalid credentials" });
     const rows = c.bizrows||[];
     if(!rows.length) return json(res,200,{ ok:true, analysis:"" });
@@ -1185,6 +1081,7 @@ Cover, as short paragraphs or bullets: (1) overall sales picture and notable tre
   }
 
   /* ---- admin: monthly organizations report (preview + Word) ---- */
+  if(["/api/monthly","/api/monthly.doc","/api/assoc-reports","/api/assoc.doc","/api/problems.doc"].includes(pathname) && !Auth.hasRole("admin","rais")) return json(res,403,{error:"forbidden"});
   if(pathname==="/api/monthly" && req.method==="GET"){
     return json(res,200, C.monthlyReportData(query.ym||""));
   }
@@ -1218,109 +1115,34 @@ Cover, as short paragraphs or bullets: (1) overall sales picture and notable tre
   return json(res,404,{ error:"not found" });
 }
 
-/* ---------- static ---------- */
-const MIME={ ".webm":"audio/webm",".ogg":"audio/ogg",".mp3":"audio/mpeg",".m4a":"audio/mp4",".wav":"audio/wav",".mp4":"video/mp4",".pdf":"application/pdf",".zip":"application/zip",".docx":"application/vnd.openxmlformats-officedocument.wordprocessingml.document",".xlsx":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",".xls":"application/vnd.ms-excel",".txt":"text/plain; charset=utf-8",".csv":"text/csv",".bin":"application/octet-stream",".html":"text/html; charset=utf-8",".css":"text/css",".js":"text/javascript",".json":"application/json",".doc":"application/msword",".svg":"image/svg+xml",".png":"image/png",".ico":"image/x-icon",".jpg":"image/jpeg",".jpeg":"image/jpeg",".webp":"image/webp",".gif":"image/gif" };
-/* ---- what the static server must never hand out ----
-   Everything in the project root was reachable over HTTP: anthropic.key,
-   credentials.txt and data/orgs.json (every login and password in plain
-   text) all answered 200. The site is a flat folder of pages next to the
-   backend, so the fix is an explicit denylist rather than a public/ move,
-   which would mean rewriting every page path. */
-const PRIVATE_DIRS  = ["data", "srv", "node_modules", "backups", ".git", ".claude", "telegram bot"];
-const PRIVATE_FILES = new Set(["server.js","core.js","db.js","claude.js","ws.js","meet-bot.js",
-  "google-meet.js","setup-google.js","package.json","package-lock.json"]);
-function isPrivatePath(rel){
-  const parts = rel.split(/[\\/]+/).filter(Boolean);
-  if(!parts.length) return false;
-  if(PRIVATE_DIRS.includes(parts[0])) return true;
-  const name = parts[parts.length-1].toLowerCase();
-  if(parts.length === 1 && PRIVATE_FILES.has(parts[0])) return true;
-  return name.endsWith(".key") || name.startsWith("credentials.") || name.startsWith(".env");
-}
-
-function serveStatic(res, pathname){
-  let f = pathname==="/" ? "/index.html" : pathname;
-  const p = path.join(ROOT, decodeURIComponent(f));
-  if(!p.startsWith(ROOT)){ res.writeHead(403); return res.end("403"); }
-  if(isPrivatePath(path.relative(ROOT, p))){
-    res.writeHead(404,{ "Content-Type":"text/html" }); return res.end("404 — not found");
-  }
-  fs.readFile(p,(e,d)=>{ if(e){ res.writeHead(404,{ "Content-Type":"text/html" }); return res.end("404 — not found"); }
-    const ext = path.extname(p);
-    // never cache the app shell (html/js/css) so every visitor always gets the latest version
-    const noCache = ext===".html"||ext===".js"||ext===".css";
-    const headers = { "Content-Type": MIME[ext]||"text/plain" };
-    if(noCache) headers["Cache-Control"]="no-store, no-cache, must-revalidate, max-age=0";
-    res.writeHead(200, headers); res.end(d); });
-}
-
-let HTTPS_READY = false;
-
-/* A page served over http:// on a LAN address is not a secure context,
-   so the browser deletes navigator.mediaDevices entirely and voice
-   messages become impossible. Rather than explain that to every user,
-   move them to the secure address. localhost is already a secure
-   context and is left alone. */
-function redirectToHttps(req, res){
-  if(!HTTPS_READY || req.socket.encrypted) return false;
-  const host = String(req.headers.host||"").split(":")[0];
-  if(!host || host === "localhost" || host === "127.0.0.1" || host === "::1") return false;
-  res.writeHead(302, { Location: "https://" + host + ":" + HTTPS_PORT + req.url });
-  res.end();
-  return true;
-}
-
-const handler = async (req,res)=>{
-  const u = url.parse(req.url, true);
-  /* Only PAGES need the secure context. The mobile app is not a browser:
-     bouncing its API and image requests to the self-signed certificate
-     makes every one of them fail, so those two prefixes stay on http. */
-  const isClientData = u.pathname.startsWith("/api/") || u.pathname.startsWith("/uploads/");
-  if(!isClientData && redirectToHttps(req,res)) return;
-  if(u.pathname.startsWith("/api/")){ try{ await handleApi(req,res,u.pathname,u.query); }catch(e){ console.error(e); json(res,500,{ error:"server error" }); } return; }
-  serveStatic(res, u.pathname);
-};
-
-/* ---------- self-signed HTTPS (mic on mobile needs HTTPS) ---------- */
-/** Every address this machine can be reached on, for the certificate. */
-function localAddresses(){
-  const nets = require("os").networkInterfaces();
-  const out = [];
-  Object.keys(nets).forEach(n => (nets[n]||[]).forEach(i => {
-    if(i.family === "IPv4" && !i.internal) out.push(i.address);
-  }));
-  return out;
-}
-
-/* A certificate with no subjectAltName is rejected outright by every
-   current browser — CN alone has not been accepted for years. The old
-   one had only "CN=TIJORAT MARKAZI", so opening the site by IP failed
-   before the page even loaded, which is why voice never worked off
-   localhost. This regenerates it with localhost and every LAN address
-   listed, and re-issues whenever those addresses change. */
-function ensureCert(){
-  const keyF=path.join(C.DATA,"key.pem"), crtF=path.join(C.DATA,"cert.pem");
-  const stampF=path.join(C.DATA,"cert-hosts.txt");
-  const ips = localAddresses();
-  const want = ["localhost","127.0.0.1"].concat(ips).join(",");
+let stopping=false;
+const handler=async(req,res)=>{
+  res.setHeader("X-Content-Type-Options","nosniff");
   try{
-    let stale = true;
-    try{ stale = fs.readFileSync(stampF,"utf8").trim() !== want; }catch(e){}
-    if(stale || !fs.existsSync(keyF) || !fs.existsSync(crtF)){
-      const san = ["DNS:localhost","IP:127.0.0.1"].concat(ips.map(a=>"IP:"+a)).join(",");
-      const cnfF = path.join(C.DATA,"cert.cnf");
-      fs.writeFileSync(cnfF,
-        "[req]\ndistinguished_name=dn\nx509_extensions=v3\nprompt=no\n" +
-        "[dn]\nCN=TIJORAT MARKAZI\n" +
-        "[v3]\nsubjectAltName=" + san + "\nbasicConstraints=CA:FALSE\n" +
-        "keyUsage=digitalSignature,keyEncipherment\nextendedKeyUsage=serverAuth\n");
-      execSync(`openssl req -x509 -newkey rsa:2048 -nodes -keyout "${keyF}" -out "${crtF}" -days 825 -config "${cnfF}"`,{stdio:"ignore"});
-      fs.writeFileSync(stampF, want);
-      console.log("  TLS    → certificate issued for: " + want);
-    }
-    return { key:fs.readFileSync(keyF), cert:fs.readFileSync(crtF) };
-  }catch(e){ return null; }
-}
+    if(!req.url?.startsWith("/") || req.url.startsWith("//")) return json(res,400,{error:"invalid_request_target"});
+    const target=new URL(req.url,"http://localhost");
+    const u={pathname:target.pathname,query:Object.fromEntries(target.searchParams)};
+    if(u.pathname==="/api/health/live") return json(res,stopping?503:200,{ok:!stopping});
+    if(u.pathname==="/api/health/ready") return json(res,!stopping&&await DB.probe()?200:503,{ok:!stopping&&DB.status().ready});
+    if(stopping || !DB.status().ready) return json(res,503,{error:"unavailable"});
+    const auth=await Auth.load(req);
+    await Auth.run(auth,()=>Runtime.durableResponse(req,res,async response=>{
+      if(u.pathname.startsWith("/api/auth/")) return Auth.handle(req,response,u.pathname,readBody,json,auth);
+      if(auth?.restricted && !["/api/legal","/api/legal/export","/api/legal/withdraw","/api/legal/erase","/api/legal/mine"].includes(u.pathname)) return json(response,403,{error:"rights_only"});
+      if(!["GET","HEAD"].includes(req.method)) Auth.checkCsrf(req,auth);
+      if(["/api/sessions","/api/session","/api/chat","/api/ask","/api/ai-usage","/api/ai/document","/api/copilot"].includes(u.pathname)&&!auth) return json(response,401,{error:"login_required"});
+      if(req.method==="POST") Auth.throttle("write:"+(auth?Auth.owner(auth):(req.socket.remoteAddress||"unknown")),120);
+      if(["/api/chat","/api/ask","/api/ai/document","/api/copilot"].includes(u.pathname)) Auth.throttle("ai:"+Auth.owner(auth),10);
+      if(u.pathname.startsWith("/api/")) return handleApi(req,response,u.pathname,u.query);
+      if(u.pathname.startsWith("/uploads/")) return require("./srv/assets").serve(response,u.pathname,C,auth);
+      return json(response,404,{error:"not_found"});
+    }));
+  }catch(error){
+    console.error("[request]",error.status||503,error.name);
+    if(!res.headersSent) json(res,error.status||503,{error:error.status?error.message:"unavailable"});
+    else res.destroy();
+  }
+};
 
 /* ---------- monthly auto-report: archive Word at month end + optional Telegram to rais ---------- */
 function ymNow(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); }
@@ -1378,6 +1200,7 @@ async function autoArchiveReports(){
 const WS = require("./ws");
 
 function wsAllowed(conn, gid){
+  if(gid.startsWith(ADMIN_ROOM))return conn.data.actor&&adminRoomAllows(conn.data.actor,gid.slice(ADMIN_ROOM.length));
   return conn.data.actor && C.groupAllows(conn.data.actor, gid);
 }
 
@@ -1393,7 +1216,7 @@ function attachRealtime(httpServer){
         const actor = resolveActor(C.getOrgs(), m);
         if(!actor) return conn.send({ op:"auth", ok:false });
         conn.data.actor = actor;
-        conn.data.rooms = C.groupsFor(actor).map(g => g.id);
+        conn.data.rooms = adminRooms(C.getOrgs(),actor).concat(C.groupsFor(actor)).map(g => g.id);
         return conn.send({ op:"auth", ok:true,
           me:{ type:actor.type, id:actor.id, name:actor.name }, rooms: conn.data.rooms });
       }
@@ -1404,6 +1227,14 @@ function attachRealtime(httpServer){
       if(m.op !== "typing" && !wsAllowed(conn, gid)) return conn.send({ op:"error", error:"forbidden" });
 
       const toRoom = (payload) => hub.broadcast(payload, c => wsAllowed(c, gid));
+
+      if(gid.startsWith(ADMIN_ROOM)&&m.op!=="typing"){
+        if(m.op!=="send")return conn.send({op:"error",error:"operation_not_supported_in_admin_thread"});
+        let att=null;if(m.attach){att=C.saveAttachment(m.attach);if(att.error)return conn.send({op:"error",error:att.error});}
+        if(!String(m.text||"").trim()&&!att)return;
+        const cid=gid.slice(ADMIN_ROOM.length);C.chatSend(cid,actor.type==="company"?"company":"admin",m.text,att);
+        return toRoom({op:"new",group:gid,msg:adminRoomThread(C.getOrgs(),cid).at(-1)});
+      }
 
       if(m.op === "send"){
         let att = null;
@@ -1445,39 +1276,34 @@ function attachRealtime(httpServer){
 }
 
 /* ---------- start ---------- */
-const httpServer = http.createServer(handler);
-attachRealtime(httpServer);
-
-/* The database must be up before the first request can land, otherwise an
-   early call would read stale file data and write it back over Postgres. */
-C.initDB().then(()=>{
-  httpServer.listen(PORT, ()=>{
-    console.log(`\n  TIJORAT MARKAZI server → http://localhost:${PORT}`);
-    console.log(`  AI: ${C.KEY ? "ON ("+C.MODEL+")" : "OFF — demo mode"}`);
-    console.log(`  News: ${process.env.NEWS_FETCH && process.env.NEWS_FETCH.toLowerCase() !== "off"
-      ? "web search ON" : "web search OFF (archive only — set NEWS_FETCH=on to resume)"}`);
-    const db=C.dbStatus(); console.log(`  DB: ${db.ready ? "postgres — "+db.collections+" collections" : "FILES — "+(db.error||"not connected")}`);
-    if(ADMIN_IS_DEFAULT) console.log("  ⚠  ADMIN PASSWORD IS THE DEFAULT — set ADMIN_PASSWORD or create admin.key before going live");
-    sweepGeneratedDocs();                          // keep uploads/ from growing without bound
-    setInterval(sweepGeneratedDocs, 24*60*60*1000);
-    autoArchiveReports();                          // on start: archive any ended month not yet done
-    setInterval(autoArchiveReports, 6*60*60*1000); // and re-check every 6h (catches month rollover)
-  });
-});
-/* finish queued writes on shutdown instead of dropping them */
-for(const sig of ["SIGINT","SIGTERM"]) process.on(sig, ()=>{ C.dbFlush().finally(()=>process.exit(0)); });
-
-const creds = ensureCert();
-if(creds){
-  // the socket has to live on HTTPS too, or a phone gets no realtime
-  const httpsServer = https.createServer(creds, handler);
-  attachRealtime(httpsServer);
-  httpsServer.listen(HTTPS_PORT, ()=>{
-    HTTPS_READY = true;                        // only now is redirecting safe
-    console.log(`  HTTPS  → https://localhost:${HTTPS_PORT}`);
-    localAddresses().forEach(a=>console.log(`  LAN    → https://${a}:${HTTPS_PORT}   (voice works here)`));
-    console.log("");
-  });
-}else{
-  console.log(`  HTTPS  → skipped (openssl not found)\n`);
+const httpServer=http.createServer(handler);
+httpServer.requestTimeout=30000;
+httpServer.headersTimeout=10000;
+httpServer.keepAliveTimeout=5000;
+const realtime=attachRealtime(httpServer);
+async function shutdown(code=0){
+  if(stopping) return; stopping=true;
+  const deadline=setTimeout(()=>process.exit(code||1),25000); deadline.unref();
+  realtime.close();
+  await new Promise(resolve=>{httpServer.close(resolve);httpServer.closeIdleConnections();});
+  try{await DB.close();}catch{code=1;}
+  clearTimeout(deadline);process.exit(code);
 }
+DB.onFailure(()=>{ console.error("[db] persistence unavailable; restarting"); setTimeout(()=>shutdown(1),100).unref(); });
+for(const signal of ["SIGTERM","SIGINT"]) process.on(signal,()=>shutdown());
+async function start(){
+  Runtime.validate();
+  const until=Date.now()+Number(process.env.STARTUP_TIMEOUT||120)*1000;
+  while(true){try{await DB.init();break;}catch(error){await DB.close().catch(()=>{});if(Date.now()>=until)throw error;await new Promise(r=>setTimeout(r,2000));}}
+  await Auth.init(); C.getOrgs(); await DB.flush();
+  httpServer.listen(PORT,"0.0.0.0",()=>console.log("Backend listening on port "+PORT));
+  sweepGeneratedDocs();setInterval(sweepGeneratedDocs,86400000).unref();
+  autoArchiveReports().catch(()=>console.error("[reports] archive failed"));
+  setInterval(()=>autoArchiveReports().catch(()=>console.error("[reports] archive failed")),6*3600000).unref();
+}
+if(require.main===module){
+  process.on("unhandledRejection",()=>{console.error("[fatal] unhandled rejection");shutdown(1);});
+  process.on("uncaughtException",()=>{console.error("[fatal] uncaught exception");shutdown(1);});
+  start().catch(error=>{console.error("[startup] failed",error.code||error.name);process.exit(1);});
+}
+module.exports={start,handler,httpServer,shutdown};

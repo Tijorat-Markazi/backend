@@ -454,23 +454,13 @@ function inquiryAdd(body, target, buyer){
   const email   = buyer ? H.S(buyer.email, 120).toLowerCase() : H.S(body.email, 120).toLowerCase();
   if(!contact && !email) return { error: "contact_required" };
 
-  /* A visitor has no account, so their thread cannot be protected by a login.
-     It is protected by a capability instead: a key minted on the first
-     enquiry from this address and handed back to that browser. Knowing the
-     e-mail alone is not enough to read the thread.
-
-     A buyer account makes that unnecessary — buyerAccountId is the owner, and
-     inquiriesOfBuyer() reads by it. The key is still minted so a thread that
-     starts signed-in stays readable if the same person later writes in from
-     the public showroom with the same address. */
-  const existing = st.inquiries.find(i => i.buyerEmail && i.buyerEmail === email && i.viewKey);
-  const viewKey = (H.S(body.viewKey, 60) && existing && existing.viewKey === H.S(body.viewKey, 60))
-    ? existing.viewKey
-    : (existing ? existing.viewKey : H.uid("vk") + H.uid(""));
+  // Ownership comes from the account or opaque guest session. Contact email
+  // never grants access to another browser's inquiries.
+  const guestOwner=require("./auth").owner();
 
   const row = {
     id:          H.uid("iq"),
-    viewKey,
+    ownerId: guestOwner,
     buyerAccountId: buyer ? H.S(buyer.id, 40) : "",
     companyId:   H.S(target.companyId, 40),
     companyName: H.S(target.companyName, 160),
@@ -501,12 +491,10 @@ function inquiryAdd(body, target, buyer){
   H.logEvent(st, "inquiry_sent", { inquiryId: row.id, companyId: row.companyId,
     productId: row.productId, source: row.source, qty: row.qty });
   save(st);
-  /* viewKey goes back to the buyer's browser only, in this one response. */
-  return { ok: true, inquiry: sellerInquiry(row), viewKey: row.viewKey };
+  return { ok: true, inquiry: sellerInquiry(row) };
 }
 
-/* The company sees the buyer's contact — that is the point of the channel —
-   but never the buyer's capability key. */
+// Strip legacy capability fields if an operator imports older records.
 const sellerInquiry = i => { const { viewKey, ...rest } = i; return rest; };
 /* The buyer sees their own thread, never another buyer's. */
 const buyerInquiry = i => ({ id: i.id, companyName: i.companyName, productName: i.productName,
@@ -548,13 +536,7 @@ const inquiriesFor = companyId => load().inquiries
   .map(sellerInquiry);
 
 /** Requires the capability key issued when the thread was opened. */
-const inquiriesOf = (email, key) => {
-  const e = H.S(email, 120).toLowerCase();
-  const k = H.S(key, 60);
-  if(!e || !k) return [];
-  return load().inquiries.filter(i => i.buyerEmail === e && i.viewKey && i.viewKey === k)
-    .sort((a, b) => b.updated - a.updated).map(buyerInquiry);
-};
+const inquiriesOf = ownerId => load().inquiries.filter(i=>i.ownerId===ownerId).sort((a,b)=>b.updated-a.updated).map(buyerInquiry);
 
 /** A signed-in buyer needs no capability key: the account id IS the owner. */
 const inquiriesOfBuyer = buyerId => {

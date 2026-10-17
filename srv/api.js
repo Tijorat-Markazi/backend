@@ -6,18 +6,9 @@
    through `ctx` rather than importing server.js back, so the
    dependency stays one-directional.
 
-   Identity model, deliberately reusing what the platform already has:
-   • seller / provider / employer  → company login + password
-     (the same credentials company.html issues), resolved via core.
-   • B2B buyer → buyer login + password, an admin-approved account
-     (see buyer.js). This tier is newer than the rest of the file:
-     before it, "the buyer" was whatever e-mail a request body
-     claimed, so nothing buyer-side could be owned or protected.
-   • candidate / investor / idea author → e-mail, the same identity
-     the assistant and chat archive already key on. Still a claim,
-     not a proof — which is why it stays last in the actor chain.
-   Anything that writes to a company-owned record demands the
-   company credentials; nothing trusts a client-supplied id.
+   Identity is supplied by the opaque server session in auth.js. Account IDs
+   are resolved from current records; visitor IDs come from the server cookie.
+   Contact email addresses are never ownership credentials.
    ============================================================ */
 const H = require("./store");
 const B = require("./bozor");
@@ -30,6 +21,7 @@ const R  = require("./register");
 const AN = require("./analytics");
 const BY = require("./buyer");
 const PW = require("./passwords");
+const Auth = require("./auth");
 const L  = require("./legal");
 const RT = require("./rights");
 
@@ -39,54 +31,22 @@ const owns = p => PREFIXES.some(x => p === x.replace(/\/$/, "") || p.startsWith(
 
 /* ---------- identity ---------- */
 /** A company acting as seller / finance provider / employer. */
-function company(ctx, b){
-  const o = ctx.core.getOrgs();
-  const c = ctx.core.findCompany(o, b.login, b.password);
-  if(!c) return null;
-  return { id: c.id, name: c.name, sector: c.sector, assocId: c.assocId || "", raw: c };
-}
-/** A B2B buyer holding an admin-approved account. */
-function buyer(ctx, b){
-  const a = BY.authenticate(ctx.core.getOrgs(), b.login, b.password);
-  if(!a) return null;
-  return { id: a.id, name: a.name, login: a.login, email: a.email,
-           contactName: a.raw.contactName || "", raw: a.raw, type: "buyer" };
-}
-/** An individual, keyed on e-mail exactly like the assistant does. */
-function person(b){
-  const email = H.S(b.email, 120).toLowerCase();
-  if(!email || !email.includes("@")) return null;
-  return { id: "u:" + email, name: H.S(b.name, 160) || email.split("@")[0], email };
-}
-/* Any of the three — used where a company, a buyer or a walk-in visitor may
-   all legitimately act. Order is the point: the two credentialed tiers are
-   tried first, so a request carrying real credentials is never demoted to an
-   unverified e-mail identity just because it also carried an address. */
-const actor = (ctx, b) => company(ctx, b) || buyer(ctx, b) || person(b);
-
-/** Strictly a buyer. Used by every route in the buyer's own cabinet. */
-const needBuyer = (ctx, b) => buyer(ctx, b);
-
-const need = (res, ctx, what) => ctx.json(res, 401, { error: what });
-const out  = (res, ctx, r) => r && r.error
-  ? ctx.json(res, r.error === "forbidden" ? 403 : 400, r)
-  : ctx.json(res, 200, r);
-
-/** Whoever may rule on a registration: the named association, or oversight. */
-function approver(ctx, b){
-  if(ctx.isAdmin(b.pass)) return { type: "admin", id: "admin", name: "Administrator" };
-  const o = ctx.core.getOrgs();
-  const lg = H.S(b.login, 80), pw = String(b.password == null ? "" : b.password);
-  if(o.rais && o.rais.login === lg && PW.verify(o.rais, pw))
-    return { type: "rais", id: "rais", name: "Rais" };
-  const a = (o.associations || []).find(x => x.login === lg && PW.verify(x, pw));
-  if(a) return { type: "assoc", id: a.id, name: a.chairman || a.name };
-  return null;
-}
+function company(){const c=Auth.record("company");return c?{id:c.id,name:c.name,sector:c.sector,assocId:c.assocId||"",raw:c}:null;}
+function buyer(){const b=Auth.record("buyer");return b?{id:b.id,name:b.name,login:b.login,email:b.email||"",contactName:b.contactName||"",raw:b,type:"buyer"}:null;}
+const person=body=>Auth.person(body);
+const actor=(ctx,body)=>company()||buyer()||person(body);
+const needBuyer=()=>buyer();
+const need=(res,ctx,what)=>ctx.json(res,401,{error:what});
+const out=(res,ctx,r)=>r&&r.error?ctx.json(res,r.error==="forbidden"?403:400,r):ctx.json(res,200,r);
+function approver(){const a=Auth.actor();return a&&["admin","rais","assoc"].includes(a.type)?a:null;}
 
 /* ============================================================
    handler
    ============================================================ */
+function currentAnalyst(){
+  if(Auth.hasRole("admin"))return {name:"Administrator",org:"",scopes:AN.MODULES};
+  const a=Auth.record("analyst");return a?{id:a.id,name:a.name,org:a.org||"",login:a.login,scopes:Array.isArray(a.scopes)?a.scopes.filter(m=>AN.MODULES.includes(m)):[]}:null;
+}
 async function handle(req, res, pathname, query, ctx){
   const GET  = req.method === "GET";
   const POST = req.method === "POST";
@@ -145,7 +105,7 @@ async function handle(req, res, pathname, query, ctx){
       if(p) productName = p.name || productName;
     }
     return out(res, ctx, B.inquiryAdd(body, { companyId: co.id, companyName: co.name,
-      productId: pid, productName }));
+      productId: pid, productName }, buyer()));
   }
   if(pathname === "/api/bozor/inquiries" && POST){
     const c = company(ctx, body);
@@ -162,7 +122,7 @@ async function handle(req, res, pathname, query, ctx){
   if(pathname === "/api/bozor/inquiry/mine" && POST){
     const p = person(body);
     if(!p) return need(res, ctx, "email_required");
-    return ctx.json(res, 200, { ok: true, items: B.inquiriesOf(p.email, body.viewKey) });
+    return ctx.json(res, 200, { ok: true, items: B.inquiriesOf(p.id) });
   }
 
   if(pathname === "/api/bozor/rfqs" && GET) return ctx.json(res, 200, { items: B.rfqList(query) });
@@ -181,8 +141,11 @@ async function handle(req, res, pathname, query, ctx){
       .map(r => Object.assign({}, r, { quoteCount: st.quotes.filter(q => q.rfqId === r.id).length })) });
   }
 
-  if(pathname === "/api/bozor/quotes" && GET)
-    return out(res, ctx, B.quotesFor(H.S(query.rfqId, 40)));
+  if(pathname === "/api/bozor/quotes" && GET){
+    const id=H.S(query.rfqId,40),a=actor(ctx,{}),r=B.load().rfqs.find(x=>x.id===id);
+    if(!a||!r||r.buyerId!==a.id)return ctx.json(res,403,{error:"forbidden"});
+    return out(res,ctx,B.quotesFor(id));
+  }
   if(pathname === "/api/bozor/quote" && POST){
     const c = company(ctx, body);
     if(!c) return need(res, ctx, "company_login_required");
@@ -271,8 +234,11 @@ async function handle(req, res, pathname, query, ctx){
     if(!a) return need(res, ctx, "identify_first");
     return ctx.json(res, 200, { ok: true, items: M.requestsOf(a.id) });
   }
-  if(pathname === "/api/moliya/offers" && GET)
-    return out(res, ctx, M.offerCompare(H.S(query.requestId, 40)));
+  if(pathname === "/api/moliya/offers" && GET){
+    const id=H.S(query.requestId,40),a=actor(ctx,{}),request=M.load().requests.find(r=>r.id===id);
+    if(!a||!request||request.ownerId!==a.id)return ctx.json(res,403,{error:"forbidden"});
+    return out(res,ctx,M.offerCompare(id));
+  }
   if(pathname === "/api/moliya/offer" && POST){
     const c = company(ctx, body);
     if(!c) return need(res, ctx, "company_login_required");
@@ -451,6 +417,10 @@ async function handle(req, res, pathname, query, ctx){
   if(pathname === "/api/legal" && GET)
     return ctx.json(res, 200, Object.assign({ ok: true }, L.publicConfig()));
 
+  if(pathname === "/api/legal/mine" && POST){
+    const sub=RT.subjectOf(ctx.core);if(!sub)return need(res,ctx,"login_required");
+    return ctx.json(res,200,{ok:true,items:RT.exportFor(sub,ctx.core).rightsRequests});
+  }
   if(pathname === "/api/legal/export" && POST){
     const sub = RT.subjectOf(ctx.core, body);
     if(!sub) return need(res, ctx, "login_required");
@@ -595,15 +565,14 @@ async function handle(req, res, pathname, query, ctx){
      accounts precisely so that reading intelligence never requires the
      rights that let someone change operational records. */
   if(pathname === "/api/analyst/login" && POST){
-    const a = AN.authenticate(ctx.core.getOrgs(), body.login, body.password);
+    const a = currentAnalyst();
     if(!a) return ctx.json(res, 401, { error: "invalid_credentials" });
     return ctx.json(res, 200, { ok: true, analyst: { name: a.name, org: a.org, scopes: a.scopes },
       modules: AN.MODULES, dimensions: AN.DIMENSIONS, metrics: AN.METRICS });
   }
 
   /* Oversight can open the workbench without a separate account. */
-  const analyst = () => AN.authenticate(ctx.core.getOrgs(), body.login, body.password)
-    || (ctx.isAdmin(body.pass) ? { name: "Administrator", org: "", scopes: AN.MODULES } : null);
+  const analyst = () => currentAnalyst();
 
   if(pathname === "/api/analyst/overview" && POST){
     const a = analyst();
@@ -637,7 +606,7 @@ async function handle(req, res, pathname, query, ctx){
         "Content-Disposition": 'attachment; filename="tijorat-markazi-tahlil-' + stamp + '.doc"' });
       return res.end(html);
     }
-    const buf = AN.toXlsx(sheets);
+    const buf = await AN.toXlsx(sheets);
     res.writeHead(200, { "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       "Content-Disposition": 'attachment; filename="tijorat-markazi-tahlil-' + stamp + '.xlsx"',
       "Content-Length": buf.length });
@@ -646,7 +615,7 @@ async function handle(req, res, pathname, query, ctx){
 
   /* Account management belongs to the admin, next to companies and associations. */
   if(pathname === "/api/analyst/accounts" && POST){
-    if(!ctx.isAdmin(body.pass)) return ctx.json(res, 403, { error: "forbidden" });
+    if(!ctx.isAdmin()) return ctx.json(res, 403, { error: "forbidden" });
     const o = ctx.core.getOrgs();
     o.analysts = Array.isArray(o.analysts) ? o.analysts : [];
     if(body.op === "add"){
@@ -692,14 +661,14 @@ async function handle(req, res, pathname, query, ctx){
      the copilots cannot be used to bypass the free tier. */
   if(pathname === "/api/copilot" && POST){
     const privileged = ctx.isPrivileged(ctx.core.getOrgs(), body.auth || body) || !!company(ctx, body);
-    const meter = H.S(body.email || body.guestId || body.login, 80);
+    const meter = Auth.owner();
     if(!privileged){
       if(!meter) return ctx.json(res, 401, { error: "identify_first" });
       if(ctx.core.aiUsageCount(meter) >= ctx.core.AI_FREE_LIMIT)
         return ctx.json(res, 200, { ok: false, limit: true, error: "ai_limit" });
     }
+    if(!privileged&&meter){ctx.core.aiUsageInc(meter);await require("../db").flush();}
     const r = await CP.run(body.agent, body);
-    if(r.ok && !privileged && meter) ctx.core.aiUsageInc(meter);
     return ctx.json(res, r.ok ? 200 : 200, r);
   }
   if(pathname === "/api/copilot/agents" && GET)

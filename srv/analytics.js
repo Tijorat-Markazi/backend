@@ -353,14 +353,10 @@ function sheets(opts, orgs){
   return out;
 }
 
-function toXlsx(sheetList){
-  const X = require("xlsx");
-  const wb = X.utils.book_new();
-  for(const s of sheetList){
-    const ws = X.utils.aoa_to_sheet(s.rows);
-    X.utils.book_append_sheet(wb, ws, String(s.name).slice(0, 28));
-  }
-  return X.write(wb, { type: "buffer", bookType: "xlsx" });
+async function toXlsx(sheetList){
+  const ExcelJS=require("exceljs"),wb=new ExcelJS.Workbook();
+  for(const sheet of sheetList){const ws=wb.addWorksheet(String(sheet.name).replace(/[\\/*?:\[\]]/g," ").slice(0,28)||"Sheet");for(const row of sheet.rows)ws.addRow(row);}
+  return Buffer.from(await wb.xlsx.writeBuffer());
 }
 
 /** The same figures as a Word-readable document, matching the platform's

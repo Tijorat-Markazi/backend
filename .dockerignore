@@ -1,0 +1,27 @@
+.git
+.github
+node_modules
+.cache
+.verification
+.tools
+tests
+data
+uploads
+telegram bot
+backups
+*.key
+*.pem
+.env
+.env.*
+*.env
+credentials.*
+*.sql
+*.dump
+*.log
+coverage
+README*
+HUQUQIY-MUVOFIQLIK.md
+meet-bot.js
+google-meet.js
+setup-google.js
+monthly-report.js

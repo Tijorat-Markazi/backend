@@ -3,7 +3,9 @@
    ============================================================ */
 const fs   = require("fs");
 const path = require("path");
-const { execSync } = require("child_process");
+const { execFileSync } = require("child_process");
+const Auth=require("./srv/auth");
+const Assets=require("./srv/assets");
 
 const ROOT = __dirname;
 const DATA = path.join(ROOT, "data");
@@ -17,10 +19,8 @@ const MODEL = AI.MODEL;
 const KEY   = AI.KEY;
 
 /* ---------- storage ---------- */
-/* All platform data lives in Postgres (see db.js). These two helpers keep the
-   old file-shaped signature, so every existing call site reads and writes the
-   database without changing. If Postgres is unreachable they fall back to the
-   JSON files, and the platform keeps running. */
+/* PostgreSQL is required. The HTTP/WS transport waits for queued persistence
+   before success; a failed write poisons this process and triggers restart. */
 const DB = require("./db");
 const PW = require("./srv/passwords");  // hashing at rest + the migration off plaintext
 const loadJSON = (f,def) => DB.get(f, def);
@@ -536,6 +536,7 @@ function chatThread(companyId){ const all=getChats(); return all[companyId]||[];
 function chatSend(companyId, from, text, att){
   const all=getChats(); const arr=all[companyId]||(all[companyId]=[]);
   const msg={ from, text:String(text||"").slice(0,2000), time:Date.now() };
+  if(att && att.url) Assets.share(att.url,"admin:"+companyId);
   if(att && att.url) msg.att={ url:att.url, name:att.name, mime:att.mime,
                                kind:att.kind, size:att.size, dur:att.dur };
   arr.push(msg); saveJSON(PCHAT_FILE, all); return arr; }
@@ -643,9 +644,10 @@ function saveAttachment(b){
   const ext = ATTACH_EXT[mime] || "bin";
   const kind = attachKind(mime, !!b.voice);
   fs.mkdirSync(ATTACH_DIR, { recursive:true });
-  const file = uid(kind) + "." + ext;
+  const file = require("node:crypto").randomBytes(20).toString("hex") + "." + ext;
   try{ fs.writeFileSync(path.join(ATTACH_DIR, file), buf); }
   catch(e){ return { error:"write failed" }; }
+  Assets.register("/uploads/"+file);
 
   return {
     ok:true,
@@ -768,6 +770,7 @@ function groupSend(gid, actor, text, att, replyTo){
      client: only the fields saveAttachment() produced are copied, so a
      caller cannot point a bubble at an arbitrary URL. */
   if(att && att.url){
+    Assets.share(att.url,gid);
     msg.att = { url:att.url, name:att.name, mime:att.mime,
                 kind:att.kind, size:att.size, dur:att.dur };
   }
@@ -949,6 +952,7 @@ async function cacheNewsImage(imgUrl){
     fs.mkdirSync(NEWS_UPLOADS, { recursive:true });
     const name = uid("news")+"."+ext;
     fs.writeFileSync(path.join(NEWS_UPLOADS, name), got.buf);
+    Assets.register("/uploads/news/"+name,{public:true});
     return "/uploads/news/"+name;
   }catch(e){ return ""; }
 }
@@ -1390,7 +1394,10 @@ function getOrgs(){
     if(!a.login){ let base=slugLogin(a.name)||("uy"+(i+1)), lg=base, n=2; while(used.has(lg)){ lg=base+n; n++; } used.add(lg); a.login=lg; changed=true; }
     if(!a.password && !a.pwHash){ PW.set(a, genPass()); changed=true; }
   });
-  if(!o.rais || !o.rais.login){ o.rais = PW.set({ login:"rais" }, "rais2024"); changed=true; }
+  if(!o.rais || !o.rais.login || !o.rais.productionProvisioned){
+    if(!process.env.RAIS_PASSWORD || process.env.RAIS_PASSWORD.length<16)throw new Error("RAIS_PASSWORD is required for initialization");
+    o.rais=PW.set({...o.rais,login:process.env.RAIS_LOGIN||o.rais?.login||"rais",productionProvisioned:true},process.env.RAIS_PASSWORD);changed=true;
+  }
   /* Legacy plaintext credentials are rewritten as scrypt hashes here, before
      any caller sees the document. See srv/passwords.js for why this is eager. */
   const moved = PW.migrate(o);
@@ -1552,15 +1559,16 @@ async function aiDocument({ kind, prompt, lang, title }){
   const doc = await AI.makeDocument({ kind, prompt, lang, title });
   if(!doc.ok) return doc;
   fs.mkdirSync(ATTACH_DIR, { recursive:true });
-  const file = uid("doc") + "." + doc.ext;
+  const file = "doc"+require("node:crypto").randomBytes(20).toString("hex") + "." + doc.ext;
   try{ fs.writeFileSync(path.join(ATTACH_DIR, file), doc.data); }
   catch(e){ return { ok:false, error:"write_failed" }; }
+  Assets.register("/uploads/"+file);
   return { ok:true, url:"/uploads/" + file, name:doc.filename, size:doc.data.length, note:doc.note };
 }
 const docKinds = () => AI.docKinds();
 
 /* ---------- office/doc extraction ---------- */
-function runCmd(cmd){ try{ return execSync(cmd,{maxBuffer:1024*1024*30}).toString(); }catch(e){ return ""; } }
+function runCmd(args){ try{return execFileSync("unzip",args,{timeout:3000,maxBuffer:2*1024*1024}).toString();}catch{return "";} }
 function cleanXml(s){
   return String(s)
     .replace(/<\/w:p>|<\/a:p>|<\/text:p>|<\/tr>/g,"\n")
@@ -1569,13 +1577,13 @@ function cleanXml(s){
     .replace(/[ \t]+/g," ").replace(/\n{3,}/g,"\n\n").trim();
 }
 function extractOffice(b64, name){
-  const tmp = path.join(DATA, "tmp_"+Date.now()+"_"+Math.random().toString(36).slice(2)+(path.extname(name)||".bin"));
+  const tmp = path.join(DATA, "tmp_"+Date.now()+"_"+Math.random().toString(36).slice(2)+([".docx",".xlsx",".pptx"].includes(path.extname(name).toLowerCase())?path.extname(name).toLowerCase():".bin"));
   try{
     fs.writeFileSync(tmp, Buffer.from(b64,"base64"));
     let xml="";
-    if(/\.docx$/i.test(name))      xml = runCmd(`unzip -p "${tmp}" word/document.xml`);
-    else if(/\.pptx$/i.test(name)) xml = runCmd(`unzip -p "${tmp}" "ppt/slides/slide*.xml"`);
-    else if(/\.xlsx$/i.test(name)) xml = runCmd(`unzip -p "${tmp}" xl/sharedStrings.xml`) + "\n" + runCmd(`unzip -p "${tmp}" "xl/worksheets/sheet*.xml"`);
+    if(/\.docx$/i.test(name))      xml = runCmd(["-p",tmp,"word/document.xml"]);
+    else if(/\.pptx$/i.test(name)) xml = runCmd(["-p",tmp,"ppt/slides/slide*.xml"]);
+    else if(/\.xlsx$/i.test(name)) xml = runCmd(["-p",tmp,"xl/sharedStrings.xml"]) + "\n" + runCmd(["-p",tmp,"xl/worksheets/sheet*.xml"]);
     return cleanXml(xml).slice(0,20000);
   }catch(e){ return ""; }
   finally{ try{ fs.unlinkSync(tmp); }catch(e){} }

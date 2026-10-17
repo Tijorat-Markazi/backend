@@ -146,6 +146,7 @@ function submit(body, orgs, req){
 
   const row = {
     id: H.uid("rg"),
+    ownerId: require("./auth").owner(),
     ref: makeRef(),
     kind: "company",
     name, sector,
@@ -204,6 +205,7 @@ function submitBuyer(body, orgs, req){
 
   const row = {
     id: H.uid("rg"),
+    ownerId: require("./auth").owner(),
     ref: makeRef(),
     kind: "buyer",
     name,
@@ -357,7 +359,7 @@ function status(email, ref){
   const e = H.S(email, 120).toLowerCase();
   const r = H.S(ref, 40).toUpperCase();
   if(!e || !r) return { error: "identify_first" };
-  const app = load().applications.find(a => a.email === e && String(a.ref).toUpperCase() === r);
+  const app = load().applications.find(a => a.ownerId === require("./auth").owner() && String(a.ref).toUpperCase() === r);
   if(!app) return { error: "not_found" };
   return { ok: true, application: publicView(app) };
 }

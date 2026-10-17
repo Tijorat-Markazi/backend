@@ -402,7 +402,7 @@ function requestSetStatus(owner, body){
   const id  = H.S(body.id, 40);
   const req = st.requests.find(r => r.id === id);
   if(!req) return { error: "not_found" };
-  if(req.ownerId && owner && req.ownerId !== owner.id) return { error: "forbidden" };
+  if(!owner || !req.ownerId || req.ownerId !== owner.id) return { error: "forbidden" };
   const status = REQ_STATUS.includes(H.S(body.status, 20)) ? H.S(body.status, 20) : req.status;
   const next = Object.assign({}, req, { status });
   st.requests = st.requests.map(r => (r.id === id ? next : r));
