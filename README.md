@@ -6,7 +6,9 @@ use `npm ci`, `npm test`, and `npm start` with the environment below.
 
 ## Production deployment
 
-The Dockerfile installs production dependencies in a separate stage. The runtime
+The Dockerfile installs production dependencies in a separate stage. Both stages
+use the same digest-pinned Node 24 / Alpine 3.24 image; runtime APK packages are
+updated and npm/Yarn are removed. The runtime
 contains the API and `unzip` for bounded Office text extraction, runs as
 UID/GID `10001:10001`, and supports a read-only root filesystem. Mount writable
 `/app/data` and `/app/uploads` and provide `/tmp` as tmpfs. Runtime files and
@@ -17,6 +19,11 @@ configuration and directory permissions, waits for PostgreSQL within
 `STARTUP_TIMEOUT`, creates its document/session tables, and initializes account
 credentials. `WEB_CONCURRENCY` must be `1`; do not use clustering, PM2 workers,
 replicas, or a second process that writes through the same memory mirror.
+
+After Trivy scans the published image, CI starts that exact digest against an
+ephemeral PostgreSQL 18 database with a read-only root filesystem and UID 10001.
+It checks real API readiness, runtime package imports, Office extraction tools,
+the Tashkent timezone and graceful shutdown before infra promotion.
 
 | Setting | Purpose |
 | --- | --- |

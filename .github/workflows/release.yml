@@ -191,6 +191,17 @@ jobs:
     permissions:
       contents: read
       packages: read
+    services:
+      postgres:
+        image: postgres:18-bookworm@sha256:afc7e2d441324c0388fa80c3d24f733b4194a4eb7f47dd8ee2b08eb1a24a647c
+        env:
+          POSTGRES_DB: image_smoke
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ci-only-password
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres -d image_smoke"
+          --health-interval 5s --health-timeout 3s --health-retries 12
     env:
       IMAGE_REF: ${{ needs.build-publish.outputs.image_ref }}
       TRIVY_PASSWORD: ${{ github.token }}
@@ -200,6 +211,14 @@ jobs:
           persist-credentials: false
       - name: Scan published image
         run: bash .github/scripts/security-scan.sh image
+      - uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+      - name: Smoke-test published production image
+        timeout-minutes: 3
+        run: bash .github/scripts/smoke-image.sh
       - name: Generate image SBOM
         if: ${{ always() }}
         run: bash .github/scripts/security-scan.sh sbom
