@@ -28,7 +28,8 @@ the Tashkent timezone and graceful shutdown before infra promotion.
 | Setting | Purpose |
 | --- | --- |
 | `NODE_ENV` | `production` in deployed containers. |
-| `DATABASE_URL` | Required PostgreSQL connection URL; no file fallback. |
+| `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `POSTGRES_PASSWORD` | Production connection components; application role/password only. All are required together. |
+| `DATABASE_URL` | Legacy local/CI URL when no DB component settings are present; no file fallback. |
 | `APP_ORIGIN` | Exact public HTTPS origin, e.g. `https://domain-name.uz`. |
 | `ADMIN_PASSWORD` | Required secret, at least 16 characters. |
 | `RAIS_PASSWORD` | Required initial oversight password, at least 16 characters. |

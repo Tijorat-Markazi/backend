@@ -3,7 +3,8 @@ const fs = require("node:fs");
 const path = require("node:path");
 const DB = require("../db");
 function validate() {
-  for (const name of ["DATABASE_URL","APP_ORIGIN","ADMIN_PASSWORD","RAIS_PASSWORD"]) {
+  DB.connectionOptions();
+  for (const name of ["APP_ORIGIN","ADMIN_PASSWORD","RAIS_PASSWORD"]) {
     if (!process.env[name]) throw new Error(`${name} is required`);
   }
   if (process.env.WEB_CONCURRENCY && process.env.WEB_CONCURRENCY !== "1") throw new Error("WEB_CONCURRENCY must be 1: storage uses one process");

@@ -7,11 +7,22 @@ const DATA = path.join(__dirname, "data");
 const cache = new Map();
 let pool, ready = false, fatal = null, chain = Promise.resolve(), failureHandler = () => {};
 const UPSERT = "INSERT INTO documents(key,data,updated_at) VALUES($1,$2,now()) ON CONFLICT(key) DO UPDATE SET data=EXCLUDED.data,updated_at=now()";
+function connectionOptions(env = process.env) {
+  // Components take precedence; never mix them with a legacy URL.
+  const names = ["DB_HOST", "DB_PORT", "DB_NAME", "DB_USER"];
+  if (names.some(name => env[name])) {
+    for (const name of [...names, "POSTGRES_PASSWORD"]) if (!env[name]) throw new Error(`${name} is required`);
+    if (!/^\d+$/.test(env.DB_PORT) || Number(env.DB_PORT) < 1 || Number(env.DB_PORT) > 65535) throw new Error("Invalid DB_PORT");
+    return { host: env.DB_HOST, port: Number(env.DB_PORT), database: env.DB_NAME,
+      user: env.DB_USER, password: env.POSTGRES_PASSWORD };
+  }
+  if (!env.DATABASE_URL) throw new Error("DB_HOST, DB_PORT, DB_NAME, DB_USER and POSTGRES_PASSWORD are required (or legacy DATABASE_URL)");
+  return { connectionString: env.DATABASE_URL };
+}
 function fail(error) { ready = false; if (!fatal) { fatal = error; failureHandler(error); } }
 async function init(options = {}) {
   ready = false;
-  if (!options.pool && !process.env.DATABASE_URL) throw new Error("DATABASE_URL is required");
-  pool = options.pool || new Pool({ connectionString: process.env.DATABASE_URL,
+  pool = options.pool || new Pool({ ...connectionOptions(),
     max: 6, connectionTimeoutMillis: 3000, query_timeout: 5000, statement_timeout: 5000, idleTimeoutMillis: 30000 });
   pool.on?.("error", fail);
   cache.clear(); fatal = null; chain = Promise.resolve();
@@ -49,5 +60,5 @@ async function query(text, values) {
 async function probe() { if (!ready || fatal) return false; try { await query("SELECT 1"); return true; } catch { return false; } }
 async function close() { try { await flush(); } finally { ready = false; await pool?.end(); } }
 const status = () => ({ ready: ready && !fatal, collections: cache.size });
-module.exports = { init, get, set, flush, close, query, probe, status,
+module.exports = { init, get, set, flush, close, query, probe, status, connectionOptions,
   keyOf: file => path.basename(file), onFailure: handler => { failureHandler = handler; } };

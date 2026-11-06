@@ -232,6 +232,8 @@ jobs:
           if-no-files-found: warn
 
   deploy:
+    outputs:
+      promoted: ${{ steps.promotion.outputs.enabled }}
     needs: [build-publish, image-scan]
     if: ${{ github.ref == 'refs/heads/main' && !inputs.publish_only }}
     environment: prod
@@ -252,7 +254,19 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '24.21.0'
+      - name: Decide whether to promote this image
+        id: promotion
+        env:
+          AUTO_DEPLOY: ${{ vars.AUTO_DEPLOY || 'false' }}
+        run: |
+          enabled=false
+          if [[ "$GITHUB_EVENT_NAME" == workflow_dispatch || "$AUTO_DEPLOY" == true ]]; then enabled=true; fi
+          echo "enabled=$enabled" >> "$GITHUB_OUTPUT"
+          if [[ "$enabled" == false ]]; then
+            echo 'Image published and scanned. Promotion is paused: enable prod/AUTO_DEPLOY or dispatch a manual release.' >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Create infra token
+        if: steps.promotion.outputs.enabled == 'true'
         id: infra-token
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -264,11 +278,13 @@ jobs:
           permission-deployments: read
           permission-actions: write
       - name: Update infra and wait for deployment
+        if: steps.promotion.outputs.enabled == 'true'
         run: node .github/scripts/release.mjs deploy
         env:
           INFRA_TOKEN: ${{ steps.infra-token.outputs.token }}
 
   cleanup-ghcr:
+    if: needs.deploy.outputs.promoted == 'true'
     needs: [build-publish, deploy]
     environment: prod
     runs-on: ubuntu-24.04

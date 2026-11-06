@@ -10,13 +10,14 @@ docker run --detach --name "$name" --init --read-only --network host \
   --tmpfs /tmp:rw,noexec,nosuid,size=32m \
   --tmpfs /app/data:rw,noexec,nosuid,size=16m,uid=10001,gid=10001,mode=0700 \
   --tmpfs /app/uploads:rw,noexec,nosuid,size=16m,uid=10001,gid=10001,mode=0700 \
-  -e DATABASE_URL=postgresql://postgres:ci-only-password@127.0.0.1:5432/image_smoke \
+  -e DB_HOST=127.0.0.1 -e DB_PORT=5432 -e DB_NAME=image_smoke \
+  -e DB_USER=postgres -e POSTGRES_PASSWORD=ci-only-password \
   -e APP_ORIGIN=https://example.test -e STARTUP_TIMEOUT=30 -e WEB_CONCURRENCY=1 \
   -e ADMIN_PASSWORD=ci-only-smoke-passphrase -e RAIS_PASSWORD=ci-only-smoke-passphrase \
   -e NEWS_FETCH=off -e TZ=Asia/Tashkent "$IMAGE_REF"
 
 ready=false
-for attempt in {1..30}; do
+for ((attempt=1; attempt<=30; attempt++)); do
   if [[ "$(docker inspect --format '{{.State.Running}}' "$name")" != true ]]; then break; fi
   if docker exec "$name" node -e \
     'fetch("http://127.0.0.1:4321/api/health/ready",{signal:AbortSignal.timeout(1000)}).then(r=>process.exit(r.status===200?0:1)).catch(()=>process.exit(1))'; then
