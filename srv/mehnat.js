@@ -140,13 +140,13 @@ function vacancyWarnings(v){
   const out = [];
   const text = [v.title, v.summary, v.duties].join(" ").toLowerCase();
   if(/\b(erkak|ayol|мужчин|женщин|male only|female only)\b/.test(text))
-    out.push("Jins boʻyicha talab — bu diskriminatsion va matching uchun ishlatilmaydi.");
+    out.push("Jins böyiça talab — bu diskriminatsion va matching uçun işlatilmaydi.");
   if(/\b(\d{2})\s*(yosh|лет|years old)\b/.test(text))
-    out.push("Yosh boʻyicha talab — bu diskriminatsion va matching uchun ishlatilmaydi.");
+    out.push("Yoş böyiça talab — bu diskriminatsion va matching uçun işlatilmaydi.");
   if(v.yearsMin > 15) out.push("Talab qilinayotgan tajriba juda yuqori — nomzodlar oqimi keskin torayadi.");
   if(v.seniority === "junior" && v.yearsMin >= 5) out.push("Junior lavozimga 5+ yil tajriba mantiqsiz.");
-  if(!v.salaryMin && !v.salaryMax) out.push("Ish haqi koʻrsatilmagan — ariza konversiyasi sezilarli pasayadi.");
-  if(v.skillsRequired.length > 12) out.push("Majburiy skilllar juda koʻp — bir qismini 'afzal' ga oʻtkazing.");
+  if(!v.salaryMin && !v.salaryMax) out.push("Iş haqi körsatilmagan — ariza konversiyasi sezilarli pasayadi.");
+  if(v.skillsRequired.length > 12) out.push("Majburiy skilllar juda köp — bir qismini 'afzal' ga ötkazing.");
   return out;
 }
 
@@ -270,18 +270,18 @@ function matchPair(cand, vac){
   const factors = [
     { weight: 30, value: core.value, known: core.known,
       why: "Majburiy skilllar mos: " + (core.matched || []).join(", "),
-      gap: (core.missing || []).length ? "Yetishmayotgan majburiy skill: " + core.missing.join(", ") : "Skill maʼlumoti yoʻq" },
-    { weight: 18, value: exp, why: "Tajriba lavozimga mos", gap: "Lavozimga tegishli tajriba koʻrinmadi" },
+      gap: (core.missing || []).length ? "Yetişmayotgan majburiy skill: " + core.missing.join(", ") : "Skill maʼlumoti yöq" },
+    { weight: 18, value: exp, why: "Tajriba lavozimga mos", gap: "Lavozimga tegişli tajriba körinmadi" },
     { weight: 10, value: sen.value, known: sen.known, why: "Seniority darajasi mos", gap: "Seniority darajasi farq qiladi" },
     { weight: 8,  value: loc.value, known: loc.known, why: "Hudud/format mos", gap: "Hudud mos emas va relokatsiya belgilanmagan" },
-    { weight: 10, value: pay.value, known: pay.known, why: "Maosh kutilmasi byudjetga mos", gap: "Maosh kutilmasi byudjetdan tashqarida" },
-    { weight: 7,  value: avail.value, known: avail.known, why: "Nomzod hozir ish qidirmoqda", gap: "Nomzod passiv holatda" },
+    { weight: 10, value: pay.value, known: pay.known, why: "Maoş kutilmasi byudjetga mos", gap: "Maoş kutilmasi byudjetdan taşqarida" },
+    { weight: 7,  value: avail.value, known: avail.known, why: "Nomzod hozir iş qidirmoqda", gap: "Nomzod passiv holatda" },
     { weight: 7,  value: (lang.value + cert.value) / 2, known: lang.known || cert.known,
       why: "Til va sertifikat talablari bajarilgan",
       gap: [].concat(lang.missing || [], cert.missing || []).length
         ? "Til/sertifikat yetishmaydi: " + [].concat(lang.missing || [], cert.missing || []).join(", ") : "" },
-    { weight: 5,  value: evidence.value, known: true, why: "Profil tasdiqlangan yoki portfolio bor", gap: "Skill isboti yoʻq — portfolio yoki test qoʻshing" },
-    { weight: 5,  value: (pref.value + prefFit) / 2, why: "Afzal skilllar va ish formati mos", gap: "Ish formati yoki afzal skilllar mos emas" },
+    { weight: 5,  value: evidence.value, known: true, why: "Profil tasdiqlangan yoki portfolio bor", gap: "Skill isboti yöq — portfolio yoki test qöşing" },
+    { weight: 5,  value: (pref.value + prefFit) / 2, why: "Afzal skilllar va iş formati mos", gap: "Iş formati yoki afzal skilllar mos emas" },
   ];
   const s = H.score(factors);
 

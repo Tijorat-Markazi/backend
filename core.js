@@ -47,7 +47,7 @@ function writeProblemsDoc(){
   const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
 <head><meta charset="utf-8"><title>TIJORAT MARKAZI — Murojaatlar</title></head>
 <body style="font-family:Calibri,Arial,sans-serif">
-<h1>TIJORAT MARKAZI — foydalanuvchi murojaatlari</h1>
+<h1>TIJORAT MARKAZI — foydalanuvçi murojaatlari</h1>
 <p>Jami: ${arr.length}</p>
 <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%">
 <tr style="background:#0a2540;color:#fff"><th>Sana</th><th>Email/Manba</th><th>Savol / Muammo</th></tr>
@@ -142,20 +142,20 @@ function monthlyReportData(ym){
 }
 function reportSolution(r){
   const tips=[];
-  if(r.questions>0) tips.push("Murojaatlar tegishli TIJORAT MARKAZI markazlariga yo'naltirildi; to'liq yechim uchun AI yordamchidan foydalaning.");
-  if(r.products===0) tips.push("A'zo kompaniyalarga Showroom modulida mahsulotlarini joylashtirish tavsiya etiladi.");
-  if(r.invest===0) tips.push("Investitsiya jalb qilish uchun «Invest loyihalar» moduli orqali loyihalarni e'lon qilish tavsiya etiladi.");
-  if(r.companies===0) tips.push("Uyushmaga a'zo kompaniyalarni qo'shish va faollashtirish tavsiya etiladi.");
+  if(r.questions>0) tips.push("Murojaatlar tegişli TIJORAT MARKAZI markazlariga yönaltirildi; töliq yeçim uçun AI yordamçidan foydalaning.");
+  if(r.products===0) tips.push("Aʼzo kompaniyalarga Showroom modulida mahsulotlarini joylaştiriş tavsiya etiladi.");
+  if(r.invest===0) tips.push("Investitsiya jalb qiliş uçun «Invest loyihalar» moduli orqali loyihalarni eʼlon qiliş tavsiya etiladi.");
+  if(r.companies===0) tips.push("Uyuşmaga aʼzo kompaniyalarni qöşiş va faollaştiriş tavsiya etiladi.");
   if(!tips.length) tips.push("Faoliyat barqaror. TIJORAT MARKAZI modullaridan faol foydalanishni davom ettirish tavsiya etiladi.");
   return tips.join(" ");
 }
 // prose fallback (continuous text, no lists) when AI is unavailable
 function proseFallback(r, ymR){
   const qs = r.questionsList || [];
-  let p1 = `${ymR} oyi davomida tashkilotingizga a'zo ${r.companies} ta kompaniya faoliyat yuritdi va ular Showroom tizimida jami ${r.products} ta mahsulot joylashtirdi. Hisobot davrida ${r.invest} ta investitsiya loyihasi, ${r.news} ta yangilik hamda ${r.rnd} ta R&D yozuvi qayd etildi. Kompaniyalaringiz tomonidan sun'iy intellekt yordamchiga jami ${r.questions} ta murojaat yo'llandi.`;
+  let p1 = `${ymR} oyi davomida taşkilotingizga aʼzo ${r.companies} ta kompaniya faoliyat yuritdi va ular Showroom tizimida jami ${r.products} ta mahsulot joylaştirdi. Hisobot davrida ${r.invest} ta investitsiya loyihasi, ${r.news} ta yangilik hamda ${r.rnd} ta R&D yozuvi qayd etildi. Kompaniyalaringiz tomonidan sunʼiy intellekt yordamçiga jami ${r.questions} ta murojaat yöllandi.`;
   if(!qs.length) return p1 + "\n\n" + "Hisobot davrida muammoli murojaatlar qayd etilmadi; faoliyat barqaror darajada saqlanmoqda.";
-  const pProblem = `Hisobot davrida tashkilotingiz kompaniyalari tomonidan asosan quyidagi masalalar bo'yicha murojaatlar bildirildi: ${qs.join("; ")}. Ushbu masalalar tashkilot faoliyatida dolzarb ekanligi qayd etildi.`;
-  const pSolution = `Mazkur muammolar yuzasidan quyidagi yechim taklif etiladi: TIJORAT MARKAZI platformasining tegishli markazlari — Investitsiya, Eksport, Grant hamda R&D yo'nalishlari — orqali amaliy yordam ko'rsatiladi va sun'iy intellekt yordamchi orqali har bir masala bo'yicha batafsil maslahat taqdim etiladi.`;
+  const pProblem = `Hisobot davrida taşkilotingiz kompaniyalari tomonidan asosan quyidagi masalalar böyiça murojaatlar bildirildi: ${qs.join("; ")}. Uşbu masalalar taşkilot faoliyatida dolzarb ekanligi qayd etildi.`;
+  const pSolution = `Mazkur muammolar yuzasidan quyidagi yeçim taklif etiladi: TIJORAT MARKAZI platformasining tegişli markazlari — Investitsiya, Eksport, Grant hamda R&D yönalişlari — orqali amaliy yordam körsatiladi va sunʼiy intellekt yordamçi orqali har bir masala böyiça batafsil maslahat taqdim etiladi.`;
   return p1 + "\n\n" + pProblem + "\n\n" + pSolution;
 }
 // AI-written FULL letter body as continuous text (paragraphs, no lists)
@@ -182,7 +182,7 @@ function orgLetterHtml(r, ymR, dateStr, ymRaw, bodyText){
     .replace(/\r/g,"").split(/\n{2,}|\n/).map(s=>s.trim().replace(/^[*•\-\d.\s]+/,"")).filter(Boolean)
     .map(p=>`<p style="margin:0 0 10px;text-align:justify">${esc(p)}</p>`).join("");
   const ilova = (r.questionsList && r.questionsList.length)
-    ? `murojaatlar ro'yxati 1 varaqda` : `yo'q`;
+    ? `murojaatlar röyxati 1 varaqda` : `yöq`;
   return `<div style="page-break-before:always;padding:8px 6px 0;font-size:13px;line-height:1.55">
     <!-- Yuqori burchak shtampi (jo'natuvchi) -->
     <table style="width:100%;border-bottom:1.5px solid #0a2540;padding-bottom:6px"><tr>
@@ -191,26 +191,26 @@ function orgLetterHtml(r, ymR, dateStr, ymRaw, bodyText){
       </td>
       <td style="vertical-align:top">
         <div style="font-size:16px;font-weight:bold;letter-spacing:1px">TIJORAT MARKAZI</div>
-        <div style="font-size:11px;color:#445">Milliy sun'iy intellekt biznes operatsion tizimi</div>
-        <div style="font-size:10.5px;color:#697586">STIR: 300000000 · Manzil: Toshkent sh., Amir Temur ko'ch. · Tel: +998 71 200 00 00 · e-mail: info@tijoratmarkazi.uz</div>
+        <div style="font-size:11px;color:#445">Milliy sunʼiy intellekt biznes operatsion tizimi</div>
+        <div style="font-size:10.5px;color:#697586">STIR: 300000000 · Manzil: Toşkent ş., Amir Temur köç. · Tel: +998 71 200 00 00 · e-mail: info@tijoratmarkazi.uz</div>
       </td>
     </tr></table>
 
     <table style="width:100%;font-size:12px;margin:8px 0 14px"><tr>
-      <td>Chiq. № KNG/${esc(ymRaw)}/${String(r.n).padStart(3,"0")} &nbsp; sana: ${esc(dateStr)}</td>
-      <td style="text-align:right">Kirish № ____ sana «__» ________ 20__ y.</td>
+      <td>Çiq. № KNG/${esc(ymRaw)}/${String(r.n).padStart(3,"0")} &nbsp; sana: ${esc(dateStr)}</td>
+      <td style="text-align:right">Kiriş № ____ sana «__» ________ 20__ y.</td>
     </tr></table>
 
     <div style="margin-bottom:2px"><b>Kimga:</b> ${esc(r.name)}${(r.chairman&&r.chairman!=="—")?`, rais ${esc(r.chairman)}`:` rahbariyatiga`}</div>
     <div style="margin-bottom:14px"><b>Manzil:</b> ______________________________________</div>
 
-    <div style="text-align:center;font-weight:bold;margin:6px 0 14px">${esc(ymR)} oyi yakunlari to'g'risida</div>
+    <div style="text-align:center;font-weight:bold;margin:6px 0 14px">${esc(ymR)} oyi yakunlari töğrisida</div>
 
     <p style="margin:0 0 12px">${greetW} ${esc(greet)}!</p>
 
     ${bodyParas}
 
-    <p style="margin:10px 0 0;text-align:justify">Mazkur masalalar yuzasidan zarur choralarni ko'rishingizni va hamkorlikni davom ettirishingizni so'raymiz.</p>
+    <p style="margin:10px 0 0;text-align:justify">Mazkur masalalar yuzasidan zarur çoralarni körişingizni va hamkorlikni davom ettirişingizni söraymiz.</p>
 
     <p style="margin:10px 0 0"><b>Ilova:</b> ${ilova}.</p>
 
@@ -218,7 +218,7 @@ function orgLetterHtml(r, ymR, dateStr, ymRaw, bodyText){
       <td>Hurmat bilan,<br>TIJORAT MARKAZI tizimi rahbariyati</td>
       <td style="text-align:right;vertical-align:bottom">_______________ /TIJORAT MARKAZI/<br><span style="font-size:11px;color:#697586">(imzo)</span></td>
     </tr></table>
-    <p style="font-size:11px;color:#697586;margin-top:14px">Ijrochi: TIJORAT MARKAZI · Tel: +998 71 200 00 00 · e-mail: info@tijoratmarkazi.uz</p>
+    <p style="font-size:11px;color:#697586;margin-top:14px">Ijroçi: TIJORAT MARKAZI · Tel: +998 71 200 00 00 · e-mail: info@tijoratmarkazi.uz</p>
   </div>`;
 }
 /* ---- letter cache: generate each org's letter once per month, reuse afterwards ---- */
@@ -287,10 +287,10 @@ function assocReportData(ym){
 // prose fallback for one company letter (no AI key / AI down)
 function companyProseFallback(c, assocName, ymR){
   const qs = c.questionsList || [];
-  const p1 = `${ymR} oyi davomida «${assocName}» uyushmasiga a'zo bo'lgan «${c.name}» kompaniyasi Showroom tizimida ${c.products} ta mahsulot joylashtirdi va sun'iy intellekt yordamchiga jami ${c.questions} ta murojaat yo'lladi.`;
+  const p1 = `${ymR} oyi davomida «${assocName}» uyuşmasiga aʼzo bölgan «${c.name}» kompaniyasi Showroom tizimida ${c.products} ta mahsulot joylaştirdi va sunʼiy intellekt yordamçiga jami ${c.questions} ta murojaat yölladi.`;
   if(!qs.length) return p1 + "\n\nHisobot davrida muammoli murojaatlar qayd etilmadi.";
-  const pProblem  = `Hisobot davrida kompaniya tomonidan asosan quyidagi masalalar bo'yicha murojaatlar va shikoyatlar bildirildi: ${qs.join("; ")}. Ushbu masalalar kompaniya faoliyatida dolzarb ekanligi qayd etildi.`;
-  const pSolution = `Mazkur muammolar yuzasidan quyidagi yechim taklif etiladi: TIJORAT MARKAZI platformasining tegishli markazlari — Investitsiya, Eksport, Grant hamda R&D yo'nalishlari — orqali amaliy yordam ko'rsatiladi va sun'iy intellekt yordamchi orqali har bir masala bo'yicha batafsil maslahat taqdim etiladi.`;
+  const pProblem  = `Hisobot davrida kompaniya tomonidan asosan quyidagi masalalar böyiça murojaatlar va şikoyatlar bildirildi: ${qs.join("; ")}. Uşbu masalalar kompaniya faoliyatida dolzarb ekanligi qayd etildi.`;
+  const pSolution = `Mazkur muammolar yuzasidan quyidagi yeçim taklif etiladi: TIJORAT MARKAZI platformasining tegişli markazlari — Investitsiya, Eksport, Grant hamda R&D yönalişlari — orqali amaliy yordam körsatiladi va sunʼiy intellekt yordamçi orqali har bir masala böyiça batafsil maslahat taqdim etiladi.`;
   return p1 + "\n\n" + pProblem + "\n\n" + pSolution;
 }
 // AI-written body of ONE company letter (problem → solution, continuous text)
@@ -325,7 +325,7 @@ function companyLetterHtml(c, a, ymR, dateStr, ymRaw, bodyText){
   const bodyParas = String(bodyText || companyProseFallback(c, a.name, ymR))
     .replace(/\r/g,"").split(/\n{2,}|\n/).map(s=>s.trim().replace(/^[*•\-\d.\s]+/,"")).filter(Boolean)
     .map(p=>`<p style="margin:0 0 10px;text-align:justify">${esc(p)}</p>`).join("");
-  const ilova = (c.questionsList && c.questionsList.length) ? `murojaatlar ro'yxati 1 varaqda` : `yo'q`;
+  const ilova = (c.questionsList && c.questionsList.length) ? `murojaatlar röyxati 1 varaqda` : `yöq`;
   return `<div style="page-break-before:always;padding:8px 6px 0;font-size:13px;line-height:1.55">
     <table style="width:100%;border-bottom:1.5px solid #0a2540;padding-bottom:6px"><tr>
       <td style="width:64px;vertical-align:top">
@@ -333,27 +333,27 @@ function companyLetterHtml(c, a, ymR, dateStr, ymRaw, bodyText){
       </td>
       <td style="vertical-align:top">
         <div style="font-size:16px;font-weight:bold;letter-spacing:1px">TIJORAT MARKAZI</div>
-        <div style="font-size:11px;color:#445">Milliy sun'iy intellekt biznes operatsion tizimi</div>
-        <div style="font-size:10.5px;color:#697586">STIR: 300000000 · Manzil: Toshkent sh., Amir Temur ko'ch. · Tel: +998 71 200 00 00 · e-mail: info@tijoratmarkazi.uz</div>
+        <div style="font-size:11px;color:#445">Milliy sunʼiy intellekt biznes operatsion tizimi</div>
+        <div style="font-size:10.5px;color:#697586">STIR: 300000000 · Manzil: Toşkent ş., Amir Temur köç. · Tel: +998 71 200 00 00 · e-mail: info@tijoratmarkazi.uz</div>
       </td>
     </tr></table>
 
     <table style="width:100%;font-size:12px;margin:8px 0 14px"><tr>
-      <td>Chiq. № KNG/${esc(ymRaw)}/${String(a.n).padStart(3,"0")}-${String(c.n).padStart(2,"0")} &nbsp; sana: ${esc(dateStr)}</td>
-      <td style="text-align:right">Kirish № ____ sana «__» ________ 20__ y.</td>
+      <td>Çiq. № KNG/${esc(ymRaw)}/${String(a.n).padStart(3,"0")}-${String(c.n).padStart(2,"0")} &nbsp; sana: ${esc(dateStr)}</td>
+      <td style="text-align:right">Kiriş № ____ sana «__» ________ 20__ y.</td>
     </tr></table>
 
     <div style="margin-bottom:2px"><b>Kimga:</b> «${esc(c.name)}» kompaniyasi rahbariyatiga</div>
-    <div style="margin-bottom:2px"><b>Uyushma:</b> ${esc(a.name)}</div>
+    <div style="margin-bottom:2px"><b>Uyuşma:</b> ${esc(a.name)}</div>
     <div style="margin-bottom:14px"><b>Manzil:</b> ______________________________________</div>
 
-    <div style="text-align:center;font-weight:bold;margin:6px 0 14px">${esc(ymR)} oyi yakunlari va murojaatlar to'g'risida</div>
+    <div style="text-align:center;font-weight:bold;margin:6px 0 14px">${esc(ymR)} oyi yakunlari va murojaatlar töğrisida</div>
 
     <p style="margin:0 0 12px">Hurmatli «${esc(c.name)}» rahbariyati!</p>
 
     ${bodyParas}
 
-    <p style="margin:10px 0 0;text-align:justify">Mazkur masalalar yuzasidan zarur choralarni ko'rishingizni va hamkorlikni davom ettirishingizni so'raymiz.</p>
+    <p style="margin:10px 0 0;text-align:justify">Mazkur masalalar yuzasidan zarur çoralarni körişingizni va hamkorlikni davom ettirişingizni söraymiz.</p>
 
     <p style="margin:10px 0 0"><b>Ilova:</b> ${ilova}.</p>
 
@@ -361,7 +361,7 @@ function companyLetterHtml(c, a, ymR, dateStr, ymRaw, bodyText){
       <td>Hurmat bilan,<br>TIJORAT MARKAZI tizimi rahbariyati</td>
       <td style="text-align:right;vertical-align:bottom">_______________ /TIJORAT MARKAZI/<br><span style="font-size:11px;color:#697586">(imzo)</span></td>
     </tr></table>
-    <p style="font-size:11px;color:#697586;margin-top:14px">Ijrochi: TIJORAT MARKAZI · Tel: +998 71 200 00 00 · e-mail: info@tijoratmarkazi.uz</p>
+    <p style="font-size:11px;color:#697586;margin-top:14px">Ijroçi: TIJORAT MARKAZI · Tel: +998 71 200 00 00 · e-mail: info@tijoratmarkazi.uz</p>
   </div>`;
 }
 // ONE association's Word file: a cover line + a letter per child company that has problems
@@ -377,9 +377,9 @@ async function assocReportDoc(a, ym, opts){
   let letters = parts.join("");
   letters = letters.replace("page-break-before:always;","");   // first letter starts on page 1
   const head = `<div style="text-align:center;border-bottom:2px solid #0a2540;padding-bottom:10px;margin-bottom:6px">
-    <div style="font-size:13px;color:#697586;letter-spacing:1px">TIJORAT MARKAZI — RASMIY XATLAR TO'PLAMI</div>
+    <div style="font-size:13px;color:#697586;letter-spacing:1px">TIJORAT MARKAZI — RASMIY XATLAR TÖPLAMI</div>
     <h1 style="margin:6px 0 2px;font-size:20px">${esc(a.name)}</h1>
-    <div style="font-size:13px;color:#445">${esc(ymR)} · a'zo kompaniyalar murojaatlari: ${a.companyCount} ta kompaniya</div>
+    <div style="font-size:13px;color:#445">${esc(ymR)} · aʼzo kompaniyalar murojaatlari: ${a.companyCount} ta kompaniya</div>
   </div>`;
   return `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
 <head><meta charset="utf-8"><title>${esc(a.name)} — ${esc(ym||"")}</title></head>
@@ -418,8 +418,8 @@ const APPEALS_FILE = path.join(DATA, "appeals.json");
 const APPEAL_STAGES = ["new","assoc","sent","answered","rejected"];
 const APPEAL_AGENCIES = [
   "Vazirlar Mahkamasi","Iqtisodiyot va moliya vazirligi","Investitsiyalar, sanoat va savdo vazirligi",
-  "Qishloq xo'jaligi vazirligi","Bandlik va mehnat vazirligi","Soliq qo'mitasi","Bojxona qo'mitasi",
-  "Adliya vazirligi","Boshqa davlat organi",
+  "Qişloq xöjaligi vazirligi","Bandlik va mehnat vazirligi","Soliq qömitasi","Bojxona qömitasi",
+  "Adliya vazirligi","Boşqa davlat organi",
 ];
 
 function getAppeals(){ const a = loadJSON(APPEALS_FILE, null) || { items:[] }; if(!Array.isArray(a.items)) a.items=[]; return a; }
@@ -467,7 +467,7 @@ function appealSetStage(id, stage, actor, note){
 /* The AI writes the formal body from a few words of context, so a company
    never has to phrase an official appeal from a blank page. */
 async function appealDraft({ company, assoc, agency, subject, hint, lang }){
-  const L = { uz:"Uzbek", ru:"Russian", en:"English" }[lang] || "Uzbek";
+  const L = { uz:"Uzbek (2026 Latin alphabet: write Ö ö, Ğ ğ, Ş ş, Ç ç instead of Oʻ oʻ, Gʻ gʻ, Sh sh, Ch ch, and keep the tutuq sign ʼ)", ru:"Russian", en:"English" }[lang] || "Uzbek (2026 Latin alphabet: write Ö ö, Ğ ğ, Ş ş, Ç ç instead of Oʻ oʻ, Gʻ gʻ, Sh sh, Ch ch, and keep the tutuq sign ʼ)";
   const sys = `You are "TIJORAT MARKAZI", writing the BODY of an OFFICIAL appeal from a business to a government body of Uzbekistan.
 Write flowing formal prose in ${L} — no bullet points, no numbered lists, no table, no greeting, no signature.
 Use EXACTLY THREE paragraphs in this order:
@@ -479,7 +479,7 @@ Never invent statistics, законы, decree numbers or dates that were not giv
   const out = await geminiRaw(sys, user);
   return (out && out.trim()) ? out.trim() : "";
 }
-const APPEAL_STAGE_UZ = { new:"Yangi — uyushma ko'rib chiqmoqda", assoc:"Uyushma qo'llab-quvvatladi",
+const APPEAL_STAGE_UZ = { new:"Yangi — uyuşma körib çiqmoqda", assoc:"Uyuşma qöllab-quvvatladi",
   sent:"Davlat organiga yuborildi", answered:"Javob olindi", rejected:"Rad etildi" };
 
 function appealDoc(item){
@@ -500,14 +500,14 @@ function appealDoc(item){
     </td>
     <td style="vertical-align:top">
       <div style="font-size:16px;font-weight:bold;letter-spacing:1px">TIJORAT MARKAZI</div>
-      <div style="font-size:11px;color:#445">Milliy sun'iy intellekt biznes operatsion tizimi</div>
-      <div style="font-size:10.5px;color:#697586">STIR: 300000000 · Toshkent sh., Amir Temur ko'ch. · +998 71 200 00 00 · info@tijoratmarkazi.uz</div>
+      <div style="font-size:11px;color:#445">Milliy sunʼiy intellekt biznes operatsion tizimi</div>
+      <div style="font-size:10.5px;color:#697586">STIR: 300000000 · Toşkent ş., Amir Temur köç. · +998 71 200 00 00 · info@tijoratmarkazi.uz</div>
     </td>
   </tr></table>
 
   <table style="width:100%;font-size:12px;margin:8px 0 14px"><tr>
-    <td>Chiq. № MUR/${esc(item.id.slice(-6).toUpperCase())} &nbsp; sana: ${esc(dateStr)}</td>
-    <td style="text-align:right">Kirish № ____ sana «__» ________ 20__ y.</td>
+    <td>Çiq. № MUR/${esc(item.id.slice(-6).toUpperCase())} &nbsp; sana: ${esc(dateStr)}</td>
+    <td style="text-align:right">Kiriş № ____ sana «__» ________ 20__ y.</td>
   </tr></table>
 
   <p style="text-align:right;margin:0 0 14px;font-weight:bold">${esc(item.agency)}<br>rahbariyatiga</p>
@@ -515,14 +515,14 @@ function appealDoc(item){
   ${paras || `<p>${esc(item.body||"")}</p>`}
 
   <table style="width:100%;margin-top:26px;font-size:12.5px"><tr>
-    <td>${esc(item.assocName||"Uyushma")}<br><span style="color:#697586">a'zo korxona: ${esc(item.companyName||"—")}</span></td>
+    <td>${esc(item.assocName||"Uyushma")}<br><span style="color:#697586">aʼzo korxona: ${esc(item.companyName||"—")}</span></td>
     <td style="text-align:right">_______________<br><span style="color:#697586">imzo va muhr</span></td>
   </tr></table>
 
   <div style="margin-top:28px;border-top:1px solid #ccd;padding-top:8px">
-    <div style="font-size:11px;color:#697586;margin-bottom:6px">Murojaat harakati (xizmat ma'lumoti)</div>
+    <div style="font-size:11px;color:#697586;margin-bottom:6px">Murojaat harakati (xizmat maʼlumoti)</div>
     <table border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;width:100%;font-size:11px">
-      <tr style="background:#0a2540;color:#fff"><th>Sana</th><th>Bosqich</th><th>Kim</th><th>Izoh</th></tr>
+      <tr style="background:#0a2540;color:#fff"><th>Sana</th><th>Bosqiç</th><th>Kim</th><th>Izoh</th></tr>
       ${trail}
     </table>
   </div>
@@ -822,7 +822,7 @@ function groupsFor(actor, lang){
         .concat(comps.map(c=>({ id:c.id, role:"company", name:c.name })))
         .concat(OVERSIGHT));
   };
-  const chairmenRoom = () => describe(GROUP_CHAIRMEN, "Raislar kengashi",
+  const chairmenRoom = () => describe(GROUP_CHAIRMEN, "Raislar kengaşi",
     o.associations.map(x=>({ id:x.id, role:"assoc", name:x.chairman || orgName(x, lang) })).concat(OVERSIGHT));
 
   if(actor.type === "assoc"){
@@ -982,7 +982,7 @@ async function genNewsBatch(topic, count){
   count = Math.max(1, Math.min(NEWS_PER_DAY, count || 1));
   const sys = `You are the news desk of "TIJORAT MARKAZI". Use Google Search to find ${count} REAL, recently published news article(s) about the "${topic}" sector that matter to businesses in Uzbekistan.
 Use ONLY articles you actually found through search. Never invent a headline, a summary or a link.
-For EACH article output: its headline translated into Uzbek (uz), Russian (ru) and English (en); a ONE-sentence summary of the article in the same three languages; and "url" — the exact address of the source article.
+For EACH article output: its headline translated into Uzbek (uz, in the 2026 Latin alphabet: Ö Ğ Ş Ç instead of Oʻ Gʻ Sh Ch), Russian (ru) and English (en); a ONE-sentence summary of the article in the same three languages; and "url" — the exact address of the source article.
 Output ONLY a JSON array, no code fences, EXACTLY this shape:
 [{"title":{"uz":"…","ru":"…","en":"…"},"body":{"uz":"…","ru":"…","en":"…"},"url":"https://…"}]`;
   const { text, sources } = await geminiSearch(sys, `Sector: ${topic}. Find the most recent articles.`);
@@ -1434,7 +1434,7 @@ function getModules(){ const m = loadJSON(MODULES_FILE, null) || { items:[] }; i
 function saveModules(m){ saveJSON(MODULES_FILE, m); return m; }
 
 /* ---------- Gemini ---------- */
-const LANG_NAME = { uz:"Uzbek", ru:"Russian", en:"English" };
+const LANG_NAME = { uz:"Uzbek (2026 Latin alphabet: write Ö ö, Ğ ğ, Ş ş, Ç ç instead of Oʻ oʻ, Gʻ gʻ, Sh sh, Ch ch, and keep the tutuq sign ʼ)", ru:"Russian", en:"English" };
 function systemPrompt(lang){
   return `You are "TIJORAT MARKAZI", the official assistant of the TIJORAT MARKAZI platform — Uzbekistan's Milliy savdo platformasi. The platform has 12 centers covering: government services, investment, R&D, export, education, media, international relations, B2B marketplace, analytics and executive command.
 
@@ -1452,7 +1452,7 @@ Put everything the document needs into the tool's prompt field; the generator ca
 After the file is created, reply in one or two sentences with the download link. Do not paste the document's contents into the chat.
 
 === LANGUAGE ===
-Detect the language of the user's latest message and ALWAYS reply in that SAME language — Uzbek, Russian or English. Refuse in the user's language too. If the message language is unclear, default to ${LANG_NAME[lang]||"the user's language"}.
+Detect the language of the user's latest message and ALWAYS reply in that SAME language — Uzbek, Russian or English. When replying in Uzbek, write in the 2026 Latin alphabet (Ö ö, Ğ ğ, Ş ş, Ç ç instead of Oʻ oʻ, Gʻ gʻ, Sh sh, Ch ch; keep the tutuq sign ʼ). Refuse in the user's language too. If the message language is unclear, default to ${LANG_NAME[lang]||"the user's language"}.
 
 === STYLE ===
 Be concise, structured and actionable. Use short paragraphs or bullet points. When useful, mention which TIJORAT MARKAZI center helps.`;
@@ -1471,15 +1471,15 @@ async function geminiRaw(systemText, userText){
 }
 // per-language labels + fixed phrasing for the official letter template
 const LETTER_T = {
-  uz:{ name:"Uzbek", greet:r=>`Hurmatli "${r}" tashkiloti,`,
-       intro:"TIJORAT MARKAZI — Oʻzbekistonning Milliy sun'iy intellekt biznes operatsion tizimi nomidan rasmiy javobni taqdim etamiz.",
+  uz:{ name:"Uzbek (2026 Latin alphabet: write Ö ö, Ğ ğ, Ş ş, Ç ç instead of Oʻ oʻ, Gʻ gʻ, Sh sh, Ch ch, and keep the tutuq sign ʼ)", greet:r=>`Hurmatli "${r}" taşkiloti,`,
+       intro:"TIJORAT MARKAZI — Özbekistonning Milliy sunʼiy intellekt biznes operatsion tizimi nomidan rasmiy javobni taqdim etamiz.",
        stat:"STATISTIKA", prob:"MUAMMO", sol:"YECHIM", close:"Hurmat bilan,",
-       statP:(n,t)=>`Soʻnggi davrda tashkilotingizdan jami ${n} ta murojaat keldi. Murojaatlarning asosiy mavzulari: ${t}.`,
-       probP:t=>`Murojaatlaringiz investitsiya jalb etish, moliyani boshqarish, grant mablagʻlaridan foydalanish, bitimlarni yuridik qoʻllab-quvvatlash hamda eksport bozorlariga chiqish boʻyicha kompleks yordamga ehtiyoj borligini koʻrsatadi (${t}).`,
-       solIntro:"Belgilangan masalalarni hal qilish uchun TIJORAT MARKAZI ning quyidagi modullaridan foydalanishni tavsiya etamiz:",
-       mods:[`**"Moliya va Investitsiyalar"** — investor topish, moliyaviy rejalashtirish va grant arizalarini tayyorlash uchun.`,
-             `**"Yuridik maslahatchi"** — shartnoma hujjatlarini ishlab chiqish va tahlil qilish uchun.`,
-             `**"Xalqaro savdo va Eksport"** — bozorlarni tahlil qilish va eksport boʻyicha yordam olish uchun.`] },
+       statP:(n,t)=>`Sönggi davrda taşkilotingizdan jami ${n} ta murojaat keldi. Murojaatlarning asosiy mavzulari: ${t}.`,
+       probP:t=>`Murojaatlaringiz investitsiya jalb etiş, moliyani boşqariş, grant mablağlaridan foydalaniş, bitimlarni yuridik qöllab-quvvatlaş hamda eksport bozorlariga çiqiş böyiça kompleks yordamga ehtiyoj borligini körsatadi (${t}).`,
+       solIntro:"Belgilangan masalalarni hal qiliş uçun TIJORAT MARKAZI ning quyidagi modullaridan foydalanişni tavsiya etamiz:",
+       mods:[`**"Moliya va Investitsiyalar"** — investor topiş, moliyaviy rejalaştiriş va grant arizalarini tayyorlaş uçun.`,
+             `**"Yuridik maslahatçi"** — şartnoma hujjatlarini işlab çiqiş va tahlil qiliş uçun.`,
+             `**"Xalqaro savdo va Eksport"** — bozorlarni tahlil qiliş va eksport böyiça yordam oliş uçun.`] },
   ru:{ name:"Russian", greet:r=>`Уважаемая организация "${r}",`,
        intro:"Мы рады предоставить вам официальный ответ от TIJORAT MARKAZI — Национальной ИИ Бизнес-Операционной Системы Узбекистана.",
        stat:"СТАТИСТИКА", prob:"ПРОБЛЕМА", sol:"РЕШЕНИЕ", close:"С уважением,",
@@ -1601,9 +1601,9 @@ function buildUserTurn(message, attachment){
         media = { mime:"application/pdf", data: attachment.data };
       } else if(/\.(docx|xlsx|pptx)$/i.test(name)){
         const t = extractOffice(attachment.data, name);
-        text += `\n\n[Fayl: ${name}]\n${t || "(matn ajratib bo'lmadi)"}`;
+        text += `\n\n[Fayl: ${name}]\n${t || "(matn ajratib bölmadi)"}`;
       } else {
-        text += `\n\n[Fayl: ${name}] (bu fayl turidan matn o'qib bo'lmadi)`;
+        text += `\n\n[Fayl: ${name}] (bu fayl turidan matn öqib bölmadi)`;
       }
     }
   }
@@ -1617,16 +1617,16 @@ const FALLBACK = [
     "Модуль AI Investor Matching подберёт инвесторов под ваш проект. В какой сфере проект?",
     "The AI Investor Matching module finds investors for your project. What sector is it in?"] },
   { k:["eksport","export","экспорт","bozor","рынок"], a:[
-    "Export Analytics maqsadli bozorlar va xaridorlarni tahlil qiladi. Qaysi mahsulotni eksport qilmoqchisiz?",
+    "Export Analytics maqsadli bozorlar va xaridorlarni tahlil qiladi. Qaysi mahsulotni eksport qilmoqçisiz?",
     "Export Analytics анализирует рынки и покупателей. Какой продукт хотите экспортировать?",
     "Export Analytics analyzes markets and buyers. Which product do you want to export?"] },
   { k:["grant","грант"], a:[
-    "Grant Center mos grantlarni qidiradi. Loyiha yo'nalishini ayting.",
+    "Grant Center mos grantlarni qidiradi. Loyiha yönalişini ayting.",
     "Grant Center ищет подходящие гранты. Укажите направление проекта.",
     "The Grant Center finds matching grants. Tell me the focus area."] },
 ];
 const FALLBACK_DEFAULT = [
-  "Bu demo javob. Haqiqiy AI uchun ANTHROPIC_API_KEY kerak.",
+  "Bu demo javob. Haqiqiy AI uçun ANTHROPIC_API_KEY kerak.",
   "Это демо-ответ. Для реального AI нужен ANTHROPIC_API_KEY.",
   "This is a demo reply. Real AI needs ANTHROPIC_API_KEY.",
 ];

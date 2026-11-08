@@ -129,7 +129,7 @@ function searchProducts(q){
       providers:  H.countBy(all, p => p.providerName).map(x => x.label),
       sectors:    H.countBy(all, p => p.sectors).map(x => x.label),
     },
-    disclaimer: "Katalogdagi shartlar maʼlumot uchun. Yakuniy qaror moliya tashkiloti tomonidan qabul qilinadi.",
+    disclaimer: "Katalogdagi şartlar maʼlumot uçun. Yakuniy qaror moliya taşkiloti tomonidan qabul qilinadi.",
   };
 }
 
@@ -186,19 +186,19 @@ function passportOf(ownerId){
 function readiness(p){
   if(!p) return null;
   const blocks = [
-    { key: "Identity & KYB", ok: !!(p.legalForm && p.founded), hint: "Yuridik shakl va tashkil etilgan yilni koʻrsating" },
-    { key: "Financials",     ok: !!(p.revenue && p.ebitda !== undefined && p.revenue > 0), hint: "Tushum va EBITDA raqamlarini kiriting" },
+    { key: "Identity & KYB", ok: !!(p.legalForm && p.founded), hint: "Yuridik şakl va taşkil etilgan yilni körsating" },
+    { key: "Financials",     ok: !!(p.revenue && p.ebitda !== undefined && p.revenue > 0), hint: "Tuşum va EBITDA raqamlarini kiriting" },
     { key: "Funding need",   ok: !!(p.need && p.tenor && p.purpose), hint: "Summa, muddat va maqsadni aniq yozing" },
-    { key: "Collateral",     ok: !!(p.collateral || p.collateralValue || p.receivables), hint: "Taʼminot yoki debitorlik maʼlumotini qoʻshing" },
-    { key: "Business",       ok: !!(p.sector && p.region && p.employees), hint: "Sektor, hudud va xodimlar sonini toʻldiring" },
-    { key: "Documents",      ok: (p.docs || []).length >= 3, hint: "Kamida 3 ta asosiy hujjatni roʻyxatga oling" },
-    { key: "Risk",           ok: !!p.risks, hint: "Asosiy risklar va ularni kamaytirish choralarini yozing" },
+    { key: "Collateral",     ok: !!(p.collateral || p.collateralValue || p.receivables), hint: "Taʼminot yoki debitorlik maʼlumotini qöşing" },
+    { key: "Business",       ok: !!(p.sector && p.region && p.employees), hint: "Sektor, hudud va xodimlar sonini töldiring" },
+    { key: "Documents",      ok: (p.docs || []).length >= 3, hint: "Kamida 3 ta asosiy hujjatni röyxatga oling" },
+    { key: "Risk",           ok: !!p.risks, hint: "Asosiy risklar va ularni kamaytiriş çoralarini yozing" },
   ];
   const done = blocks.filter(b => b.ok).length;
   return {
     score: Math.round(100 * done / blocks.length),
     blocks: blocks.map(b => ({ key: b.key, ok: b.ok, hint: b.ok ? "" : b.hint })),
-    note: "Bu kredit reytingi emas — moliyalashtirishga tayyorlik (funding readiness) koʻrsatkichi.",
+    note: "Bu kredit reytingi emas — moliyalaştirişga tayyorlik (funding readiness) körsatkiçi.",
   };
 }
 
@@ -242,7 +242,7 @@ function requestAdd(body, actor){
   const row = {
     id:        H.uid("fr"),
     ownerId:   H.S(actor && actor.id, 40),
-    ownerName: H.S((actor && actor.name) || body.ownerName, 160) || "Anonim soʻrov",
+    ownerName: H.S((actor && actor.name) || body.ownerName, 160) || "Anonim sörov",
     /* §5.1 step 3 — the requester chooses blind or identified. */
     anonymous: H.BOOL(body.anonymous),
     amount:    H.N(body.amount),
@@ -309,12 +309,12 @@ function routeRequest(req, st){
         [p.name, p.instrument, p.summary, p.eligibility].join(" "));
 
       const s = H.score([
-        { weight: 26, value: amt.value, known: amt.known, why: "Summa mahsulot diapazonida", gap: "Summa mahsulot diapazonidan tashqarida" },
+        { weight: 26, value: amt.value, known: amt.known, why: "Summa mahsulot diapazonida", gap: "Summa mahsulot diapazonidan taşqarida" },
         { weight: 20, value: ten.value, known: ten.known, why: "Muddat mahsulot shartlariga mos", gap: "Muddat mahsulot shartlariga mos emas" },
         { weight: 14, value: cur.value, known: cur.known, why: "Valyuta mos", gap: "Valyuta farq qiladi" },
-        { weight: 14, value: cat.value, known: cat.known, why: "Soʻralgan moliya turi mos", gap: "Boshqa toifadagi mahsulot" },
-        { weight: 12, value: sec.value, known: sec.known, why: "Provayder shu sektor bilan ishlaydi", gap: "Provayder sektor roʻyxatida bu soha yoʻq" },
-        { weight: 14, value: purpose, why: "Maqsad mahsulot taʼrifiga mos", gap: "Maqsad mahsulot taʼrifi bilan bogʻlanmadi" },
+        { weight: 14, value: cat.value, known: cat.known, why: "Söralgan moliya turi mos", gap: "Boşqa toifadagi mahsulot" },
+        { weight: 12, value: sec.value, known: sec.known, why: "Provayder şu sektor bilan işlaydi", gap: "Provayder sektor röyxatida bu soha yöq" },
+        { weight: 14, value: purpose, why: "Maqsad mahsulot taʼrifiga mos", gap: "Maqsad mahsulot taʼrifi bilan boğlanmadi" },
       ]);
       return Object.assign({ product: pview(p) }, s);
     })
@@ -392,7 +392,7 @@ function offerCompare(requestId){
     request: publicRequest(req),
     offers: priced.map(o => Object.assign({}, o, { bestCost: best != null && o.allInPct === best })),
     summary: { count: priced.length, allIn: H.stats(costs), tenor: H.stats(priced.map(o => o.tenor)) },
-    method: "All-in % = yillik stavka + (bir martalik komissiya ÷ muddat, yilda). Barcha takliflar bir xil metodologiyada.",
+    method: "All-in % = yillik stavka + (bir martalik komissiya ÷ muddat, yilda). Barça takliflar bir xil metodologiyada.",
     disclaimer: "Takliflar indikativ. Ular kredit yoki investitsiya majburiyati emas.",
   };
 }

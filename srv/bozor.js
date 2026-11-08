@@ -268,19 +268,19 @@ function matchRfq(rfq, st){
           why: "Talab qilingan sertifikatlar mavjud",
           gap: cert.missing && cert.missing.length
             ? "Sertifikat yetishmaydi: " + cert.missing.join(", ")
-            : "Sertifikat maʼlumoti yoʻq" },
+            : "Sertifikat maʼlumoti yöq" },
         { weight: 14, value: moqOk.value, known: moqOk.known,
           why: "Buyurtma hajmi MOQ dan yuqori",
           gap: "Buyurtma hajmi MOQ dan past (MOQ " + p.moq + ")" },
         { weight: 12, value: lead.value, known: lead.known,
-          why: "Yetkazib berish muddati mos",
-          gap: "Yetkazib berish muddati talabdan uzoq (" + p.leadTime + " kun)" },
+          why: "Yetkazib beriş muddati mos",
+          gap: "Yetkazib beriş muddati talabdan uzoq (" + p.leadTime + " kun)" },
         { weight: 14, value: price.value, known: price.known,
           why: "Narx byudjet doirasida",
           gap: "Narx byudjetdan yuqori" },
         { weight: 12, value: geo.value, known: geo.known,
           why: rfq.channel === "export" ? "Eksport bozori mos" : "Hudud mos",
-          gap: rfq.channel === "export" ? "Bu bozorga eksport tajribasi koʻrsatilmagan" : "Boshqa hududda joylashgan" },
+          gap: rfq.channel === "export" ? "Bu bozorga eksport tajribasi körsatilmagan" : "Boşqa hududda joylaşgan" },
       ]);
       return Object.assign({ product: view(p) }, s);
     })
@@ -400,11 +400,11 @@ function dealOpen(body, actor){
 /* TZ §10.1 "deal risk flags" — cheap, explainable checks, never a verdict. */
 function dealRisks(rfq, quote){
   const out = [];
-  if(quote.currency !== rfq.currency) out.push("Valyuta soʻrovdan farq qiladi");
-  if(rfq.maxLead && quote.leadTime > rfq.maxLead) out.push("Yetkazib berish muddati talabdan uzoq");
-  if(rfq.budget && quote.qty && quote.price * quote.qty > rfq.budget * 1.15) out.push("Taklif byudjetdan 15% dan koʻp oshdi");
-  if(rfq.channel === "export" && !quote.incoterm) out.push("Incoterm koʻrsatilmagan");
-  if(!quote.validity) out.push("Taklifning amal qilish muddati koʻrsatilmagan");
+  if(quote.currency !== rfq.currency) out.push("Valyuta sörovdan farq qiladi");
+  if(rfq.maxLead && quote.leadTime > rfq.maxLead) out.push("Yetkazib beriş muddati talabdan uzoq");
+  if(rfq.budget && quote.qty && quote.price * quote.qty > rfq.budget * 1.15) out.push("Taklif byudjetdan 15% dan köp oşdi");
+  if(rfq.channel === "export" && !quote.incoterm) out.push("Incoterm körsatilmagan");
+  if(!quote.validity) out.push("Taklifning amal qiliş muddati körsatilmagan");
   return out;
 }
 
@@ -601,17 +601,17 @@ function exportReadiness(company, st){
 
   const blocks = [
     { key: "Mahsulot",   value: exp.some(p => p.specs && p.media.length) ? 1 : exp.length ? .5 : 0,
-      hint: "Eksport mahsulotiga texnik tavsif va media qoʻshing" },
+      hint: "Eksport mahsulotiga texnik tavsif va media qöşing" },
     { key: "Sertifikat", value: exp.some(p => p.certificates.length) ? 1 : 0,
-      hint: "Sifat/kelib chiqish sertifikatlarini yuklang" },
+      hint: "Sifat/kelib çiqiş sertifikatlarini yuklang" },
     { key: "Tijorat",    value: exp.some(p => p.price && p.moq && p.leadTime) ? 1 : exp.some(p => p.price) ? .5 : 0,
-      hint: "Eksport narxi, MOQ va lead time ni toʻldiring" },
+      hint: "Eksport narxi, MOQ va lead time ni töldiring" },
     { key: "Bozor",      value: exp.some(p => p.markets.length) ? 1 : 0,
       hint: "Maqsadli eksport bozorlarini belgilang" },
     { key: "Operatsiya", value: exp.some(p => p.hs && p.incoterms.length) ? 1 : exp.some(p => p.hs) ? .5 : 0,
-      hint: "HS-code va Incoterms ni koʻrsating" },
+      hint: "HS-code va Incoterms ni körsating" },
     { key: "Sotuv",      value: store.quotes.some(q => q.sellerId === company.id) ? 1 : 0,
-      hint: "Kelgan soʻrovlarga taklif yuboring — javob tezligi baholanadi" },
+      hint: "Kelgan sörovlarga taklif yuboring — javob tezligi baholanadi" },
   ];
   const total = Math.round(100 * blocks.reduce((s, b) => s + b.value, 0) / blocks.length);
   return {

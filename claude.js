@@ -59,7 +59,7 @@ function toMessages(list){
     const blocks = [];
     const media = mediaBlock(m.image || m.media);
     if(media) blocks.push(media);
-    blocks.push({ type:"text", text: String(m.text||"") || "(bo'sh xabar)" });
+    blocks.push({ type:"text", text: String(m.text||"") || "(böş xabar)" });
     return { role: m.role === "assistant" ? "assistant" : "user", content: blocks };
   }).filter(m => m.content.length);
 }
@@ -241,10 +241,10 @@ async function makeDocument({ kind, prompt, lang, title }){
   const spec = DOC_KINDS[String(kind||"").toLowerCase()];
   if(!spec) return { ok:false, error:"bad_kind" };
 
-  const LANGS = { uz:"Uzbek", ru:"Russian", en:"English" };
+  const LANGS = { uz:"Uzbek (2026 Latin alphabet: write Ö ö, Ğ ğ, Ş ş, Ç ç instead of Oʻ oʻ, Gʻ gʻ, Sh sh, Ch ch, and keep the tutuq sign ʼ)", ru:"Russian", en:"English" };
   const system = `You are the TIJORAT MARKAZI document generator for a national trade platform serving Uzbek associations and their member companies.
 Produce exactly ONE .${spec.ext} file, then EXPORT it so the user actually receives it — a file left sitting in the working directory is never delivered.
-Write all document content in ${LANGS[lang] || "Uzbek"}.
+Write all document content in ${LANGS[lang] || LANGS.uz}.
 Make it complete and presentable: a real title, structured sections, and realistic professional formatting — never a placeholder or a stub.
 Invent no figures that were not given to you. When the request lacks data, structure the document so the missing values are clearly marked for the user to fill in.
 Reply with one short sentence describing what you produced; the file itself is the deliverable.`;
