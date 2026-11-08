@@ -44,7 +44,7 @@ function writeProblemsDoc(){
   const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
 <head><meta charset="utf-8"><title>Tijorat Markazi — Murojaatlar</title></head>
 <body style="font-family:Calibri,Arial,sans-serif">
-<h1>Tijorat Markazi AI — foydalanuvchi murojaatlari</h1>
+<h1>Tijorat Markazi AI — foydalanuvçi murojaatlari</h1>
 <p>Jami: ${arr.length}</p>
 <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%">
 <tr style="background:#0a2540;color:#fff"><th>Sana</th><th>Email/Manba</th><th>Savol / Muammo</th></tr>
@@ -152,9 +152,9 @@ function buildUserTurn(message, attachment){
         media = { mime:"application/pdf", data: attachment.data };
       } else if(/\.(docx|xlsx|pptx)$/i.test(name)){
         const t = extractOffice(attachment.data, name);
-        text += `\n\n[Fayl: ${name}]\n${t || "(matn ajratib bo'lmadi)"}`;
+        text += `\n\n[Fayl: ${name}]\n${t || "(matn ajratib bölmadi)"}`;
       } else {
-        text += `\n\n[Fayl: ${name}] (bu fayl turidan matn o'qib bo'lmadi)`;
+        text += `\n\n[Fayl: ${name}] (bu fayl turidan matn öqib bölmadi)`;
       }
     }
   }
@@ -168,16 +168,16 @@ const FALLBACK = [
     "Модуль AI Investor Matching подберёт инвесторов под ваш проект. В какой сфере проект?",
     "The AI Investor Matching module finds investors for your project. What sector is it in?"] },
   { k:["eksport","export","экспорт","bozor","рынок"], a:[
-    "Export Analytics maqsadli bozorlar va xaridorlarni tahlil qiladi. Qaysi mahsulotni eksport qilmoqchisiz?",
+    "Export Analytics maqsadli bozorlar va xaridorlarni tahlil qiladi. Qaysi mahsulotni eksport qilmoqçisiz?",
     "Export Analytics анализирует рынки и покупателей. Какой продукт хотите экспортировать?",
     "Export Analytics analyzes markets and buyers. Which product do you want to export?"] },
   { k:["grant","грант"], a:[
-    "Grant Center mos grantlarni qidiradi. Loyiha yo'nalishini ayting.",
+    "Grant Center mos grantlarni qidiradi. Loyiha yönalişini ayting.",
     "Grant Center ищет подходящие гранты. Укажите направление проекта.",
     "The Grant Center finds matching grants. Tell me the focus area."] },
 ];
 const FALLBACK_DEFAULT = [
-  "Bu demo javob. Haqiqiy AI uchun GEMINI_API_KEY kerak.",
+  "Bu demo javob. Haqiqiy AI uçun GEMINI_API_KEY kerak.",
   "Это демо-ответ. Для реального AI нужен GEMINI_API_KEY.",
   "This is a demo reply. Real AI needs GEMINI_API_KEY.",
 ];

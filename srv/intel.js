@@ -155,7 +155,7 @@ function capitalIntel(days){
       ratePct: H.stats(offers.map(o => o.ratePct).filter(x => x > 0)),
       feePct: H.stats(offers.map(o => o.feePct).filter(x => x > 0)),
       tenor: H.stats(offers.map(o => o.tenor).filter(x => x > 0)),
-      note: offers.length < COHORT_MIN ? "Namuna kichik — koʻrsatkichlar indikativ." : "",
+      note: offers.length < COHORT_MIN ? "Namuna kiçik — körsatkiçlar indikativ." : "",
     },
     investorAppetite: {
       bySector: H.countBy(st.investors.filter(i => i.visible), i => i.sectors).slice(0, 15),
@@ -177,7 +177,7 @@ function capitalIntel(days){
       ndas: st.ideas.reduce((a, i) => a + (i.ndas || []).length, 0),
       conversion: pct(st.ideas.filter(i => (i.ndas || []).length).length, st.ideas.length),
     },
-    privacy: "Koʻrsatkichlar agregat. Alohida kompaniya yoki investorning maxfiy shartlari koʻrsatilmaydi.",
+    privacy: "Körsatkiçlar agregat. Alohida kompaniya yoki investorning maxfiy şartlari körsatilmaydi.",
   };
 }
 
@@ -257,8 +257,8 @@ function laborIntel(days, filter){
     /* §11.2 Training Purchase Signal — where demand outruns supply, say so out loud. */
     trainingSignals: skillGap.filter(s => s.demand >= 3 && s.gap >= 2)
       .map(s => ({ skill: s.skill, demand: s.demand, supply: s.supply,
-        note: "Talab yuqori, mos nomzod kam — oʻquv kursi ochish uchun signal." })),
-    privacy: "Kohorta " + COHORT_MIN + " tadan kam boʻlgan kesimlar koʻrsatilmaydi.",
+        note: "Talab yuqori, mos nomzod kam — öquv kursi oçiş uçun signal." })),
+    privacy: "Kohorta " + COHORT_MIN + " tadan kam bölgan kesimlar körsatilmaydi.",
   };
 }
 
@@ -287,7 +287,7 @@ function salaryBenchmark(q){
 
   return { ok: true, query: { occupation: occ, region, seniority },
     offered: cohort(offered), expected: cohort(expected),
-    note: "Diapazon platformadagi ochiq vakansiya va nomzod kutilmalaridan hisoblanadi." };
+    note: "Diapazon platformadagi oçiq vakansiya va nomzod kutilmalaridan hisoblanadi." };
 }
 
 module.exports = { COHORT_MIN, marketIntel, capitalIntel, laborIntel, salaryBenchmark, cohort };

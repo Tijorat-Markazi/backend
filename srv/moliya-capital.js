@@ -124,13 +124,13 @@ function projectGate(actor, body){
 /** §8.1 investment-readiness — completeness of the pack, with the gaps named. */
 function projectReadiness(p){
   const blocks = [
-    { key: "Konsepsiya",  ok: !!(p.name && p.summary && p.sector), hint: "Loyiha nomi, sektori va qisqacha mazmunini yozing" },
-    { key: "Bozor",       ok: !!(p.region && p.revenue), hint: "Hudud va kutilayotgan yillik tushumni koʻrsating" },
+    { key: "Konsepsiya",  ok: !!(p.name && p.summary && p.sector), hint: "Loyiha nomi, sektori va qisqaça mazmunini yozing" },
+    { key: "Bozor",       ok: !!(p.region && p.revenue), hint: "Hudud va kutilayotgan yillik tuşumni körsating" },
     { key: "CAPEX/OPEX",  ok: !!(p.capex && p.opex), hint: "CAPEX va OPEX baholarini kiriting" },
     { key: "Moliyaviy model", ok: !!(p.irr || p.npv || p.dscr), hint: "IRR / NPV / DSCR dan kamida bittasini hisoblang" },
-    { key: "Capital ask", ok: !!(p.ask && p.instruments.length), hint: "Soʻralayotgan summa va instrumentni belgilang" },
+    { key: "Capital ask", ok: !!(p.ask && p.instruments.length), hint: "Söralayotgan summa va instrumentni belgilang" },
     { key: "Risk register", ok: !!p.risks, hint: "Asosiy risklar va mitigatsiyani yozing" },
-    { key: "Gate trail",  ok: (p.tasks || []).length > 0, hint: "Gate oʻtishini mas'ul va izoh bilan qayd eting" },
+    { key: "Gate trail",  ok: (p.tasks || []).length > 0, hint: "Gate ötişini masʼul va izoh bilan qayd eting" },
   ];
   const done = blocks.filter(b => b.ok).length;
   return {
@@ -247,7 +247,7 @@ function ideaOpen(id, actor){
   return signed
     ? { ok: true, idea: teaserView(next), confidential: idea.confidential, terms: idea.terms, ndaSigned: true }
     : { ok: true, idea: teaserView(next), confidential: null, ndaSigned: false,
-        notice: "Maxfiy qism NDA qabul qilingandan keyin ochiladi." };
+        notice: "Maxfiy qism NDA qabul qilingandan keyin oçiladi." };
 }
 
 function ideaNda(id, actor){
@@ -296,8 +296,8 @@ function matchInvestors(subject){
     const engagement = { value: 0.5, known: false };  // no behavioural history yet — declared, not faked
 
     const s = H.score([
-      { weight: 25, value: thesis, why: "Sektor, bosqich, hudud va instrument tezisga mos", gap: "Investor tezisi bilan mos kelmadi" },
-      { weight: 15, value: ticket.value, known: ticket.known, why: "Soʻralayotgan summa ticket diapazonida", gap: "Summa investor ticket diapazonidan tashqarida" },
+      { weight: 25, value: thesis, why: "Sektor, bosqiç, hudud va instrument tezisga mos", gap: "Investor tezisi bilan mos kelmadi" },
+      { weight: 15, value: ticket.value, known: ticket.known, why: "Söralayotgan summa ticket diapazonida", gap: "Summa investor ticket diapazonidan taşqarida" },
       { weight: 20, value: traction.value, known: traction.known, why: "Traction/moliyaviy dalillar mavjud", gap: "Traction raqamlari yetishmaydi (revenue, MRR, IRR)" },
       { weight: 15, value: risk.value, known: risk.known, why: "Risk klassi investor toleransiga yaqin", gap: "Risk profili yuqori — dalillar bilan mustahkamlang" },
       { weight: 15, value: synergy, why: "Investor tezisi bilan strategik sinergiya bor", gap: "Strategik sinergiya matni topilmadi" },
@@ -368,34 +368,34 @@ function capitalStack(input){
 
   const conservative = norm([
     source(sharia ? "islamic" : "debt", sharia ? "Islom moliyasi (Murabaha/Ijara)" : "Bank krediti",
-      Math.min(debtRoom, 40), hasCollateral ? "Taʼminot mavjud" : "Taʼminot cheklangan"),
+      Math.min(debtRoom, 40), hasCollateral ? "Taʼminot mavjud" : "Taʼminot çeklangan"),
     source("lease", "Lizing", leaseRoom, "Uskuna/transport xaridi"),
     source("trade", "Trade finance", tradeRoom, "Eksport kontrakti asosida"),
-    source("equity", "Oʻz mablagʻi / equity", 30, "Qolgan qismi oʻz hissasi"),
+    source("equity", "Öz mablaği / equity", 30, "Qolgan qismi öz hissasi"),
   ]);
   const balanced = norm([
     source(sharia ? "islamic" : "debt", sharia ? "Islom moliyasi" : "Bank krediti", Math.min(debtRoom, 30), "Barqaror qism"),
     source("factoring", "Faktoring", factorRoom, "Debitorlik aylanmasi"),
     source("lease", "Lizing", leaseRoom * 0.8, "Asset finance"),
     source("trade", "Trade finance", tradeRoom, "Kontrakt sikli"),
-    source("equity", "Equity / investor", 35, "Oʻsish uchun kapital"),
+    source("equity", "Equity / investor", 35, "Ösiş uçun kapital"),
   ]);
   const growth = norm([
-    source("equity", "Equity / investor", 50, "Yuqori oʻsish, past repayment bosimi"),
-    source("mezzanine", "Mezzanine / convertible", 15, "Debt va equity oraligʻi"),
-    source(sharia ? "islamic" : "debt", sharia ? "Islom moliyasi" : "Bank krediti", Math.min(debtRoom, 20), "Cheklangan leverage"),
-    source("grant", "Grant / IFI / blended", 15, "Development yoki prioritet loyiha boʻlsa"),
+    source("equity", "Equity / investor", 50, "Yuqori ösiş, past repayment bosimi"),
+    source("mezzanine", "Mezzanine / convertible", 15, "Debt va equity oraliği"),
+    source(sharia ? "islamic" : "debt", sharia ? "Islom moliyasi" : "Bank krediti", Math.min(debtRoom, 20), "Çeklangan leverage"),
+    source("grant", "Grant / IFI / blended", 15, "Development yoki prioritet loyiha bölsa"),
   ]);
 
   return {
     ok: true, amount: need, currency: H.ONE(input.currency, M.CURRENCIES, "USD"),
     scenarios: [
-      build("Conservative", conservative, "Past–oʻrta", "Eng kam dilution, eng yuqori repayment bosimi."),
-      build("Balanced", balanced, "Oʻrta", "Qarz va equity muvozanati; aylanma mablagʻ qoplanadi."),
-      build("Growth", growth, "Oʻrta–yuqori", "Tez oʻsish uchun; ulush berish evaziga repayment bosimi past."),
+      build("Conservative", conservative, "Past–örta", "Eng kam dilution, eng yuqori repayment bosimi."),
+      build("Balanced", balanced, "Örta", "Qarz va equity muvozanati; aylanma mablagʻ qoplanadi."),
+      build("Growth", growth, "Örta–yuqori", "Tez ösiş uçun; uluş beriş evaziga repayment bosimi past."),
     ],
     inputs: { hasCollateral, hasReceivables, isExporter, isAsset, cashflow, sharia },
-    disclaimer: "Bu muhokama uchun boshlangʻich struktura. Yakuniy capital stack moliya va yuridik ekspert bilan tasdiqlanadi.",
+    disclaimer: "Bu muhokama uçun boşlanğiç struktura. Yakuniy capital stack moliya va yuridik ekspert bilan tasdiqlanadi.",
   };
 }
 

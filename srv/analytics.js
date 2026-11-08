@@ -160,7 +160,7 @@ function segment(opts){
 
   return { module, dimension, dimensions: dims, windowDays: d,
            rows: rows.sort((a, b) => b.n - a.n).slice(0, 40),
-           note: "Barcha ko'rsatkichlar agregat. Alohida ishtirokchi ma'lumoti ko'rsatilmaydi." };
+           note: "Barça körsatkiçlar agregat. Alohida iştirokçi maʼlumoti körsatilmaydi." };
 }
 
 function bozorSegment(dim, d){
@@ -305,7 +305,7 @@ function sheets(opts, orgs){
   const out = [];
 
   out.push({ name: "Umumiy", rows: [
-    ["Ko'rsatkich", "Qiymat"],
+    ["Körsatkiç", "Qiymat"],
     ["Davr (kun)", d],
     ["Uyushmalar", ov.platform.associations],
     ["Kompaniyalar", ov.platform.companies],
@@ -315,12 +315,12 @@ function sheets(opts, orgs){
     ["Bozor — bitim", ov.bozor.deals],
     ["Bozor — match rate %", ov.bozor.matchRate],
     ["Moliya — provayder", ov.moliya.providers],
-    ["Moliya — so'rov", ov.moliya.requests],
+    ["Moliya — sörov", ov.moliya.requests],
     ["Moliya — taklif", ov.moliya.offers],
     ["Moliya — funding gap %", ov.moliya.fundingGapPct],
-    ["Mehnat — ochiq vakansiya", ov.mehnat.vacancies],
+    ["Mehnat — oçiq vakansiya", ov.mehnat.vacancies],
     ["Mehnat — faol nomzod", ov.mehnat.candidates],
-    ["Mehnat — yollash", ov.mehnat.hires],
+    ["Mehnat — yollaş", ov.mehnat.hires],
     ["Mehnat — shortage index", ov.mehnat.shortageIndex],
   ]});
 
@@ -329,9 +329,9 @@ function sheets(opts, orgs){
     const dim = DIMENSIONS[mod][0];
     const seg = segment({ module: mod, dimension: dim, days: d });
     const head = mod === "mehnat"
-      ? [dim, "vakansiya", "o'rin", "nomzod", "shortage", "maosh mediana"]
+      ? [dim, "vakansiya", "örin", "nomzod", "shortage", "maoş mediana"]
       : mod === "moliya"
-      ? [dim, "mahsulot", "so'rov", "javob %", "summa mediana"]
+      ? [dim, "mahsulot", "sörov", "javob %", "summa mediana"]
       : [dim, "mahsulot", "talab", "talab/taklif", "narx mediana"];
     const rows = [head].concat(seg.rows.map(r => mod === "mehnat"
       ? [r.label, r.n, r.seats, r.supply, r.shortage,
@@ -346,9 +346,9 @@ function sheets(opts, orgs){
 
   out.push({ name: "Izoh", rows: [
     ["Eslatma"],
-    ["Barcha ko'rsatkichlar agregat holatda."],
-    ["Kohortasi " + COHORT_MIN + " tadan kam bo'lgan kesimlar — belgisi bilan yashiriladi."],
-    ["Shaxsiy va maxfiy tijorat ma'lumotlari eksportga kirmaydi."],
+    ["Barça körsatkiçlar agregat holatda."],
+    ["Kohortasi " + COHORT_MIN + " tadan kam bölgan kesimlar — belgisi bilan yaşiriladi."],
+    ["Şaxsiy va maxfiy tijorat maʼlumotlari eksportga kirmaydi."],
   ]});
   return out;
 }

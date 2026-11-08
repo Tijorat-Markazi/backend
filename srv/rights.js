@@ -121,7 +121,7 @@ function exportFor(subject, core){
     rightsRequests: mine.map(publicRequest),
     notice: {
       withheld: {
-        uz: "Parol qaytarilmas kriptografik shaklda saqlanadi va uni ochib bo'lmaydi — shuning uchun ushbu faylda yo'q.",
+        uz: "Parol qaytarilmas kriptografik şaklda saqlanadi va uni oçib bölmaydi — şuning uçun uşbu faylda yöq.",
         ru: "Пароль хранится в необратимой криптографической форме и не может быть раскрыт — поэтому его нет в этом файле.",
         en: "The password is stored as an irreversible hash and cannot be disclosed, so it is not in this file.",
       },
@@ -165,7 +165,7 @@ function withdraw(subject, core, req, body){
   const filed = file(subject, "withdraw", req, H.S(body && body.note, 1000));
   return { ok: true, ref: filed.ref, due: filed.due,
     effect: {
-      uz: "Rozilik qaytarib olindi. Kabinetga kirish to'xtatildi. Bitim hujjatlari qonun talab qilgan muddat davomida saqlanadi.",
+      uz: "Rozilik qaytarib olindi. Kabinetga kiriş töxtatildi. Bitim hujjatlari qonun talab qilgan muddat davomida saqlanadi.",
       ru: "Согласие отозвано. Доступ в кабинет приостановлен. Документы сделок хранятся в течение установленного законом срока.",
       en: "Consent withdrawn. Cabinet access is suspended. Transaction records are kept for the period the law requires.",
     } };

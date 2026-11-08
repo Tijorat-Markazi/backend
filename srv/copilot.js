@@ -20,11 +20,11 @@
 const AI = require("../claude");
 const H  = require("./store");
 
-const LANG_NAME = { uz: "Uzbek (Latin script)", ru: "Russian", en: "English" };
+const LANG_NAME = { uz: "Uzbek (2026 Latin alphabet: write Ö ö, Ğ ğ, Ş ş, Ç ç instead of Oʻ oʻ, Gʻ gʻ, Sh sh, Ch ch, and keep the tutuq sign ʼ)", ru: "Russian", en: "English" };
 const lang = l => LANG_NAME[H.S(l, 4)] || LANG_NAME.uz;
 
 const REVIEW_NOTE = {
-  uz: "Bu AI tayyorlagan qoralama. Foydalanishdan oldin tekshiring va tasdiqlang.",
+  uz: "Bu AI tayyorlagan qoralama. Foydalanişdan oldin tekşiring va tasdiqlang.",
   ru: "Это черновик, подготовленный ИИ. Проверьте и подтвердите перед использованием.",
   en: "This is an AI-prepared draft. Review and approve before use.",
 };
@@ -98,7 +98,7 @@ Schema: {"summary":"","lineItems":[{"item":"","qty":0,"unit":"","unitPrice":0,"t
   return structured(system,
     `RFQ: ${H.S(rfq.title, 200)}\nSpec: ${H.S(rfq.spec, 2000)}\nQty: ${H.N(rfq.qty)} ${H.S(rfq.unit, 20)}\n` +
     `Budget: ${H.N(rfq.budget)} ${H.S(rfq.currency, 5)}\nChannel: ${H.S(rfq.channel, 10)}\n` +
-    `Incoterm: ${H.S(rfq.incoterm, 12)}\n\nSotuvchi maʼlumoti:\n${H.S(body.seller, 2000)}`, l);
+    `Incoterm: ${H.S(rfq.incoterm, 12)}\n\nSotuvçi maʼlumoti:\n${H.S(body.seller, 2000)}`, l);
 }
 
 /** §8 Export Copilot — market fit and the export-readiness checklist. */
@@ -113,7 +113,7 @@ Schema: {"markets":[{"country":"","why":"","difficulty":"low|medium|high"}],"hsD
 "documents":[],"packaging":[],"incoterms":[],"logisticsQuestions":[],"verify":[],
 "nextSteps":[],"assumptions":[{"field":"","assumed":"","why":""}]}`;
   return structured(system, `Mahsulot: ${H.S(body.product, 2000)}\nKompaniya: ${H.S(body.company, 300)}\n` +
-    `Maqsadli bozor (agar bor boʻlsa): ${H.S(body.market, 120)}`, l);
+    `Maqsadli bozor (agar bor bölsa): ${H.S(body.market, 120)}`, l);
 }
 
 /* ============================================================
@@ -139,7 +139,7 @@ Schema: {"teaser":{"problem":"","solution":"","market":"","traction":"","ask":""
 "assumptions":[{"field":"","assumed":"","why":""}],
 "expertReview":["items that need a licensed/legal/audit/Sharia expert"]}`;
   return structured(system, `Loyiha / startup maʼlumoti:\n${H.S(body.text, 6000)}\n\n` +
-    `Soʻralayotgan kapital: ${H.N(body.ask)} ${H.S(body.currency, 5)}\nSektor: ${H.S(body.sector, 120)}\n` +
+    `Söralayotgan kapital: ${H.N(body.ask)} ${H.S(body.currency, 5)}\nSektor: ${H.S(body.sector, 120)}\n` +
     `Bosqich: ${H.S(body.stage, 40)}`, l);
 }
 
@@ -156,7 +156,7 @@ Schema: {"problem":"","customer":"","valueProposition":"","revenueModel":"","goT
 "validationExperiments":[{"experiment":"","cost":"low|medium|high","learns":""}],
 "monetization":{"recommended":"sale|license|royalty|equity|codev","why":""},
 "expertReview":[],"assumptions":[{"field":"","assumed":"","why":""}]}`;
-  return structured(system, `Gʻoya:\n${H.S(body.text, 5000)}\nSektor: ${H.S(body.sector, 120)}`, l);
+  return structured(system, `Ğoya:\n${H.S(body.text, 5000)}\nSektor: ${H.S(body.sector, 120)}`, l);
 }
 
 /** §4.3 Smart Finance Finder — natural language into a structured, filterable need. */
