@@ -62,8 +62,8 @@ const OPERATOR = {
   address:     { uz: "[TÖLDIRILSIN: poçta manzili, Özbekiston]",
                  ru: "[ZAPOLNIT: почтовый адрес, Узбекистан]",
                  en: "[TO BE COMPLETED: postal address, Uzbekistan]" },
-  email:       "[TO'LDIRILSIN: rasmiy elektron pochta]",
-  phone:       "[TO'LDIRILSIN: +998 ...]",
+  email:       "tijoratmarkazi@gmail.com",
+  phone:       "+998 90 096 33 77",
   /* Modda 22 ZRU-547: the person must be told where to send a request about
      their own data. One named channel, answered inside RESPONSE_DAYS. */
   dpoEmail:    "[TO'LDIRILSIN: mas'ul shaxs e-pochtasi]",
