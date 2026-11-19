@@ -77,6 +77,17 @@ test("no exported text file means null, and the upload is still deleted",async()
   assert.deepEqual(calls.filter(c=>c.method==="DELETE").map(c=>c.path),["/v1/files/file_in"]);
 });
 
+test("a file exported before a failed resume is still deleted",async()=>{
+  await reset();
+  let round=0;
+  replies.set("POST /v1/messages",()=>++round===1
+    ?message([exported("file_out")],{stop_reason:"pause_turn"})
+    :new Response(JSON.stringify({type:"error",error:{type:"invalid_request_error",message:"boom"}}),{status:400,headers:{"content-type":"application/json"}}));
+  assert.equal(await AI.readFileInSandbox({data:Buffer.from("x"),name:"a.doc",mime:""}),null);
+  await settle();
+  assert.deepEqual(calls.filter(c=>c.method==="DELETE").map(c=>c.path).sort(),["/v1/files/file_in","/v1/files/file_out"]);
+});
+
 test("a refusal means null",async()=>{
   await reset();
   replies.set("POST /v1/messages",()=>message([],{stop_reason:"refusal"}));

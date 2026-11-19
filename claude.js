@@ -318,20 +318,27 @@ const readerRequest = (fileId, name) => ({
   ] }],
 });
 
-/* Runs the conversion, resuming a paused turn in the same container, and
-   returns every file id any round exported, so none escapes the cleanup. */
-async function convertTurns(req, opts, uploadId){
-  const ids = new Set();
+/* Runs the conversion, resuming a paused turn in the same container. Each
+   round's exported file ids go into the caller's `created` list before the
+   next request is sent, so a round that later fails or times out still
+   leaves every earlier export to the cleanup. */
+async function convertTurns(req, opts, uploadId, created){
+  const exported = [];
+  const keep = content => collectFileIds(content).forEach(id => {
+    if(id === uploadId || exported.includes(id)) return;
+    exported.push(id);
+    created.push(id);
+  });
   let messages = req.messages;
   let msg = await client.beta.messages.create(req, opts);
   for(let round = 0; ; round++){
-    collectFileIds(msg.content).forEach(id => { if(id !== uploadId) ids.add(id); });
+    keep(msg.content);
     if(msg.stop_reason !== "pause_turn" || round >= MAX_RESUMES) break;
     messages = messages.concat([{ role:"assistant", content: msg.content }]);
     msg = await client.beta.messages.create(Object.assign({}, req, {
       container: msg.container && msg.container.id, messages }), opts);
   }
-  return { ids: [...ids], refused: msg.stop_reason === "refusal" };
+  return { ids: exported, refused: msg.stop_reason === "refusal" };
 }
 
 async function pickTextExport(ids, opts){
@@ -372,8 +379,7 @@ async function readFileInSandbox({ data, name, mime }){
       betas: READ_BETAS,
     }, opts);
     created.push(upload.id);
-    const run = await convertTurns(readerRequest(upload.id, name), opts, upload.id);
-    created.push(...run.ids);
+    const run = await convertTurns(readerRequest(upload.id, name), opts, upload.id, created);
     if(run.refused) return null;
     const exported = await pickTextExport(run.ids, opts);
     if(!exported){ console.error("[claude] attachment reader: no text file exported for", name); return null; }
