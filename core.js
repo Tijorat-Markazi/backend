@@ -3,9 +3,9 @@
    ============================================================ */
 const fs   = require("fs");
 const path = require("path");
-const { execFileSync } = require("child_process");
 const Auth=require("./srv/auth");
 const Assets=require("./srv/assets");
+const Attachments=require("./srv/attachments");
 
 const ROOT = __dirname;
 const DATA = path.join(ROOT, "data");
@@ -1567,45 +1567,18 @@ async function aiDocument({ kind, prompt, lang, title }){
 }
 const docKinds = () => AI.docKinds();
 
-/* ---------- office/doc extraction ---------- */
-function runCmd(args){ try{return execFileSync("unzip",args,{timeout:3000,maxBuffer:2*1024*1024}).toString();}catch{return "";} }
-function cleanXml(s){
-  return String(s)
-    .replace(/<\/w:p>|<\/a:p>|<\/text:p>|<\/tr>/g,"\n")
-    .replace(/<[^>]+>/g," ")
-    .replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&#39;|&apos;/g,"'")
-    .replace(/[ \t]+/g," ").replace(/\n{3,}/g,"\n\n").trim();
-}
-function extractOffice(b64, name){
-  const tmp = path.join(DATA, "tmp_"+Date.now()+"_"+Math.random().toString(36).slice(2)+([".docx",".xlsx",".pptx"].includes(path.extname(name).toLowerCase())?path.extname(name).toLowerCase():".bin"));
-  try{
-    fs.writeFileSync(tmp, Buffer.from(b64,"base64"));
-    let xml="";
-    if(/\.docx$/i.test(name))      xml = runCmd(["-p",tmp,"word/document.xml"]);
-    else if(/\.pptx$/i.test(name)) xml = runCmd(["-p",tmp,"ppt/slides/slide*.xml"]);
-    else if(/\.xlsx$/i.test(name)) xml = runCmd(["-p",tmp,"xl/sharedStrings.xml"]) + "\n" + runCmd(["-p",tmp,"xl/worksheets/sheet*.xml"]);
-    return cleanXml(xml).slice(0,20000);
-  }catch(e){ return ""; }
-  finally{ try{ fs.unlinkSync(tmp); }catch(e){} }
-}
-function buildUserTurn(message, attachment){
+/* ---------- attachments ----------
+   Any file type is accepted; srv/attachments.js decides from its bytes
+   whether Claude sees it as a picture, a PDF or text, and sends formats it
+   cannot parse itself (.doc .xls .ppt and the like) to the AI sandbox. */
+const readAttachment = Attachments.createReader({ tmpDir: DATA, readInSandbox: AI.readFileInSandbox });
+/* `options.allowSandbox` is false for a caller with no account or guest identity. */
+async function buildUserTurn(message, attachment, options){
   let text = message||"", media = null;
   if(attachment){
-    const name = attachment.name||"file";
-    if(attachment.kind==="text"){
-      text += `\n\n[Fayl: ${name}]\n${attachment.content||""}`;
-    } else if(attachment.kind==="image"){
-      media = { mime: attachment.mime, data: attachment.data };
-    } else if(attachment.kind==="binary"){
-      if(/\.pdf$/i.test(name) || attachment.mime==="application/pdf"){
-        media = { mime:"application/pdf", data: attachment.data };
-      } else if(/\.(docx|xlsx|pptx)$/i.test(name)){
-        const t = extractOffice(attachment.data, name);
-        text += `\n\n[Fayl: ${name}]\n${t || "(matn ajratib bölmadi)"}`;
-      } else {
-        text += `\n\n[Fayl: ${name}] (bu fayl turidan matn öqib bölmadi)`;
-      }
-    }
+    const part = await readAttachment(attachment, options);
+    media = part.media;
+    if(part.text) text += `\n\n[Fayl: ${Attachments.cleanName(attachment.name)}]\n${part.text}`;
   }
   return { text: text||"(fayl biriktirildi)", media };
 }
@@ -1647,7 +1620,7 @@ async function answer({ email, sessionId, message, attachment, lang, company }){
   if(!s.title) s.title = (message||attachment?.name||"…").slice(0,46);
   logProblem(email, shown, sessionId, company);
   const callMsgs = s.messages.slice(-20, -1).map(m=>({ role:m.role, text:m.text }));
-  const turn = buildUserTurn(message, attachment);
+  const turn = await buildUserTurn(message, attachment);
   callMsgs.push({ role:"user", text: turn.text, image: turn.media });
   const out = await askWithFiles(callMsgs, lang);
   let reply = out.text;
