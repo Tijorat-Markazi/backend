@@ -209,7 +209,8 @@ async function handleApi(req, res, pathname, query){
     const used = key ? C.aiUsageInc(key) : null;
     await DB.flush();
     const msgs = (Array.isArray(history)?history.slice(-20):[]).map(m=>({ role:m.role, text:m.text }));
-    const turn = C.buildUserTurn(message, attachment);
+    // a file only the paid sandbox can read is converted for a metered caller only
+    const turn = await C.buildUserTurn(message, attachment, { allowSandbox: !!key });
     msgs.push({ role:"user", text: turn.text, image: turn.media });
     const out = await C.askWithFiles(msgs, lang);
     let reply = out.text;
